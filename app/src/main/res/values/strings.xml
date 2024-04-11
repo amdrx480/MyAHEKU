@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">LoginWithAnimation</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Mau belajar Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
+    <string name="title_welcome_page">Selamat datang di Dicoding!</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Masukkan dulu datamu ya</string>
+    <string name="title_login_page">Sudah siap untuk upgrade skill?</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Belajar di Dicoding.</string>
+
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="stocks">Stocks</string>
+
+
+    <string name="empty_data">Unfortunately, there\'s no photo right now</string>
+    <string name="photo_name">Photo Author</string>
+    <string name="description">Photo Description here</string>
+    <string name="Create_at">Created A Time</string>
+    <string name="create_add">Created At %1$s,</string>
+
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="must_filled">Must be filled</string>
+    <string name="invalid_email">Not a valid email</string>
+
+    <string name="information_failed">Gagal</string>
+    <string name="information_success">Berhasil</string>
+
+    <string name="register_success">The account is ready. Come on, login and learn coding.</string>
+    <string name="continue_">Continue</string>
+
+    <string name="information_Failed">Yah!</string>
+    <string name="register_failed">The account failed, please re-register</string>
+    <string name="continue_Failed">Continue</string>
+
+    <string name="login_in_failed">Login In Failed</string>
+    <string name="login_in_success">Login In Success</string>
+
+    <string name="no_story">No Story</string>
+    <string name="created_add">Created at %1$s,</string>
+    <string name="invalid_permission">Can\'t get permission</string>
+    <string name="upload_success">Upload Success</string>
+    <string name="upload_failed">Upload Failed</string>
+    <string name="no_attach_file">No file attached, please attach image first</string>
+    <string name="new_story">New Story</string>
+    <string name="gallery">Gallery</string>
+    <string name="image_preview">Image preview</string>
+    <string name="camera">Camera</string>
+    <string name="upload">Upload</string>
+    <string name="capture_image">Capture image</string>
+    <string name="switch_camera">Switch Camera</string>
+    <string name="log_out_success">Log Out Success</string>
+    <string name="change_language">Change language</string>
+    <string name="image_story">image story</string>
+    <string name="appwidget_text">Story App BANNER</string>
+    <string name="add_widget">Add widget</string>
+    <string name="empty_text">No Data</string>
+    <string name="app_widget_description">This is an app widget description</string>
+
+    <string name="detail_story">Detail Story</string>
+    <string name="list_story">Story App</string>
+
+</resources>
