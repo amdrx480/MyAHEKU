@@ -2,6 +2,9 @@
     <string name="app_name">LoginWithAnimation</string>
     <string name="signup">Daftar</string>
     <string name="login">Masuk</string>
+
+    <string name="title_dashboard">Dashboard</string>
+
     <string name="message_welcome_page">Mau belajar Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
     <string name="title_welcome_page">Selamat datang di Dicoding!</string>
     <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
@@ -40,6 +43,9 @@
     <string name="login_in_failed">Login In Failed</string>
     <string name="login_in_success">Login In Success</string>
 
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
     <string name="no_story">No Story</string>
     <string name="created_add">Created at %1$s,</string>
     <string name="invalid_permission">Can\'t get permission</string>
@@ -63,5 +69,7 @@
 
     <string name="detail_story">Detail Story</string>
     <string name="list_story">Story App</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
