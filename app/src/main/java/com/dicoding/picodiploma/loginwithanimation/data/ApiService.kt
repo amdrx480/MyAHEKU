@@ -2,6 +2,8 @@ package com.dicoding.picodiploma.loginwithanimation.data
 
 import com.dicoding.picodiploma.loginwithanimation.data.login.LoginRequest
 import com.dicoding.picodiploma.loginwithanimation.data.login.LoginResponse
+import com.dicoding.picodiploma.loginwithanimation.data.purchase.PurchaseRequest
+import com.dicoding.picodiploma.loginwithanimation.data.purchase.PurchaseResponse
 import com.dicoding.picodiploma.loginwithanimation.data.stocks.StocksRequest
 import com.dicoding.picodiploma.loginwithanimation.model.stocks.AllStocksResponse
 import retrofit2.Call
@@ -21,6 +23,15 @@ interface ApiService {
     fun getAllStocks(
         @Header("Authorization") token: String
     ): Call<AllStocksResponse>
+
+    @POST("stocks")
+    fun setPurchaseStocks(
+        @Header("Authorization") token: String,
+        @Body purchaseRequest: PurchaseRequest
+    ): Call<PurchaseResponse>
+
+//    @POST("stocks")
+//    fun setPurchaseStocks( @Body loginRequest: PurchaseRequest): Call<PurchaseResponse>
 
     //bisa
 //    @GET("stocks")

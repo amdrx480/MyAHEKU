@@ -19,11 +19,11 @@ class MainViewModel(private val repository: UserPreference) : ViewModel() {
         return repository.getSession().asLiveData()
     }
 
-    fun logout() {
-        viewModelScope.launch {
-            repository.logout()
-        }
-    }
+//    fun logout() {
+//        viewModelScope.launch {
+//            repository.logout()
+//        }
+//    }
 
     fun setLastLoginTime() {
         val currentTime = System.currentTimeMillis()

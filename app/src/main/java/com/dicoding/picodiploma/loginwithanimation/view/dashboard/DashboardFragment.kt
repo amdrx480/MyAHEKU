@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentDashboardBinding
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
+import com.dicoding.picodiploma.loginwithanimation.view.Purchase.PurchaseStockActivity
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksActivity
 
@@ -56,14 +57,17 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupAction() {
+        binding.purchaseStocksButton.setOnClickListener {
+            val moveToPurchaseStocksActivity = Intent(requireActivity(), PurchaseStockActivity::class.java)
+            startActivity(moveToPurchaseStocksActivity)
+        }
         binding.stocksButton.setOnClickListener {
             // Buat Intent
-            val moveToListStoryActivity = Intent(requireActivity(), StocksActivity::class.java)
-
+            val moveToStocksActivity = Intent(requireActivity(), StocksActivity::class.java)
             // Ambil data sesi dari ViewModel dan tambahkan ke Intent
             dashboardViewModel.getSession().observe(viewLifecycleOwner) { user ->
-                moveToListStoryActivity.putExtra(StocksActivity.EXTRA_USER, user)
-                startActivity(moveToListStoryActivity)
+                moveToStocksActivity.putExtra(StocksActivity.EXTRA_USER, user)
+                startActivity(moveToStocksActivity)
             }
         }
     }

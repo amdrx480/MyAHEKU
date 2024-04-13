@@ -12,5 +12,4 @@ data class LoginResponse(
 
     @SerializedName("token")
     val token : String
-
 )

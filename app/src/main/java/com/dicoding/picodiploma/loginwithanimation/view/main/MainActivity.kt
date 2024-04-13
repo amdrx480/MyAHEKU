@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_dashboard,
+                R.id.navigation_dashboard, R.id.navigation_profile
             )
         )
 
@@ -95,4 +95,11 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        // Hentikan observasi pada LiveData saat aktivitas dihancurkan
+//        mainViewModel.getSession().removeObservers(this)
+//    }
+//
 }

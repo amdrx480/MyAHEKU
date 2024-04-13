@@ -3,10 +3,12 @@ package com.dicoding.picodiploma.loginwithanimation.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
+import com.dicoding.picodiploma.loginwithanimation.view.Purchase.PurchaseStocksViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardViewModel
 //import com.dicoding.picodiploma.loginwithanimation.di.Injection
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
+import com.dicoding.picodiploma.loginwithanimation.view.profile.ProfileViewModel
 
 class ViewModelFactory(private val repository: UserPreference) : ViewModelProvider.NewInstanceFactory() {
 
@@ -22,6 +24,14 @@ class ViewModelFactory(private val repository: UserPreference) : ViewModelProvid
 
             modelClass.isAssignableFrom(DashboardViewModel::class.java) -> {
                 DashboardViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
+                ProfileViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(PurchaseStocksViewModel::class.java) -> {
+                PurchaseStocksViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

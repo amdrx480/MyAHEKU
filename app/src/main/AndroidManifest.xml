@@ -21,6 +21,9 @@
         android:theme="@style/Theme.LoginWithAnimation"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".view.Purchase.PurchaseStockActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.welcome.WelcomeActivity"
             android:exported="false" />
         <activity
