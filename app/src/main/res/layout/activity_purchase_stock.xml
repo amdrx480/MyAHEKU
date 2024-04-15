@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.Purchase.PurchaseStockActivity">
+    tools:context=".view.purchase.PurchaseStockActivity">
 
     <TextView
         android:id="@+id/roydyhccmsj"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="Pembelian Barang"
-        android:textColor="@color/black"
+        android:textColor="#098047"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.069"
@@ -81,19 +81,96 @@
         app:layout_constraintEnd_toEndOf="@+id/itemNameEditText"
         app:layout_constraintTop_toTopOf="@+id/roydyhscmsj" />
 
-    <!-- Tambahkan TextView dan EditText lainnya sesuai kebutuhan -->
+    <TextView
+        android:id="@+id/roydyhcmsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Satuan"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/roydyhscmsj"
+        app:layout_constraintTop_toBottomOf="@+id/itemCodeEditText" />
+
+    <Spinner
+        android:id="@+id/itemUnitSpinner"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/roydyhcmsj"
+        app:layout_constraintEnd_toEndOf="@+id/itemCodeEditText"
+        app:layout_constraintTop_toTopOf="@+id/roydyhcmsj" />
+
+    <TextView
+        android:id="@+id/rodyhscmsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Jumlah"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/roydyhcmsj"
+        app:layout_constraintTop_toBottomOf="@+id/itemUnitSpinner" />
 
     <EditText
-        android:id="@+id/descriptionEditText"
-        android:layout_width="332dp"
-        android:layout_height="88dp"
+        android:id="@+id/itemQuantityEditText"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/rodyhscmsj"
+        app:layout_constraintEnd_toEndOf="@+id/itemUnitSpinner"
+        app:layout_constraintTop_toTopOf="@+id/rodyhscmsj" />
+
+    <TextView
+        android:id="@+id/roydyhsmsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:hint="Masukkan deskripsi..."
-        android:inputType="textMultiLine"
-        android:maxLines="20"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kodeBarangEditText" />
+        android:text="Kategori "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/rodyhscmsj"
+        app:layout_constraintTop_toBottomOf="@+id/itemQuantityEditText" />
+
+    <EditText
+        android:id="@+id/itemCategoryEditText"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/roydyhsmsj"
+        app:layout_constraintEnd_toEndOf="@+id/itemQuantityEditText"
+        app:layout_constraintTop_toTopOf="@+id/roydyhsmsj" />
+
+    <TextView
+        android:id="@+id/oydyhscmsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Harga Barang"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/roydyhsmsj"
+        app:layout_constraintTop_toBottomOf="@+id/itemCategoryEditText" />
+
+    <EditText
+        android:id="@+id/itemPurchaseEditText"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/oydyhscmsj"
+        app:layout_constraintEnd_toEndOf="@+id/itemCategoryEditText"
+        app:layout_constraintTop_toTopOf="@+id/oydyhscmsj" />
+
+    <!-- Tambahkan TextView dan EditText lainnya sesuai kebutuhan -->
+
+<!--    <EditText-->
+<!--        android:id="@+id/descriptionEditText"-->
+<!--        android:layout_width="332dp"-->
+<!--        android:layout_height="88dp"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:hint="Masukkan deskripsi..."-->
+<!--        android:inputType="textMultiLine"-->
+<!--        android:maxLines="20"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/itemCodeEditText" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/saveButton"

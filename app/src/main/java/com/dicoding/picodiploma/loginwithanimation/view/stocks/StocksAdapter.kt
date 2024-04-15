@@ -55,7 +55,7 @@ class StocksAdapter : RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
                 tvStockName.text = combinedText
                 tvStockCategory.text = stocks.stock_Category
                 tvStockPcs.text = stocks.stock_Pcs.toString()
-//                tvStockPack.text = stocks.stock_Pack.toString()
+                tvStockPack.text = stocks.stock_Pack.toString()
                 tvStockRoll.text = stocks.stock_Roll.toString()
                 tvStockMeter.text = stocks.stock_Meter.toString()
 

@@ -3,7 +3,7 @@ package com.dicoding.picodiploma.loginwithanimation.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
-import com.dicoding.picodiploma.loginwithanimation.view.Purchase.PurchaseStocksViewModel
+import com.dicoding.picodiploma.loginwithanimation.view.purchase.PurchaseStocksViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardViewModel
 //import com.dicoding.picodiploma.loginwithanimation.di.Injection
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginViewModel

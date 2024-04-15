@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.view.Purchase
+package com.dicoding.picodiploma.loginwithanimation.view.purchase
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -54,6 +54,6 @@ class PurchaseStocksViewModel(private val repository: UserPreference): ViewModel
     }
 
     companion object {
-        private const val TAG = "ListPurchaseStockViewModel"
+        private const val TAG = "ListPurchaseViewModel"
     }
 }
