@@ -1,20 +1,25 @@
 package com.dicoding.picodiploma.loginwithanimation.view.purchase
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.data.purchase.PurchaseRequest
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityPurchaseStockBinding
 import com.dicoding.picodiploma.loginwithanimation.helper.helper
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -26,20 +31,18 @@ class PurchaseStockActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPurchaseStockBinding
 
     private val cart = mutableListOf<PurchaseRequest>() // List untuk menyimpan produk yang akan dibeli
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPurchaseStockBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val units = arrayOf("pcs", "pack", "roll", "meter")
+        val units = arrayOf("Pcs", "Pack", "Roll", "Meter")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, units)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.itemUnitSpinner.adapter = adapter
 
         setupViewModel()
         setupAction()
-//        setupDropdownAction()
     }
 
     private fun setupViewModel() {
@@ -61,39 +64,41 @@ class PurchaseStockActivity : AppCompatActivity() {
         binding.saveButton.setOnClickListener {
             val selectedUnit = binding.itemUnitSpinner.selectedItem.toString()
             val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
+            val supplierVendor = binding.supplierNameEditText.text.toString()
+            val stockName = binding.itemNameEditText.text.toString()
+            val stockCode = binding.itemCodeEditText.text.toString()
+            val stockCategory = binding.itemCategoryEditText.text.toString()
 
-            if (enteredQuantity > 0) {
-                val purchaseRequest = createPurchaseRequest(selectedUnit, enteredQuantity)
+            if (selectedUnit.isNotEmpty() && enteredQuantity > 0 && supplierVendor.isNotEmpty() && stockName.isNotEmpty() && stockCode.isNotEmpty() && stockCategory.isNotEmpty()) {
+                val purchaseRequest = createPurchaseRequest(selectedUnit, enteredQuantity,supplierVendor, stockName, stockCode, stockCategory)
                 addToCart(purchaseRequest)
                 purchaseStocksViewModel.purchaseStocks(user.token, purchaseRequest, object : helper.ApiCallBackString {
                     override fun onResponse(success: Boolean, message: String) {
                         if (success) {
                             // Lakukan tindakan jika proses pembelian berhasil
                             // Misalnya, menampilkan pesan sukses atau mengubah tampilan
+                            showAlertDialog("Berhasil", "Pembelian berhasil.")
+
                         } else {
                             // Lakukan tindakan jika proses pembelian gagal
                             // Misalnya, menampilkan pesan error atau memberi notifikasi
+                            showAlertDialog("Gagal", "Pembelian gagal: $message")
                         }
                     }
                 })
             } else {
                 // Tampilkan pesan bahwa jumlah harus lebih dari 0
-                Toast.makeText(this, "Quantity should be greater than 0", Toast.LENGTH_SHORT).show()
+                showAlertDialog("Gagal", "Harap Isi Semua.")
             }
         }
     }
 
-    private fun createPurchaseRequest(unit: String, quantity: Int): PurchaseRequest {
-        val supplierVendor = binding.supplierNameEditText.text.toString()
-        val stockName = binding.itemNameEditText.text.toString()
-        val stockCode = binding.itemCodeEditText.text.toString()
-        val stockCategory = binding.itemCategoryEditText.text.toString()
-
+    private fun createPurchaseRequest(unit: String, quantity: Int, supplierVendor: String, stockName: String, stockCode: String, stockCategory: String): PurchaseRequest {
         return when (unit) {
-            "pcs" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, quantity, 0, 0, 0)
-            "pack" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, quantity, 0, 0)
-            "roll" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, quantity, 0)
-            "meter" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, quantity)
+            "Pcs" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, quantity, 0, 0, 0)
+            "Pack" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, quantity, 0, 0)
+            "Roll" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, quantity, 0)
+            "Meter" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, quantity)
             else -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, 0)
         }
     }
@@ -102,75 +107,13 @@ class PurchaseStockActivity : AppCompatActivity() {
         cart.add(purchaseRequest)
     }
 
-//    private fun setupAction() {
-//        binding.saveButton.setOnClickListener {
-//            val purchaseRequest = PurchaseRequest(
-//                binding.supplierNameEditText.text.toString(),
-//                binding.itemNameEditText.text.toString(),
-//                binding.itemCodeEditText.text.toString(),
-//                binding.itemCategoryEditText.text.toString(),
-//                stock_Pcs = 0,
-//                stock_Pack = 0,
-//                stock_Roll = 0,
-//                stock_Meter = 50
-//            )
-//            purchaseStocksViewModel.purchaseStocks(user.token, purchaseRequest, object : helper.ApiCallBackString {
-//                override fun onResponse(success: Boolean, message: String) {
-//                    if (success) {
-//                        // Lakukan tindakan jika proses pembelian berhasil
-//                        // Misalnya, menampilkan pesan sukses atau mengubah tampilan
-//                    } else {
-//                        // Lakukan tindakan jika proses pembelian gagal
-//                        // Misalnya, menampilkan pesan error atau memberi notifikasi
-//                    }
-//                }
-//            })
-//        }
-//    }
-
-//    private fun setupDropdownAction() {
-//        val purchaseRequest = PurchaseRequest(
-//            supplierVendor = "", // Berikan nilai default atau isi sesuai kebutuhan
-//            stock_Name = "",
-//            stock_Code = "",
-//            stock_Category = "",
-//            stock_Pcs = 0,
-//            stock_Pack = 0,
-//            stock_Roll = 25,
-//            stock_Meter = 50
-//        )
-//
-//        val dropdownItems = listOf(
-//            StockUnitModel("Pcs", purchaseRequest.stock_Pcs),
-//            StockUnitModel("Pack", purchaseRequest.stock_Pack),
-//            StockUnitModel("Roll", purchaseRequest.stock_Roll),
-//            StockUnitModel("Meter", purchaseRequest.stock_Meter)
-//        )
-//
-//        val adapter = DropdownAdapter(this, dropdownItems)
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//
-//        val spinner = findViewById<Spinner>(R.id.itemUnitSpinner)
-//        spinner.adapter = adapter
-//
-//        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                // Update quantity based on selected item
-//                val selectedItem = dropdownItems[position]
-//                val selectedQuantity = when (selectedItem.label) {
-//                    "Pcs" -> purchaseRequest.stock_Pcs
-//                    "Pack" -> purchaseRequest.stock_Pack
-//                    "Roll" -> purchaseRequest.stock_Roll
-//                    "Meter" -> purchaseRequest.stock_Meter
-//                    else -> 0
-//                }
-//                binding.itemQuantityEditText.setText(selectedQuantity.toString())
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                // Do nothing
-//            }
-//
-//        }
-//    }
+    private fun showAlertDialog(title: String, message: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 }

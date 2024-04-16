@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.view.stocks
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStocksBinding
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
+import com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardFragment
 import com.google.android.material.snackbar.Snackbar
 
 class StocksActivity : AppCompatActivity() {
@@ -16,7 +18,6 @@ class StocksActivity : AppCompatActivity() {
     private val viewModel by viewModels<StocksViewModel>()
 
     private lateinit var user: UserModel
-//    private lateinit var stocks: StocksModel
     private lateinit var adapter: StocksAdapter
 
     private var _binding: ActivityStocksBinding? = null
@@ -29,44 +30,46 @@ class StocksActivity : AppCompatActivity() {
         setContentView(binding?.root)
 
         user = intent.getParcelableExtra(EXTRA_USER)!!
-
-        setListStocks()
         adapter = StocksAdapter()
 
-        showHaveDataOrNot()
         setupRecycleView()
         showSnackBar()
         showLoading()
     }
 
-    private fun showHaveDataOrNot(){
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onStart(){
+        super.onStart()
         viewModel.isHaveData.observe(this){ haveData ->
             binding?.apply {
                 if (haveData) {
                     rvStock.visibility = View.VISIBLE
                     tvInfo.visibility = View.GONE
-                } else {
-                    //penyebab biang keroknya
+                }
+//                else {
+//                    //penyebab biang keroknya
 //                    rvStock.visibility = View.GONE
 //                    tvInfo.visibility = View.VISIBLE
-                }
+//                }
             }
             Log.d("showHaveDataOrNot", "Data status: $haveData")
         }
-    }
-
-    private fun setListStocks() {
         viewModel.showListStocks(user.token)
         viewModel.itemStory.observe(this) {
             adapter.setListStocks(it)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        setListStocks()
-    }
-
+    override fun onStop() {
+    super.onStop()
+    // Menghentikan observasi data
+    viewModel.isHaveData.removeObservers(this)
+    viewModel.itemStory.removeObservers(this)
+}
     private fun showSnackBar() {
         viewModel.snackBarText.observe(this) {
             it.getContentIfNotHandled()?.let { snackBarText ->
@@ -97,6 +100,11 @@ class StocksActivity : AppCompatActivity() {
         binding?.rvStock?.layoutManager = LinearLayoutManager(this)
         binding?.rvStock?.setHasFixedSize(true)
         binding?.rvStock?.adapter = adapter
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
