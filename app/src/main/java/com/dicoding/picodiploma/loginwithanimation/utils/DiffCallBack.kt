@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.helper
+package com.dicoding.picodiploma.loginwithanimation.utils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem

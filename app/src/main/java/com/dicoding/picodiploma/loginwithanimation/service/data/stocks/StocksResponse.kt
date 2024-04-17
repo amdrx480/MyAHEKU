@@ -1,10 +1,13 @@
-package com.dicoding.picodiploma.loginwithanimation.data.purchase
+package com.dicoding.picodiploma.loginwithanimation.model.stocks
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
-data class PurchaseResponse (
+data class AllStocksResponse(
+
     @SerializedName("error")
     val error: Boolean,
 
@@ -12,14 +15,23 @@ data class PurchaseResponse (
     val message: String,
 
     @SerializedName("token")
-    val token : List<ListPurchaseItem>,
-    )
+    val token: List<ListStocksItem>,
+
+//    @SerializedName("token")
+//    val token: String,
+)
 
 @Parcelize
-data class ListPurchaseItem(
+@Entity(tableName = "stocks")
+data class ListStocksItem(
 
-    @SerializedName("id")
+    @PrimaryKey
+//    @SerializedName("id")
+    @field:SerializedName("id")
     val id: String,
+
+    @SerializedName("created_at")
+    val created_at: String,
 
     @SerializedName("stock_location")
     val stock_Location: String,
@@ -45,4 +57,4 @@ data class ListPurchaseItem(
     @SerializedName("stock_meter")
     val stock_Meter: Int
 
-) : Parcelable
+    ) : Parcelable

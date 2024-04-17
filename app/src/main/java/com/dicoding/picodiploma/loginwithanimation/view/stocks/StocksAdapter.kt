@@ -1,32 +1,18 @@
 package com.dicoding.picodiploma.loginwithanimation.view.stocks
 
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowPhotoBinding
-import com.dicoding.picodiploma.loginwithanimation.helper.DiffCallBack
-import com.dicoding.picodiploma.loginwithanimation.helper.helper
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.AllStocksResponse
+import com.dicoding.picodiploma.loginwithanimation.utils.DiffCallBack
 import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
 import java.util.*
 
-class StocksAdapter : RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
-
-    private val listStocks = ArrayList<ListStocksItem>()
-
-    fun setListStocks(itemStocks: List<ListStocksItem>) {
-        val diffCallback = DiffCallBack(this.listStocks, itemStocks)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
-        this.listStocks.clear()
-        this.listStocks.addAll(itemStocks)
-        diffResult.dispatchUpdatesTo(this)
-    }
+class StocksAdapter : PagingDataAdapter<ListStocksItem, StocksAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemRowPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,18 +20,17 @@ class StocksAdapter : RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(listStocks[position])
+        val data = getItem(position)
+        if (data != null) {
+            holder.bind(data)
+        }
     }
-
-    override fun getItemCount() = listStocks.size
 
     inner class ViewHolder(private var binding: ItemRowPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(stocks: ListStocksItem) {
             with(binding) {
-                Log.d(TAG, "Binding stocks: $stocks")
-
                 Glide.with(imgViewStock)
 //                    .load(story.photoUrl) // URL Avatar
 //                    .placeholder(R.drawable.ic_place_default_holder)
@@ -73,6 +58,20 @@ class StocksAdapter : RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
     }
 
     companion object {
-        private const val TAG = "StockAdapter_TAG"
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStocksItem>() {
+            override fun areItemsTheSame(
+                oldItem: ListStocksItem,
+                newItem: ListStocksItem,
+            ): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(
+                oldItem: ListStocksItem,
+                newItem: ListStocksItem,
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 }

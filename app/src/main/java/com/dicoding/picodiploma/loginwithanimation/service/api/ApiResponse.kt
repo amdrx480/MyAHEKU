@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.data
+package com.dicoding.picodiploma.loginwithanimation.service.api
 
 import com.google.gson.annotations.SerializedName
 

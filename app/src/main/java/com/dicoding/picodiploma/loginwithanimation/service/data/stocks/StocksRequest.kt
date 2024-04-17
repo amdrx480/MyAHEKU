@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.data.stocks
+package com.dicoding.picodiploma.loginwithanimation.service.data.stocks
 
 data class StocksRequest(
 //    val token : String,

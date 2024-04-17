@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
@@ -32,7 +33,7 @@ class SplashScreenActivity : AppCompatActivity() {
         handler.postDelayed({
             mainViewModel = ViewModelProvider(
                 this,
-                ViewModelFactory(UserPreference.getInstance(dataStore))
+                ViewModelUserFactory(UserPreference.getInstance(dataStore))
             )[MainViewModel::class.java]
 
             mainViewModel.getSession().observe(this) {

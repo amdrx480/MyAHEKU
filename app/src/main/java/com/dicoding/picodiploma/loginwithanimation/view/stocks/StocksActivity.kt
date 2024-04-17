@@ -1,21 +1,24 @@
 package com.dicoding.picodiploma.loginwithanimation.view.stocks
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStocksBinding
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
-import com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardFragment
-import com.google.android.material.snackbar.Snackbar
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class StocksActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<StocksViewModel>()
+    private val viewModel: StocksViewModel by viewModels {
+        ViewModelFactory.getInstance(this)
+    }
 
     private lateinit var user: UserModel
     private lateinit var adapter: StocksAdapter
@@ -32,9 +35,7 @@ class StocksActivity : AppCompatActivity() {
         user = intent.getParcelableExtra(EXTRA_USER)!!
         adapter = StocksAdapter()
 
-        setupRecycleView()
-        showSnackBar()
-        showLoading()
+        setupAdapter()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -42,66 +43,32 @@ class StocksActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onStart(){
-        super.onStart()
-        viewModel.isHaveData.observe(this){ haveData ->
-            binding?.apply {
-                if (haveData) {
-                    rvStock.visibility = View.VISIBLE
-                    tvInfo.visibility = View.GONE
-                }
-//                else {
-//                    //penyebab biang keroknya
-//                    rvStock.visibility = View.GONE
-//                    tvInfo.visibility = View.VISIBLE
-//                }
-            }
-            Log.d("showHaveDataOrNot", "Data status: $haveData")
-        }
-        viewModel.showListStocks(user.token)
-        viewModel.itemStory.observe(this) {
-            adapter.setListStocks(it)
-        }
-    }
+    private fun setupAdapter(){
+        adapter = StocksAdapter()
+        binding?.rvStocks?.adapter = adapter.withLoadStateHeaderAndFooter(
+            footer = LoadingStateStocksAdapter { adapter.retry() },
+            header = LoadingStateStocksAdapter { adapter.retry() }
+        )
+        binding?.rvStocks?.layoutManager = LinearLayoutManager(this)
+        binding?.rvStocks?.setHasFixedSize(true)
 
-    override fun onStop() {
-    super.onStop()
-    // Menghentikan observasi data
-    viewModel.isHaveData.removeObservers(this)
-    viewModel.itemStory.removeObservers(this)
-}
-    private fun showSnackBar() {
-        viewModel.snackBarText.observe(this) {
-            it.getContentIfNotHandled()?.let { snackBarText ->
-                Snackbar.make(
-                    findViewById(R.id.rv_stock),
-                    snackBarText,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collect {
+                binding?.swipeRefresh?.isRefreshing = it.mediator?.refresh is LoadState.Loading
             }
         }
-    }
-
-    private fun showLoading() {
-        viewModel.isLoading.observe(this) {
-            binding?.apply {
-                if (it) {
-                    progressBar.visibility = View.VISIBLE
-                    rvStock.visibility = View.INVISIBLE
-                } else {
-                    progressBar.visibility = View.GONE
-                    rvStock.visibility = View.VISIBLE
-                }
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                binding?.tvInfo?.root?.isVisible = loadStates.refresh is LoadState.Error
             }
+            if (adapter.itemCount < 1) binding?.tvInfo?.root?.visibility = View.VISIBLE
+            else binding?.tvInfo?.root?.visibility = View.GONE
+        }
+
+        viewModel.getStocks(user.token).observe(this) {
+            adapter.submitData(lifecycle, it)
         }
     }
-
-    private fun setupRecycleView(){
-        binding?.rvStock?.layoutManager = LinearLayoutManager(this)
-        binding?.rvStock?.setHasFixedSize(true)
-        binding?.rvStock?.adapter = adapter
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

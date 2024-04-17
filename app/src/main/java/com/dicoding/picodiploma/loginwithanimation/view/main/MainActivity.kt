@@ -19,13 +19,14 @@ import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBindi
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelUserFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 //Aheku
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+//    private lateinit var mainViewModel: MainViewModel
     private lateinit var user: UserModel
 
     private lateinit var binding: ActivityMainBinding
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         setupView()
 //        setupAction()
-        setupViewModel()
+//        setupViewModel()
     }
     private fun setupView() {
         @Suppress("DEPRECATION")
@@ -81,20 +82,20 @@ class MainActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private fun setupViewModel() {
-        mainViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
-        )[MainViewModel::class.java]
-
-        mainViewModel.getSession().observe(this) { preferences ->
-            user = UserModel(
-                preferences.password,
-                preferences.token,
-                true
-            )
-        }
-    }
+//    private fun setupViewModel() {
+//        mainViewModel = ViewModelProvider(
+//            this,
+//            ViewModelUserFactory(UserPreference.getInstance(dataStore))
+//        )[MainViewModel::class.java]
+//
+//        mainViewModel.getSession().observe(this) { preferences ->
+//            user = UserModel(
+//                preferences.password,
+//                preferences.token,
+//                true
+//            )
+//        }
+//    }
 
 //    override fun onDestroy() {
 //        super.onDestroy()

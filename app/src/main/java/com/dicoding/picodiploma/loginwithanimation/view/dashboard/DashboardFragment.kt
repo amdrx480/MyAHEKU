@@ -16,6 +16,7 @@ import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.purchase.PurchaseStockActivity
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
@@ -45,7 +46,7 @@ class DashboardFragment : Fragment() {
 
     private fun setupViewModel() {
         //perlu menggukaan requireContext().dataStore pada fragment
-        dashboardViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(requireContext().dataStore)))[DashboardViewModel::class.java]
+        dashboardViewModel = ViewModelProvider(this, ViewModelUserFactory(UserPreference.getInstance(requireContext().dataStore)))[DashboardViewModel::class.java]
 
         dashboardViewModel.getSession().observe(this) { preferences ->
             user = UserModel(
@@ -59,14 +60,18 @@ class DashboardFragment : Fragment() {
     private fun setupAction() {
         binding.purchaseStocksButton.setOnClickListener {
             val moveToPurchaseStocksActivity = Intent(requireActivity(), PurchaseStockActivity::class.java)
+            moveToPurchaseStocksActivity.putExtra(PurchaseStockActivity.EXTRA_USER, user)
             startActivity(moveToPurchaseStocksActivity)
         }
         binding.stocksButton.setOnClickListener {
             val moveToStocksActivity = Intent(requireActivity(), StocksActivity::class.java)
-            dashboardViewModel.getSession().observe(viewLifecycleOwner) { user ->
-                moveToStocksActivity.putExtra(StocksActivity.EXTRA_USER, user)
-                startActivity(moveToStocksActivity)
-            }
+            moveToStocksActivity.putExtra(StocksActivity.EXTRA_USER, user)
+            startActivity(moveToStocksActivity)
+            //penyebab repeating ListStockItem
+//            dashboardViewModel.getSession().observe(viewLifecycleOwner) { user ->
+//                moveToStocksActivity.putExtra(StocksActivity.EXTRA_USER, user)
+//                startActivity(moveToStocksActivity)
+//            }
         }
     }
 

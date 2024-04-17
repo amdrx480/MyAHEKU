@@ -17,6 +17,7 @@ import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentProfileBi
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,18 +56,20 @@ class ProfileFragment : Fragment() {
         setupAction()
     }
 
-    private fun setupViewModel() {
-        //perlu menggukaan requireContext().dataStore pada fragment
-        profileViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(requireContext().dataStore)))[ProfileViewModel::class.java]
+private fun setupViewModel() {
+    profileViewModel = ViewModelProvider(
+        this,
+        ViewModelUserFactory(UserPreference.getInstance(requireContext().dataStore))
+    )[ProfileViewModel::class.java]
 
-        profileViewModel.getSession().observe(this) { preferences ->
-            user = UserModel(
-                preferences.password,
-                preferences.token,
-                true
-            )
-        }
+    profileViewModel.getSession().observe(this) { preferences ->
+        user = UserModel(
+            preferences.password,
+            preferences.token,
+            true
+        )
     }
+}
 
     private fun setupAction() {
         binding.logoutButton.setOnClickListener {

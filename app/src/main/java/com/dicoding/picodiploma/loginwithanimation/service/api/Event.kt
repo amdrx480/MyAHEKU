@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.data
+package com.dicoding.picodiploma.loginwithanimation.service.api
 
 open class Event<out T>(private val content: T) {
 

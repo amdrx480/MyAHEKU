@@ -1,8 +1,9 @@
-package com.dicoding.picodiploma.loginwithanimation.helper
+package com.dicoding.picodiploma.loginwithanimation.utils
 
+import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -19,6 +20,10 @@ object helper {
 
     interface ApiCallBackString {
         fun onResponse(success: Boolean, message: String)
+    }
+
+    fun showToast(context: Context, text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

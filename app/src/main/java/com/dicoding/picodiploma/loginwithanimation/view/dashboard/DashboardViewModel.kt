@@ -4,8 +4,8 @@ import androidx.lifecycle.*
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 
-class DashboardViewModel(private val repository: UserPreference) : ViewModel() {
+class DashboardViewModel(private val userPref: UserPreference) : ViewModel() {
     fun getSession(): LiveData<UserModel> {
-        return repository.getSession().asLiveData()
+        return userPref.getSession().asLiveData()
     }
 }
