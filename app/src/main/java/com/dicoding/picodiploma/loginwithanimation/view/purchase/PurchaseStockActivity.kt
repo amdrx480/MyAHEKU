@@ -1,29 +1,19 @@
 package com.dicoding.picodiploma.loginwithanimation.view.purchase
 
-import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.service.data.purchase.PurchaseRequest
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityPurchaseStockBinding
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
-import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
-import com.dicoding.picodiploma.loginwithanimation.model.purchase.PurchaseModel
 import com.dicoding.picodiploma.loginwithanimation.service.database.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksActivity
-
-//private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class PurchaseStockActivity : AppCompatActivity() {
 
@@ -33,8 +23,6 @@ class PurchaseStockActivity : AppCompatActivity() {
     private val purchaseStocksViewModel: PurchaseStocksViewModel by viewModels {
         ViewModelFactory.getInstance(this)
     }
-
-    private val cart = mutableListOf<PurchaseModel>() // List untuk menyimpan produk yang akan dibeli
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPurchaseStockBinding.inflate(layoutInflater)
@@ -47,7 +35,6 @@ class PurchaseStockActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.itemUnitSpinner.adapter = adapter
 
-//        setupViewModel()
         setupAction()
     }
 
@@ -61,11 +48,9 @@ class PurchaseStockActivity : AppCompatActivity() {
             val selectedUnit = binding.itemUnitSpinner.selectedItem.toString()
             val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
 
-//            if (selectedUnit.isNotEmpty() && enteredQuantity > 0 && supplierVendor.isNotEmpty() && stockName.isNotEmpty() && stockCode.isNotEmpty() && stockCategory.isNotEmpty()) {
+            if (selectedUnit.isNotEmpty() && enteredQuantity > 0 && supplierVendor.isNotEmpty() && stockName.isNotEmpty() && stockCode.isNotEmpty() && stockCategory.isNotEmpty()) {
             val purchaseRequest = createPurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, selectedUnit, enteredQuantity)
-            addToCart(purchaseRequest)
-//            purchaseStocksViewModel.uploadPurchaseStocks(user.token, supplierVendor, stockName, stockCode, stockCategory, purchaseModel.stock_Pcs, purchaseModel.stock_Pack, purchaseModel.stock_Roll, purchaseModel.stock_Meter)
-            purchaseStocksViewModel.uploadPurchaseStocks(user.token, supplierVendor, stockName, stockCode, stockCategory)
+            purchaseStocksViewModel.uploadPurchaseStocks(user.token, purchaseRequest)
                     .observe(this) {
                         if (it != null) {
                             when (it) {
@@ -76,8 +61,8 @@ class PurchaseStockActivity : AppCompatActivity() {
                                     binding.progressBar.visibility = View.GONE
                                     helper.showToast(this, getString(R.string.upload_success))
                                     AlertDialog.Builder(this).apply {
-                                        setTitle(getString(R.string.data_success))
-                                        setMessage(getString(R.string.upload_success))
+                                        setTitle(getString(R.string.upload_success))
+                                        setMessage(getString(R.string.data_success))
                                         setPositiveButton(getString(R.string.continue_)) { _, _ ->
                                             binding.progressBar.visibility = View.GONE
                                         }
@@ -100,37 +85,36 @@ class PurchaseStockActivity : AppCompatActivity() {
                             }
                         }
                     }
-//            } else {
-//                // Tampilkan pesan bahwa jumlah harus lebih dari 0
-//                showAlertDialog("Gagal", "Harap Isi Semua.")
-//            }
-        }
-    }
-
-    private fun createPurchaseRequest(supplierVendor: String, stockName: String, stockCode: String, stockCategory: String, unit: String, quantity: Int): PurchaseModel {
-        return when (unit) {
-            "Pcs" -> PurchaseModel(supplierVendor, stockName, stockCode, stockCategory, quantity, 0, 0, 0)
-            "Pack" -> PurchaseModel(supplierVendor, stockName, stockCode, stockCategory, 0, quantity, 0, 0)
-            "Roll" -> PurchaseModel(supplierVendor, stockName, stockCode, stockCategory, 0, 0, quantity, 0)
-            "Meter" -> PurchaseModel(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, quantity)
-            else -> PurchaseModel(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, 0)
-        }
-    }
-
-    private fun addToCart(purchaseRequest: PurchaseModel) {
-        cart.add(purchaseRequest)
-    }
-
-    private fun showAlertDialog(title: String, message: String) {
-        AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
+                // Set semua EditText menjadi kosong setelah data dikirim
+                binding.supplierNameEditText.text.clear()
+                binding.itemNameEditText.text.clear()
+                binding.itemCodeEditText.text.clear()
+                binding.itemCategoryEditText.text.clear()
+                binding.itemQuantityEditText.text.clear()
+            } else {
+                // Tampilkan pesan bahwa jumlah harus lebih dari 0
+                AlertDialog.Builder(this).apply {
+                    setTitle("Gagal")
+                    setMessage("Harap Isi Semua")
+                    setPositiveButton(getString(R.string.continue_)) { _, _ ->
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    create()
+                    show()
+                }
             }
-            .show()
+        }
     }
 
+    private fun createPurchaseRequest(supplierVendor: String, stockName: String, stockCode: String, stockCategory: String, unit: String, quantity: Int): PurchaseRequest {
+        return when (unit) {
+            "Pcs" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, quantity, 0, 0, 0)
+            "Pack" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, quantity, 0, 0)
+            "Roll" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, quantity, 0)
+            "Meter" -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, quantity)
+            else -> PurchaseRequest(supplierVendor, stockName, stockCode, stockCategory, 0, 0, 0, 0)
+        }
+    }
     companion object {
         const val EXTRA_USER = "user"
     }

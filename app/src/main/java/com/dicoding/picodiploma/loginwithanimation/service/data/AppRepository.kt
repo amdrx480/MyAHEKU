@@ -42,24 +42,13 @@ class AppRepository(
                 emit(ResultResponse.Error(e.message.toString()))
             }
         }
-
     fun postPurchaseStocks(
-//        purchaseRequest: PurchaseRequest
-                           token: String,
-                           supplierVendor: String,
-                           stock_Name: String,
-                           stock_Code: String,
-                           stock_Category: String,
-//                           stock_Pcs: Int,
-//                           stock_Pack: Int,
-//                           stock_Roll: Int,
-//                           stock_Meter: Int
+        token: String,
+        purchaseRequest: PurchaseRequest
     ): LiveData<ResultResponse<ApiResponse>> =
         liveData {
             emit(ResultResponse.Loading)
             try {
-//                val purchaseRequest = PurchaseRequest(supplierVendor, stock_Name, stock_Code, stock_Category, stock_Pcs, stock_Pack, stock_Roll, stock_Meter) // Buat objek LoginRequest dengan password yang diberikan
-                val purchaseRequest = PurchaseRequest(supplierVendor, stock_Name, stock_Code, stock_Category) // Buat objek LoginRequest dengan password yang diberikan
                 val response = apiService.addPurchaseStocks("Bearer $token", purchaseRequest)
                 if (!response.error) {
                     emit(ResultResponse.Success(response))
@@ -72,31 +61,6 @@ class AppRepository(
                 emit(ResultResponse.Error(e.message.toString()))
             }
         }
-
-//    fun postPurchaseStocks(
-//        token: String,
-//        purchaseRequest: PurchaseRequest
-////        description: RequestBody,
-////        imageMultipart: MultipartBody.Part,
-////        lat: RequestBody? = null,
-////        lon: RequestBody? = null
-//    ): LiveData<ResultResponse<ApiResponse>> = liveData {
-//        emit(ResultResponse.Loading)
-//        try {
-//            val response = apiService.addPurchaseStocks("Bearer $token", purchaseRequest)
-//            if (!response.error) {
-//                emit(ResultResponse.Success(response))
-//            } else {
-//                Log.e(TAG, "PostStory Fail: ${response.message}")
-//                emit(ResultResponse.Error(response.message))
-//            }
-//        } catch (e: Exception) {
-//            Log.e(TAG, "PostStory Exception: ${e.message.toString()} ")
-//            emit(ResultResponse.Error(e.message.toString()))
-//        }
-//    }
-
-
     fun pagingStories(token: String): Flow<PagingData<ListStocksItem>> {
         wrapEspressoIdlingResource {
             @OptIn(ExperimentalPagingApi::class)
