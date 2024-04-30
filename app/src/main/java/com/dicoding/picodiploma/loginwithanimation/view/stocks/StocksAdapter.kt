@@ -1,6 +1,5 @@
 package com.dicoding.picodiploma.loginwithanimation.view.stocks
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -8,9 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowPhotoBinding
-import com.dicoding.picodiploma.loginwithanimation.utils.DiffCallBack
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
-import java.util.*
+import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
 
 class StocksAdapter : PagingDataAdapter<ListStocksItem, StocksAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -38,11 +35,11 @@ class StocksAdapter : PagingDataAdapter<ListStocksItem, StocksAdapter.ViewHolder
 //                    .into(imgViewPhoto)
                 val combinedText = "${stocks.stock_Name} - ${stocks.stock_Code}"
                 tvStockName.text = combinedText
-                tvStockCategory.text = stocks.stock_Category
-                tvStockPcs.text = stocks.stock_Pcs.toString()
-                tvStockPack.text = stocks.stock_Pack.toString()
-                tvStockRoll.text = stocks.stock_Roll.toString()
-                tvStockMeter.text = stocks.stock_Meter.toString()
+                tvStockCategory.text = stocks.category_Name
+                tvUnits.text = stocks.units_Name
+                tvStockTotal.text = stocks.stock_total.toString()
+//                tvStockRoll.text = stocks.stock_Roll.toString()
+//                tvStockMeter.text = stocks.stock_Meter.toString()
 
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                    tvCreatedATime.text =

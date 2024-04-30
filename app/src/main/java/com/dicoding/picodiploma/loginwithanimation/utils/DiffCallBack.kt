@@ -1,11 +1,12 @@
 package com.dicoding.picodiploma.loginwithanimation.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ListSalesStocksItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
 
 class DiffCallBack(
-    private val mOldFavList: List<ListStocksItem>,
-    private val mNewFavList: List<ListStocksItem>
+    private val mOldFavList: List<ListSalesStocksItem>,
+    private val mNewFavList: List<ListSalesStocksItem>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = mOldFavList.size

@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
 
 @Dao
 interface AppDao {

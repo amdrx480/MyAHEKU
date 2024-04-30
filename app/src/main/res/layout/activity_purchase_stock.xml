@@ -1,220 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.purchase.PurchaseStockActivity">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/roydyhccmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Pembelian Barang"
+                android:textColor="#098047"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.069"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/roydyhccmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Pembelian Barang"
-        android:textColor="#098047"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.069"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/roydyhcscmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Nama Pemasok"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.053"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/roydyhccmsj" />
 
-    <TextView
-        android:id="@+id/roydyhcscmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Nama Pemasok"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roydyhccmsj" />
+<!--            <EditText-->
+<!--                android:id="@+id/itemVendorSpinner"-->
+<!--                android:layout_width="225dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/roydyhcscmsj"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/roydyhcscmsj"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/roydyhcscmsj" />-->
 
-    <EditText
-        android:id="@+id/supplierNameEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/roydyhcscmsj"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/roydyhcscmsj"
-        app:layout_constraintTop_toTopOf="@+id/roydyhcscmsj" />
+            <Spinner
+                android:id="@+id/itemVendorSpinner"
+                android:layout_width="225dp"
+                android:layout_height="50dp"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                app:layout_constraintBottom_toBottomOf="@+id/roydyhcscmsj"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/roydyhcscmsj"
+                app:layout_constraintTop_toTopOf="@+id/roydyhcscmsj" />
 
-    <TextView
-        android:id="@+id/roydyhcscmj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Nama Barang"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/roydyhcscmsj"
-        app:layout_constraintTop_toBottomOf="@+id/supplierNameEditText" />
+            <TextView
+                android:id="@+id/roydyhcscmj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Nama Barang"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/roydyhcscmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemVendorSpinner" />
 
-    <EditText
-        android:id="@+id/itemNameEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/roydyhcscmj"
-        app:layout_constraintEnd_toEndOf="@+id/supplierNameEditText"
-        app:layout_constraintTop_toTopOf="@+id/roydyhcscmj" />
+            <EditText
+                android:id="@+id/itemNameEditText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/roydyhcscmj"
+                app:layout_constraintEnd_toEndOf="@+id/itemVendorSpinner"
+                app:layout_constraintTop_toTopOf="@+id/roydyhcscmj" />
 
-    <TextView
-        android:id="@+id/roydyhscmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Kode Barang"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/roydyhcscmj"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
+            <TextView
+                android:id="@+id/roydyhscmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Kode Barang"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/roydyhcscmj"
+                app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
 
-    <EditText
-        android:id="@+id/itemCodeEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/roydyhscmsj"
-        app:layout_constraintEnd_toEndOf="@+id/itemNameEditText"
-        app:layout_constraintTop_toTopOf="@+id/roydyhscmsj" />
+            <EditText
+                android:id="@+id/itemCodeEditText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/roydyhscmsj"
+                app:layout_constraintEnd_toEndOf="@+id/itemNameEditText"
+                app:layout_constraintTop_toTopOf="@+id/roydyhscmsj" />
 
-    <TextView
-        android:id="@+id/roydyhcmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Satuan"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/roydyhscmsj"
-        app:layout_constraintTop_toBottomOf="@+id/itemCodeEditText" />
+            <TextView
+                android:id="@+id/roydyhcmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Satuan"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/roydyhscmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemCodeEditText" />
 
-    <Spinner
-        android:id="@+id/itemUnitSpinner"
-        android:layout_width="225dp"
-        android:layout_height="50dp"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        app:layout_constraintBottom_toBottomOf="@+id/roydyhcmsj"
-        app:layout_constraintEnd_toEndOf="@+id/itemCodeEditText"
-        app:layout_constraintTop_toTopOf="@+id/roydyhcmsj" />
+            <Spinner
+                android:id="@+id/itemUnitSpinner"
+                android:layout_width="225dp"
+                android:layout_height="50dp"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                app:layout_constraintBottom_toBottomOf="@+id/roydyhcmsj"
+                app:layout_constraintEnd_toEndOf="@+id/itemCodeEditText"
+                app:layout_constraintTop_toTopOf="@+id/roydyhcmsj" />
+<!--            <EditText-->
+<!--                android:id="@+id/itemUnitSpinner"-->
+<!--                android:layout_width="225dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/roydyhcmsj"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/itemCodeEditText"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/roydyhcmsj" />-->
 
-    <TextView
-        android:id="@+id/rodyhscmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Jumlah"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/roydyhcmsj"
-        app:layout_constraintTop_toBottomOf="@+id/itemUnitSpinner" />
+            <TextView
+                android:id="@+id/rodyhscmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Jumlah"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/roydyhcmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemUnitSpinner" />
 
-    <EditText
-        android:id="@+id/itemQuantityEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@+id/rodyhscmsj"
-        app:layout_constraintEnd_toEndOf="@+id/itemUnitSpinner"
-        app:layout_constraintTop_toTopOf="@+id/rodyhscmsj" />
+            <EditText
+                android:id="@+id/itemQuantityEditText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="@+id/rodyhscmsj"
+                app:layout_constraintEnd_toEndOf="@+id/itemUnitSpinner"
+                app:layout_constraintTop_toTopOf="@+id/rodyhscmsj" />
 
-    <TextView
-        android:id="@+id/roydyhsmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Kategori "
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/rodyhscmsj"
-        app:layout_constraintTop_toBottomOf="@+id/itemQuantityEditText" />
+            <TextView
+                android:id="@+id/roydyhsmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Kategori "
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/rodyhscmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemQuantityEditText" />
 
-    <EditText
-        android:id="@+id/itemCategoryEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/roydyhsmsj"
-        app:layout_constraintEnd_toEndOf="@+id/itemQuantityEditText"
-        app:layout_constraintTop_toTopOf="@+id/roydyhsmsj" />
+            <Spinner
+                android:id="@+id/itemCategorySpinner"
+                android:layout_width="225dp"
+                android:layout_height="50dp"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                app:layout_constraintBottom_toBottomOf="@+id/roydyhsmsj"
+                app:layout_constraintEnd_toEndOf="@+id/itemQuantityEditText"
+                app:layout_constraintTop_toTopOf="@+id/roydyhsmsj" />
+<!--            <EditText-->
+<!--                android:id="@+id/itemCategorySpinner"-->
+<!--                android:layout_width="225dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/roydyhsmsj"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/itemQuantityEditText"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/roydyhsmsj" />-->
 
-    <TextView
-        android:id="@+id/oydyhscmsj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Harga Barang"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/roydyhsmsj"
-        app:layout_constraintTop_toBottomOf="@+id/itemCategoryEditText" />
+            <TextView
+                android:id="@+id/oydyhscmsj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Harga Barang"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/roydyhsmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemCategorySpinner" />
 
-    <EditText
-        android:id="@+id/itemPurchaseEditText"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/oydyhscmsj"
-        app:layout_constraintEnd_toEndOf="@+id/itemCategoryEditText"
-        app:layout_constraintTop_toTopOf="@+id/oydyhscmsj" />
+            <EditText
+                android:id="@+id/itemPurchaseEditText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="@+id/oydyhscmsj"
+                app:layout_constraintEnd_toEndOf="@+id/itemCategorySpinner"
+                app:layout_constraintTop_toTopOf="@+id/oydyhscmsj" />
 
-    <!-- Tambahkan TextView dan EditText lainnya sesuai kebutuhan -->
+            <TextView
+                android:id="@+id/oydyhscmsP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Harga Jual"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/oydyhscmsj"
+                app:layout_constraintTop_toBottomOf="@+id/itemPurchaseEditText" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/descriptionEditText"-->
-<!--        android:layout_width="332dp"-->
-<!--        android:layout_height="88dp"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        android:hint="Masukkan deskripsi..."-->
-<!--        android:inputType="textMultiLine"-->
-<!--        android:maxLines="20"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/itemCodeEditText" />-->
+            <EditText
+                android:id="@+id/itemSellingEditText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="@+id/oydyhscmsP"
+                app:layout_constraintEnd_toEndOf="@+id/itemPurchaseEditText"
+                app:layout_constraintTop_toTopOf="@+id/oydyhscmsP" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/cr15bff4eb577"
-        android:elevation="10dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="9dp"
-        android:paddingVertical="19dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.892">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/cr15bff4eb577"
+                android:elevation="10dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="19dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemSellingEditText">
 
-        <TextView
-            android:id="@+id/roydyhcscm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:layout_marginBottom="19dp"
-            android:text="@string/save"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/roydyhcscm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginBottom="19dp"
+                    android:text="@string/save"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

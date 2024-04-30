@@ -3,7 +3,7 @@ package com.dicoding.picodiploma.loginwithanimation.view.stocks
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
 import com.dicoding.picodiploma.loginwithanimation.service.data.AppRepository
 //v
 class StocksViewModel(

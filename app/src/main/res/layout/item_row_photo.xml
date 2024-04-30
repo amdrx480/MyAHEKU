@@ -47,6 +47,19 @@
             card_view:layout_constraintTop_toTopOf="@+id/imgViewStock"
             card_view:layout_constraintVertical_bias="0.107" />
 
+<!--        <TextView-->
+<!--            android:id="@+id/tvStockCategory"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Category Stock"-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintEnd_toStartOf="@+id/remqnyg58"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/imgViewStock"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/imgViewStock" />-->
         <TextView
             android:id="@+id/tvStockCategory"
             android:layout_width="0dp"
@@ -54,108 +67,137 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Category Stock"
+            android:text="Category"
             android:textColor="#000000"
             android:textSize="14sp"
-            card_view:layout_constraintEnd_toStartOf="@+id/remqnyg58"
             card_view:layout_constraintStart_toStartOf="@+id/imgViewStock"
             card_view:layout_constraintTop_toBottomOf="@+id/imgViewStock" />
 
-        <TextView
-            android:id="@+id/re3mqnyg58"
+        <!-- LinearLayout untuk unit stock dan total stock -->
+        <LinearLayout
+            android:id="@+id/linearLayoutStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Pcs        "
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
+            android:orientation="horizontal"
             card_view:layout_constraintStart_toStartOf="@+id/tvStockName"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvStockName" />
+            card_view:layout_constraintTop_toBottomOf="@+id/tvStockName">
 
-        <TextView
-            android:id="@+id/tvStockPcs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="50"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/re3mqnyg58"
-            card_view:layout_constraintStart_toEndOf="@+id/re3mqnyg58"
-            card_view:layout_constraintTop_toTopOf="@+id/re3mqnyg58" />
+            <!-- TextView untuk unit stock -->
+            <TextView
+                android:id="@+id/tvUnits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Units     "
+                android:textColor="#000000"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/re3mqnyg50"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Pack      "
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toStartOf="@+id/re3mqnyg58"
-            card_view:layout_constraintTop_toBottomOf="@+id/re3mqnyg58" />
+            <!-- TextView untuk total stock -->
+            <TextView
+                android:id="@+id/tvStockTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="50"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvStockPack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="50"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/re3mqnyg50"
-            card_view:layout_constraintStart_toEndOf="@+id/re3mqnyg50"
-            card_view:layout_constraintTop_toTopOf="@+id/re3mqnyg50" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvUnits"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:text="Units     "-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintEnd_toEndOf="parent"-->
+<!--            card_view:layout_constraintHorizontal_bias="0.0"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/tvStockName"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/tvStockName" />-->
 
-        <TextView
-            android:id="@+id/remqnyg58"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Roll        "
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toStartOf="@+id/re3mqnyg50"
-            card_view:layout_constraintTop_toBottomOf="@+id/re3mqnyg50" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvStockTotal"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:text="50"-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintBottom_toBottomOf="@+id/tvUnits"-->
+<!--            card_view:layout_constraintStart_toEndOf="@+id/tvUnits"-->
+<!--            card_view:layout_constraintTop_toTopOf="@+id/tvUnits" />-->
 
-        <TextView
-            android:id="@+id/tvStockRoll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/remqnyg58"
-            card_view:layout_constraintStart_toEndOf="@+id/remqnyg58"
-            card_view:layout_constraintTop_toTopOf="@+id/remqnyg58" />
+<!--        <TextView-->
+<!--            android:id="@+id/re3mqnyg50"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="Pack      "-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintEnd_toEndOf="parent"-->
+<!--            card_view:layout_constraintHorizontal_bias="0.0"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/tvUnits"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/tvUnits" />-->
 
-        <TextView
-            android:id="@+id/remqnyg158"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Meter    "
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintStart_toStartOf="@+id/remqnyg58"
-            card_view:layout_constraintTop_toBottomOf="@+id/remqnyg58" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvStockPack"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="50"-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintBottom_toBottomOf="@+id/re3mqnyg50"-->
+<!--            card_view:layout_constraintStart_toEndOf="@+id/re3mqnyg50"-->
+<!--            card_view:layout_constraintTop_toTopOf="@+id/re3mqnyg50" />-->
 
-        <TextView
-            android:id="@+id/tvStockMeter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="25"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/remqnyg158"
-            card_view:layout_constraintStart_toEndOf="@+id/remqnyg158"
-            card_view:layout_constraintTop_toTopOf="@+id/remqnyg158" />
+<!--        <TextView-->
+<!--            android:id="@+id/remqnyg58"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="Roll        "-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintEnd_toEndOf="parent"-->
+<!--            card_view:layout_constraintHorizontal_bias="0.0"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/re3mqnyg50"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/re3mqnyg50" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvStockRoll"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="100"-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintBottom_toBottomOf="@+id/remqnyg58"-->
+<!--            card_view:layout_constraintStart_toEndOf="@+id/remqnyg58"-->
+<!--            card_view:layout_constraintTop_toTopOf="@+id/remqnyg58" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/remqnyg158"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="Meter    "-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintEnd_toEndOf="parent"-->
+<!--            card_view:layout_constraintHorizontal_bias="0.0"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/remqnyg58"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/remqnyg58" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvStockMeter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="25"-->
+<!--            android:textColor="#000000"-->
+<!--            android:textSize="14sp"-->
+<!--            card_view:layout_constraintBottom_toBottomOf="@+id/remqnyg158"-->
+<!--            card_view:layout_constraintStart_toEndOf="@+id/remqnyg158"-->
+<!--            card_view:layout_constraintTop_toTopOf="@+id/remqnyg158" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

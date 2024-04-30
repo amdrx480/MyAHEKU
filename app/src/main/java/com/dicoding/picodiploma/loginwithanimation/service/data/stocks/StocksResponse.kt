@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.model.stocks
+package com.dicoding.picodiploma.loginwithanimation.service.data.stocks
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -17,9 +17,7 @@ data class AllStocksResponse(
     @SerializedName("token")
     val token: List<ListStocksItem>,
 
-//    @SerializedName("token")
-//    val token: String,
-)
+    )
 
 @Parcelize
 @Entity(tableName = "stocks")
@@ -33,28 +31,25 @@ data class ListStocksItem(
     @SerializedName("created_at")
     val created_at: String,
 
-    @SerializedName("stock_location")
-    val stock_Location: String,
+    @SerializedName("stock_name")
+    val stock_Name: String,
 
     @SerializedName("stock_code")
     val stock_Code: String,
 
-    @SerializedName("stock_category")
-    val stock_Category: String,
+    @SerializedName("category_name")
+    val category_Name: String,
 
-    @SerializedName("stock_name")
-    val stock_Name: String,
+    @SerializedName("units_name")
+    val units_Name: String,
 
-    @SerializedName("stock_pcs")
-    val stock_Pcs: Int,
-
-    @SerializedName("stock_pack")
-    val stock_Pack: Int,
-
-    @SerializedName("stock_roll")
-    val stock_Roll: Int,
-
-    @SerializedName("stock_meter")
-    val stock_Meter: Int
+    @SerializedName("stock_total")
+    val stock_total: Int,
+//
+//    @SerializedName("selling_price")
+//    val selling_Price: Int,
+//
+//    @SerializedName("stock_meter")
+//    val stock_Meter: Int
 
     ) : Parcelable

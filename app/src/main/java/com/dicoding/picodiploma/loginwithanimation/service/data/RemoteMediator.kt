@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.dicoding.picodiploma.loginwithanimation.model.stocks.ListStocksItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
 import com.dicoding.picodiploma.loginwithanimation.service.api.ApiService
 import com.dicoding.picodiploma.loginwithanimation.service.database.AppDatabase
 import com.dicoding.picodiploma.loginwithanimation.service.database.RemoteKeys
