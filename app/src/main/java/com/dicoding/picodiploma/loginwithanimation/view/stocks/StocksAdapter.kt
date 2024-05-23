@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.view.stocks
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowPhotoBinding
 import com.dicoding.picodiploma.loginwithanimation.service.data.stocks.ListStocksItem
+import com.dicoding.picodiploma.loginwithanimation.view.stocks.detail.DetailStocksActivity
 
 class StocksAdapter : PagingDataAdapter<ListStocksItem, StocksAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -45,11 +47,11 @@ class StocksAdapter : PagingDataAdapter<ListStocksItem, StocksAdapter.ViewHolder
 //                    tvCreatedATime.text =
 //                        binding.root.resources.getString(R.string.created_add, helper.dateFormat(stocks.created_at, TimeZone.getDefault().id))
 //                }
-//                cardPhoto.setOnClickListener {
-//                    val intent = Intent(it.context, DetailStoryAppActivity::class.java)
-//                    intent.putExtra(DetailStoryAppActivity.EXTRA_STORY, stocks)
-//                    it.context.startActivity(intent)
-//                }
+                cardPhoto.setOnClickListener {
+                    val intent = Intent(it.context, DetailStocksActivity::class.java)
+                    intent.putExtra(DetailStocksActivity.EXTRA_DETAIL, stocks)
+                    it.context.startActivity(intent)
+                }
             }
         }
     }

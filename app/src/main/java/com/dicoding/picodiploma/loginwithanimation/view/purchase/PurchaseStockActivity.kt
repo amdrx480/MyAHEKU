@@ -11,20 +11,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.service.data.purchase.PurchaseRequest
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityPurchaseStockBinding
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
-import com.dicoding.picodiploma.loginwithanimation.model.category.CategoryModel
-import com.dicoding.picodiploma.loginwithanimation.service.api.ApiConfig
-import com.dicoding.picodiploma.loginwithanimation.service.data.category.ListCategoryItem
 import com.dicoding.picodiploma.loginwithanimation.service.database.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.category.CategoryAdapter
 import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksActivity
-import kotlinx.coroutines.launch
 
 class PurchaseStockActivity : AppCompatActivity() {
 

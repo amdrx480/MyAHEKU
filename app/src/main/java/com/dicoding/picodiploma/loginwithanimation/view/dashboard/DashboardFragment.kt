@@ -15,9 +15,8 @@ import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentDashboard
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.model.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.view.purchase.PurchaseStockActivity
-import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelUserFactory
-import com.dicoding.picodiploma.loginwithanimation.view.sales.SalesStockActivity
+import com.dicoding.picodiploma.loginwithanimation.view.cart.CartActivity
 import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
@@ -65,8 +64,8 @@ class DashboardFragment : Fragment() {
             startActivity(moveToPurchaseStocksActivity)
         }
         binding.salesStockButton.setOnClickListener {
-            val moveToSalesStockActivity = Intent(requireActivity(), SalesStockActivity::class.java)
-            moveToSalesStockActivity.putExtra(SalesStockActivity.EXTRA_USER, user)
+            val moveToSalesStockActivity = Intent(requireActivity(), CartActivity::class.java)
+            moveToSalesStockActivity.putExtra(CartActivity.EXTRA_USER, user)
             startActivity(moveToSalesStockActivity)
         }
         binding.stocksButton.setOnClickListener {

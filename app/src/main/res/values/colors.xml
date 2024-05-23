@@ -12,6 +12,9 @@
 
     <color name="gray">#D9D9D9</color>
 
+    <color name="my_green_primary">#098047</color>
+    <color name="my_green_secondary">#4FB678</color>
+
     <color name="dicoding">#2D3E50</color>
     <color name="light_blue_50">#FFE1F5FE</color>
     <color name="light_blue_200">#FF81D4FA</color>

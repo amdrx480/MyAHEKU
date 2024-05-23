@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-data class SalesStocksResponse(
+data class CartItemsResponse(
 
 @SerializedName("error")
 val error: Boolean,
@@ -13,23 +13,26 @@ val error: Boolean,
 val message: String,
 
 @SerializedName("token")
-val token : List<ListSalesStocksItem>,
+val token : List<ListCartItems>,
 
 )
 
 @Parcelize
-data class ListSalesStocksItem(
+data class ListCartItems(
 
     @SerializedName("id")
     val id: Int,
-
-    @SerializedName("vendor_name")
-    val vendor_name: String,
 
     @SerializedName("stock_name")
     val stock_name: String,
 
     @SerializedName("quantity")
     val quantity: String,
+
+    @SerializedName("price")
+    val price: String,
+
+    @SerializedName("sub_total")
+    val sub_total: String,
 
 ) : Parcelable

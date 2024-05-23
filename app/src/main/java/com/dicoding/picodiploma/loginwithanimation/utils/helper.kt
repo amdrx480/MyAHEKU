@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import java.text.NumberFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -20,6 +21,11 @@ object helper {
 
     interface ApiCallBackString {
         fun onResponse(success: Boolean, message: String)
+    }
+
+    fun formatToRupiah(price: Double): String {
+        val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+        return formatRupiah.format(price)
     }
 
     fun showToast(context: Context, text: String) {

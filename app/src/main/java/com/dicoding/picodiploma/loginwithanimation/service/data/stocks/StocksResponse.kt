@@ -45,11 +45,14 @@ data class ListStocksItem(
 
     @SerializedName("stock_total")
     val stock_total: Int,
-//
-//    @SerializedName("selling_price")
-//    val selling_Price: Int,
-//
-//    @SerializedName("stock_meter")
-//    val stock_Meter: Int
+
+    @SerializedName("selling_price")
+    val selling_Price: Int,
+
+//    @field:SerializedName("stock_photo")
+//    val stock_photo: String,
+
+//    @SerializedName("customer_name")
+//    val customer_Name: String,
 
     ) : Parcelable

@@ -28,6 +28,18 @@
     <string name="description">Photo Description here</string>
     <string name="Create_at">Created A Time</string>
     <string name="create_add">Created At %1$s,</string>
+    <string name="lorem_ipsum_text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et enim facilisis, hendrerit odio ut, pellentesque turpis. Sed at justo felis. Maecenas feugiat, erat a ultrices pellentesque, felis purus fringilla risus, eget gravida ex sapien vel ex. Donec finibus, augue in vehicula tempor, risus sapien feugiat turpis, a varius ex nisi sit amet purus. Integer quis nunc urna. Suspendisse eu sapien ac purus varius vehicula. Fusce at ex odio.
+
+        Phasellus sagittis semper nulla a gravida. Nullam vel urna dolor. Donec ultrices, dolor vel ullamcorper tempor, urna neque vehicula nisi, ac sodales mauris arcu sed justo. Curabitur vel massa dui. Ut sodales justo ut mauris blandit, ut tristique sapien facilisis. Nullam nec pulvinar purus. Donec consectetur libero eu arcu scelerisque, quis dictum sem facilisis. Vivamus dictum orci eget gravida sollicitudin.
+
+        Integer dignissim mollis quam, a cursus felis vehicula vel. Nulla cursus hendrerit sem nec luctus. Fusce dapibus sit amet turpis vel interdum. Suspendisse potenti. Suspendisse iaculis gravida magna et consequat. In hac habitasse platea dictumst. Sed cursus, nisi eu tincidunt egestas, tortor turpis posuere libero, sit amet dictum est erat non est. Maecenas dapibus odio ac placerat pellentesque. Sed molestie eros sit amet tincidunt pretium. Nam id dolor nec arcu ultricies fringilla at at mauris. Praesent vehicula sollicitudin est nec fringilla. Morbi consectetur, nibh sit amet volutpat finibus, metus est vehicula dolor, nec iaculis mi arcu nec elit. Nullam nec condimentum urna, non bibendum tortor.
+
+        Nam ac dapibus libero. Ut vel libero vehicula, cursus felis sit amet, condimentum nunc. Curabitur eu augue urna. Vestibulum in ultrices felis. Integer convallis justo sed placerat vestibulum. Suspendisse volutpat urna a lectus iaculis, nec volutpat sapien cursus. In bibendum euismod felis, vel dapibus massa maximus nec. Aliquam vel erat ac nisi vulputate venenatis a ut justo. Quisque tincidunt libero ut erat hendrerit maximus. Quisque tincidunt sed sapien in ullamcorper. Curabitur tristique elementum massa, at aliquet lectus maximus a. Nullam in orci vel quam condimentum tempus. Sed ut eros tristique, consectetur dui quis, accumsan nulla.
+    </string>
+
+    <string name="stock_total_with_units">%1$s %2$d</string>
+
 
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="must_filled">Must be filled</string>
@@ -51,7 +63,7 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
 
-    <string name="no_story">No Story</string>
+    <string name="no_info">Data tidak tampil</string>
     <string name="created_add">Created at %1$s,</string>
     <string name="invalid_permission">Can\'t get permission</string>
     <string name="upload_success">Upload Success</string>

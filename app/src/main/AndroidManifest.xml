@@ -21,7 +21,13 @@
         android:theme="@style/Theme.LoginWithAnimation"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".view.sales.SalesStockActivity"
+            android:name=".view.cart.items.AddItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.stocks.detail.DetailStocksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.cart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".view.purchase.PurchaseStockActivity"

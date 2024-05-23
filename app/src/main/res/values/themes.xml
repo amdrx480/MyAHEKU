@@ -3,6 +3,9 @@
     <style name="Base.Theme.LoginWithAnimation" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/my_green_primary</item>
+        <item name="colorOnPrimary">@color/my_green_secondary</item>
+
     </style>
 
     <style name="Theme.LoginWithAnimation" parent="Base.Theme.LoginWithAnimation" />

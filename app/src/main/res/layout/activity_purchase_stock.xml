@@ -217,9 +217,31 @@
                 app:layout_constraintEnd_toEndOf="@+id/itemPurchaseEditText"
                 app:layout_constraintTop_toTopOf="@+id/oydyhscmsP" />
 
+<!--            <Button-->
+<!--                android:id="@+id/saveButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:background="@drawable/cr15bff4eb577"-->
+<!--                android:elevation="10dp"-->
+<!--                android:orientation="vertical"-->
+<!--                android:paddingHorizontal="9dp"-->
+<!--                android:paddingVertical="19dp"-->
+<!--                android:text="@string/save"-->
+<!--                android:textSize="12sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.489"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/itemSellingEditText"-->
+<!--                app:layout_constraintVertical_bias="1.0"/>-->
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/saveButton"
-                android:layout_width="match_parent"
+                android:layout_width="283dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
@@ -232,19 +254,18 @@
                 android:paddingVertical="19dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.489"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemSellingEditText">
+                app:layout_constraintTop_toBottomOf="@+id/itemSellingEditText"
+                app:layout_constraintVertical_bias="1.0">
 
                 <TextView
                     android:id="@+id/roydyhcscm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginBottom="19dp"
                     android:text="@string/save"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
