@@ -2,9 +2,7 @@ package com.dicoding.picodiploma.loginwithanimation.view.purchase
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.service.api.ApiConfig
-import com.dicoding.picodiploma.loginwithanimation.service.api.ApiResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.purchase.PurchaseRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.AppRepository
 import com.dicoding.picodiploma.loginwithanimation.service.data.category.AllCategoryResponse

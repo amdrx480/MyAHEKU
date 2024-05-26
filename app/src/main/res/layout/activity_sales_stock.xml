@@ -6,31 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.cart.CartActivity">
 
-<!--    <ProgressBar-->
-<!--        android:id="@+id/progressBar"-->
-<!--        style="?android:attr/progressBarStyle"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:visibility="visible" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_info"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:text="@string/no_info"-->
-<!--        android:textSize="30sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <TextView
         android:id="@+id/roydyhccmsj"
         android:layout_width="wrap_content"
@@ -44,20 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--        android:visibility="gone"-->
-
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rv_sales"-->
-<!--        android:layout_width="341dp"-->
-<!--        android:layout_height="420dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/itemCustomersSaleSpinner"-->
-<!--        tools:listitem="@layout/item_cart"-->
-<!--        tools:visibility="visible" />-->
-
     <AutoCompleteTextView
         android:id="@+id/customerNameAutocompleteTextView"
         android:layout_width="227dp"
@@ -66,14 +27,6 @@
         android:hint="Isi Nama Customer"
         app:layout_constraintStart_toStartOf="@+id/roydyhccmsj"
         app:layout_constraintTop_toBottomOf="@+id/roydyhccmsj" />
-<!--    <Spinner-->
-<!--        android:id="@+id/customerNameSpinner"-->
-<!--        style="@style/Widget.AppCompat.Spinner.Underlined"-->
-<!--        android:layout_width="227dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/roydyhccmsj"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/roydyhccmsj" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartItemsRecyclerView"
@@ -84,51 +37,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customerNameAutocompleteTextView"
         tools:listitem="@layout/item_cart_item"
-        tools:visibility="visible"/>
-<!--        android:visibility="gone"/>-->
-<!--        tools:visibility="visible" -->
-
-
-    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:id="@+id/totalSales"-->
-<!--        android:layout_width="283dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:layout_marginBottom="32dp"-->
-<!--        android:background="@drawable/cr15bff4eb577"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/saveButton"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
-<!--        -->
-<!--        <LinearLayout-->
-<!--            android:layout_width="283dp"-->
-<!--            android:layout_height="wrap_content">-->
-<!--            <TextView-->
-<!--                android:id="@+id/totalSalesTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Total"-->
-<!--                android:textColor="#FFFFFF"-->
-<!--                android:textSize="12sp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.062"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/itemCodeEditText"-->
-<!--                android:layout_width="137dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:text="Rp. 75.000"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/totalSalesTextView"-->
-<!--                tools:layout_editor_absoluteY="19dp" />-->
-<!--        </LinearLayout>-->
-
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+        tools:visibility="visible"
+        android:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/totalSales"
@@ -201,7 +111,6 @@
         android:background="@drawable/cr15bff4eb577"
         android:paddingVertical="19dp"
         app:layout_constraintBottom_toBottomOf="@+id/customerNameAutocompleteTextView"
-        app:layout_constraintEnd_toEndOf="@+id/cartItemsRecyclerView"
         app:layout_constraintStart_toEndOf="@+id/customerNameAutocompleteTextView"
         app:layout_constraintTop_toTopOf="@+id/customerNameAutocompleteTextView">
 
@@ -218,71 +127,29 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
-
-
-    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/itemVendorSaleSpinner">-->
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/parent_linear_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:orientation="vertical"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:orientation="horizontal"-->
-<!--                app:layout_constraintBottom_toTopOf="@+id/button"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/itemVendorSaleSpinner">-->
-
-<!--                <EditText-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_weight="5"-->
-<!--                    android:inputType="phone" />-->
-
-<!--                <Spinner-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="3"-->
-<!--                    android:gravity="right" />-->
-
-<!--                <Button-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:background="@android:drawable/ic_delete"-->
-<!--                    android:onClick="onDelete" />-->
-<!--            </LinearLayout>-->
-
-<!--            <Button-->
-<!--                android:id="@+id/button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginBottom="5dp"-->
-<!--                android:onClick="onAddField"-->
-<!--                android:text="Add Field"-->
-<!--                android:textColor="@android:color/background_dark"-->
-<!--                app:layout_constraintBottom_toTopOf="@+id/parent_linear_layout"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/itemVendorSaleSpinner" />-->
-<!--        </LinearLayout>-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_info"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,16 +4,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemCartItemBinding
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ListCartItems
-import com.dicoding.picodiploma.loginwithanimation.utils.DiffCallBack
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
+import com.dicoding.picodiploma.loginwithanimation.view.stocks.StocksAdapter.Companion.DIFF_CALLBACK
 
-class CartItemsAdapter : RecyclerView.Adapter<CartItemsAdapter.ViewHolder>() {
-
-    private val listSalesStock = mutableListOf<ListCartItems>()
-//    private val listSalesStock = ArrayList<ListCartItems>()
+class CartItemsAdapter : ListAdapter<ListCartItems, CartItemsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private var onItemClickListener: ((ListCartItems, Int) -> Unit)? = null
 
@@ -21,68 +19,90 @@ class CartItemsAdapter : RecyclerView.Adapter<CartItemsAdapter.ViewHolder>() {
         onItemClickListener = listener
     }
 
-    fun setListSalesStock(itemSales: List<ListCartItems>) {
-//        if (itemSales.isEmpty()) {
-//            Log.e("ItemsAdapter", "Failed to set list sales stock: Empty list")
-//            // Tambahkan pesan error di sini jika perlu
-//        } else {
-            val diffCallback = DiffCallBack(this.listSalesStock, itemSales)
-            val diffResult = DiffUtil.calculateDiff(diffCallback)
+//    fun deleteItem(deletedItemId: Int) {
+//        val newList = currentList.toMutableList()
+//        newList.removeAt(deletedItemId)
+//        submitList(newList)
+//    }
 
-            this.listSalesStock.clear()
-            this.listSalesStock.addAll(itemSales)
-            diffResult.dispatchUpdatesTo(this)
-//            notifyDataSetChanged()
-
-//        }
-//        val diffCallback = DiffCallBack(this.listSalesStock, itemSales)
-//        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
-//        this.listSalesStock.clear()
-//        this.listSalesStock.addAll(ListCartItems)
-
-//        this.listSalesStock.clear()
-//        this.listSalesStock.addAll(itemSales)
-//        notifyDataSetChanged()
-//        diffResult.dispatchUpdatesTo(this)
-
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(listSalesStock[position], position)
-        Log.d("CartItemAdapter", "Item binded at position: $position")
+        val data = getItem(position)
+        if (data != null) {
+            holder.bind(data)
+            Log.d("CartItemAdapter", "Item binded at position if if (data != null) : $position")
+        } else {
+            Log.e("CartItemAdapter", "Something get wrong on Item binded at position: $position")
+        }
     }
-    override fun getItemCount() = listSalesStock.size
 
     inner class ViewHolder(private var binding: ItemCartItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(cartItem: ListCartItems, position: Int) {
+        fun bind(cartItem: ListCartItems) {
             with(binding) {
-
                 Log.d(TAG, "Binding stocks: $cartItem")
                 tvStockName.text = cartItem.stock_name
                 tvStockQuantity.text = cartItem.quantity
                 val formattedPrice = helper.formatToRupiah(cartItem.price.toDouble())
                 tvStockPrice.text = formattedPrice
 
-//                Log.d(TAG, "Binding stocks: $cartItem")
-//                tvStockName.text = cartItem.stock_name
-//                tvStockQuantity.text = cartItem.quantity
-//                val formattedPrice = helper.formatToRupiah(cartItem.price.toDouble())
-//                tvStockPrice.text = formattedPrice
+                btnDelete.setOnClickListener {
+                    // Salin daftar saat ini ke dalam daftar baru yang dapat diubah
+                    val newList = currentList.toMutableList()
 
-                btnDelete.setOnClickListener{
-                    onItemClickListener?.invoke(cartItem, position)
-                    listSalesStock.removeAt(position)
-                    notifyDataSetChanged()
+                    // Dapatkan posisi item yang dihapus
+                    val position = bindingAdapterPosition
+
+                    // Pastikan posisi item yang dihapus valid
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Panggil listener yang ditetapkan dengan item yang dihapus dan posisinya
+                        onItemClickListener?.invoke(newList[position], position)
+
+                        // Hapus item yang sesuai dari daftar baru
+                        newList.removeAt(position)
+
+                        // Perbarui daftar yang ditampilkan di adapter dengan daftar yang baru
+                        submitList(newList)
+                    }
                 }
+
+
+//                btnDelete.setOnClickListener{
+//                    val newList = currentList.toMutableList()
+//                    newList.removeAt(bindingAdapterPosition)
+//                    submitList(newList)
+//
+//                    val position = bindingAdapterPosition
+//                    if (position != RecyclerView.NO_POSITION) {
+//                        onItemClickListener?.invoke(currentList[position], position)
+//                    }
+//                }
             }
         }
     }
+
     companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListCartItems>() {
+            override fun areItemsTheSame(
+                oldItem: ListCartItems,
+                newItem: ListCartItems,
+            ): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(
+                oldItem: ListCartItems,
+                newItem: ListCartItems,
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
+
         private const val TAG = "CartItemsAdapter_TAG"
     }
 }

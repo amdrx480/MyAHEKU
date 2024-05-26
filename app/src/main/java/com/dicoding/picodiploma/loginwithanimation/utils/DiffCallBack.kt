@@ -5,8 +5,6 @@ import com.dicoding.picodiploma.loginwithanimation.service.data.customers.ListCu
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ListCartItems
 
 class DiffCallBack(
-//    private val mOldList: List<CartItem>,
-//    private val mNewList: List<CartItem>
     private val mOldList: List<ListCartItems>,
     private val mNewList: List<ListCartItems>
 ) : DiffUtil.Callback() {

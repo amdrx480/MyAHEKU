@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.picodiploma.loginwithanimation.service.api.ApiConfig
+import com.dicoding.picodiploma.loginwithanimation.service.api.ApiResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.AppRepository
 import com.dicoding.picodiploma.loginwithanimation.service.data.customers.AllCustomersResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.customers.ListCustomersItem
@@ -29,8 +30,8 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
     val cartItems: LiveData<List<ListCartItems>> = _cartItems
 
     // CartActivity
-    private val _itemDelete = MutableLiveData<List<ListCartItems>>()
-    val itemDelete: LiveData<List<ListCartItems>> = _itemDelete
+    private val _itemDelete = MutableLiveData<List<CartItemsResponse>>()
+    val itemDelete: LiveData<List<CartItemsResponse>> = _itemDelete
 
     // AddStockActivity
     private val _itemStock = MutableLiveData<List<ListStocksItem>>()
@@ -54,11 +55,11 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
         _selectedItemStock.value = stock
     }
 
-//    private val _isLoading = MutableLiveData<Boolean>()
-//    val isLoading: LiveData<Boolean> = _isLoading
-//
-//    private val _isHaveData = MutableLiveData<Boolean>()
-//    val isHaveData: LiveData<Boolean> = _isHaveData
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isHaveData = MutableLiveData<Boolean>()
+    val isHaveData: LiveData<Boolean> = _isHaveData
 
     fun getCustomers(token: String) {
         val client = ApiConfig.ApiService()
@@ -90,35 +91,9 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
         })
     }
 
-//    fun fetchCustomerById(token: String, customerId: Int) {
-//        val client = ApiConfig
-//            .ApiService()
-//            .getCustomerById("Bearer $token", customerId)
-//
-//        client.enqueue(object : Callback<ListCustomersItem> {
-//            override fun onResponse(
-//                call: Call<ListCustomersItem>,
-//                response: Response<ListCustomersItem>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val responseBody = response.body()
-//                    _customerList.value = responseBody?.cart_items
-//                    Log.e(TAG, "onSuccess getCartItemsForCustomer: ${response.message()}")
-////                    }
-//                } else {
-//                    Log.e(TAG, "onFailure getCartItemsForCustomer: ${response.message()}")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ListCustomersItem>, t: Throwable) {
-//                Log.e(TAG, "onFailure : ${t.message}")
-//            }
-//        })
-//    }
-
     fun getCartItemsForCustomer(token: String, customerId: Int) {
-//        _isLoading.value = true
-//        _isHaveData.value = true
+        _isLoading.value = true
+        _isHaveData.value = true
 
         val client = ApiConfig
             .ApiService()
@@ -129,11 +104,13 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
                 call: Call<CartItemsResponse>,
                 response: Response<CartItemsResponse>
             ) {
+                _isLoading.value = false
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
                         _cartItems.value = responseBody.token
 //                        _isHaveData.value = responseBody.customer_name == "customer_name CartItem fetched successfully"
+                        _isHaveData.value = responseBody.message == "customer_name CartItem fetched successfully"
 //                        _cartItems.value = response.body()?.cart_items
                         Log.e(TAG, "onSuccess getCartItemsForCustomer: ${response.message()}")
                     }
@@ -143,6 +120,7 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
             }
 
             override fun onFailure(call: Call<CartItemsResponse>, t: Throwable) {
+                _isLoading.value = false
                 Log.e(TAG, "onFailure : ${t.message}")
             }
         })
@@ -161,13 +139,23 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        if (!responseBody.error) {
-                            _itemDelete.value = responseBody.token
-                            Log.e(TAG, "onSuccessDeleteSales: ${response.message()}")
-                        }
+//                        _cartItems.value = responseBody.token
+//                        _isHaveData.value = responseBody.customer_name == "customer_name CartItem fetched successfully"
+//                        _isHaveData.value = responseBody.message == "customer_name CartItem fetched successfully"
+//                        if (!responseBody.error) {
+//                            _itemDelete.value = responseBody
+//                            _itemDelete.value = response.body()
+//                            _isHaveData.value = responseBody.message == "CartItem deleted successfully"
+//                            itemsId.removeAt
+//                            _itemDelete.value = responseBody.error
+//                            _itemDelete.value = responseBody.error == "CartItem deleted successfully"
+//                            _itemDelete.value = responseBody.message == "CartItem deleted successfully"
+
+                            Log.e(TAG, "onSuccessDeleteCartItems: ${response.message()}")
+//                        }
                     }
                 } else {
-                    Log.e(TAG, "onFailureDeleteSales: ${response.message()}")
+                    Log.e(TAG, "onFailureDeleteCartItems: ${response.message()}")
                 }
             }
             override fun onFailure(call: Call<CartItemsResponse>, t: Throwable) {
@@ -209,6 +197,33 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
         token: String,
         salesStocksRequest: SalesStocksRequest
     ) = repository.postItems(token, salesStocksRequest)
+
+
+//    fun fetchCustomerById(token: String, customerId: Int) {
+//        val client = ApiConfig
+//            .ApiService()
+//            .getCustomerById("Bearer $token", customerId)
+//
+//        client.enqueue(object : Callback<ListCustomersItem> {
+//            override fun onResponse(
+//                call: Call<ListCustomersItem>,
+//                response: Response<ListCustomersItem>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val responseBody = response.body()
+//                    _customerList.value = responseBody?.cart_items
+//                    Log.e(TAG, "onSuccess getCartItemsForCustomer: ${response.message()}")
+////                    }
+//                } else {
+//                    Log.e(TAG, "onFailure getCartItemsForCustomer: ${response.message()}")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ListCustomersItem>, t: Throwable) {
+//                Log.e(TAG, "onFailure : ${t.message}")
+//            }
+//        })
+//    }
 
 //    fun uploadSalesToHistory(
 //        token: String,

@@ -1,139 +1,399 @@
 package com.dicoding.picodiploma.loginwithanimation.view.cart
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.picodiploma.loginwithanimation.R
+import androidx.activity.result.contract.ActivityResultContracts
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySalesStockBinding
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
+import com.dicoding.picodiploma.loginwithanimation.service.data.customers.ListCustomersItem
+import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ListCartItems
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.cart.items.AddItemsActivity
-import com.google.android.material.snackbar.Snackbar
 
 class CartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySalesStockBinding
-
     private lateinit var user: UserModel
     private lateinit var cartItemsAdapter: CartItemsAdapter
+    private var currentSubtotal: Double = 0.0
 
     private val salesStockViewModel: SalesStocksViewModel by viewModels {
         ViewModelFactory.getInstance(this)
+    }
+    private val resultAddItemsActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val selectedCustomerId =
+                result.data?.getIntExtra(AddItemsActivity.EXTRA_CUSTOMER_ID, -1)
+            selectedCustomerId?.let { customerId ->
+                salesStockViewModel.getCartItemsForCustomer(user.token, customerId)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesStockBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         user = intent.getParcelableExtra(EXTRA_USER)!!
-
         cartItemsAdapter = CartItemsAdapter()
-
-        binding.addButton.setOnClickListener {
-            val moveToPurchaseStocksActivity = Intent(this, AddItemsActivity::class.java)
-            moveToPurchaseStocksActivity.putExtra(AddItemsActivity.EXTRA_USER, user)
-            startActivity(moveToPurchaseStocksActivity)
-        }
-
-//        showHaveDataOrNot()
-//        showLoading()
-        setupRecycleView()
-        setupAutoCompleteTextView()
-        setDeleteSales()
-//        setTotalAllPrice()
+        setupViews()
+        observeData()
     }
 
+    private fun setupViews() {
+        setupAutoCompleteTextView()
+        setupRecyclerView()
+        setupAddButton()
+        setupCartItemsAdapter()
+    }
+
+    private fun setupRecyclerView() {
+        binding.cartItemsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@CartActivity)
+            setHasFixedSize(true)
+            adapter = cartItemsAdapter
+        }
+    }
 
     private fun setupAutoCompleteTextView() {
-        val customerNameAutocompleteTextView: AutoCompleteTextView = binding.customerNameAutocompleteTextView
-//        var customerId: Int? = null
-
+        val customerNameAutocompleteTextView: AutoCompleteTextView =
+            binding.customerNameAutocompleteTextView
         salesStockViewModel.getCustomers(user.token)
-        salesStockViewModel.customersList.observe(this, Observer { customers ->
+        salesStockViewModel.customersList.observe(this) { customers ->
             val customerNames = customers.map { it.customer_name }
-            val customerNameAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, customerNames)
+            val customerNameAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, customerNames)
             customerNameAutocompleteTextView.setAdapter(customerNameAdapter)
-        })
-
-        // Penanganan pemilihan pelanggan
-        customerNameAutocompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val selectedCustomer = salesStockViewModel.customersList.value?.find { it.customer_name == parent.getItemAtPosition(position) as String }
-            selectedCustomer?.let {
-//                customerId = it.id
-                it.id
-                Toast.makeText(this@CartActivity, "Customer selected: ${it.customer_name}", Toast.LENGTH_LONG).show()
-                Log.i("AddItemsActivity", "Customer selected: ID=${it.id}, Name=${it.customer_name}")
-                Log.e("AddItemsActivity", "Customer selected: ID=${it.id}, Name=${it.customer_name}")
-
-                salesStockViewModel.getCartItemsForCustomer(user.token, it.id)
-                salesStockViewModel.cartItems.observe(this){ cartItems ->
-                    // cartItemsAdapter.setListSalesStock(it)
-//                    cartItemsAdapter.setListSalesStock(cartItems)
-                    if (cartItems != null) {
-                        cartItemsAdapter.setListSalesStock(cartItems)
-                        val subTotal = cartItems.firstOrNull()?.sub_total ?: "0"
-                        val formattedPrice = helper.formatToRupiah(subTotal.toDouble())
-                        binding.nominalText.text = formattedPrice
-                    } else {
-                        // Handle the case when cartItems is null
-                        Log.e("CartActivity", "Cart items are null 1")
-                        Toast.makeText(this@CartActivity, "Selected customer is null 1", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } ?: run {
-                // Handle the case when selectedCustomer is null
-                Log.e("CartActivity", "Selected customer is null 2")
-                Toast.makeText(this@CartActivity, "Selected customer is null 2", Toast.LENGTH_SHORT).show()
+        }
+        customerNameAutocompleteTextView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val selectedCustomerName = parent.getItemAtPosition(position) as String
+                val selectedCustomer =
+                    salesStockViewModel.customersList.value?.find { it.customer_name == selectedCustomerName }
+                selectedCustomer?.let { handleCustomerSelection(it) }
             }
+    }
 
+    private fun handleCustomerSelection(customer: ListCustomersItem) {
+        salesStockViewModel.getCartItemsForCustomer(user.token, customer.id)
+    }
+
+    private fun setupAddButton() {
+        binding.addButton.setOnClickListener {
+            val moveToAddItemsActivity = Intent(this, AddItemsActivity::class.java)
+            moveToAddItemsActivity.putExtra(AddItemsActivity.EXTRA_USER, user)
+            resultAddItemsActivity.launch(moveToAddItemsActivity)
         }
     }
 
-    private fun setupRecycleView(){
-        binding.cartItemsRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.cartItemsRecyclerView.setHasFixedSize(true)
-        binding.cartItemsRecyclerView.adapter = cartItemsAdapter
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        // Panggil kembali fungsi untuk memperbarui data saat aktivitas di-restart
-        setupRecycleView()
-        setupAutoCompleteTextView()
-        setDeleteSales()
-    }
-
-    private fun setDeleteSales() {
-        cartItemsAdapter.setOnItemClickListener { salesItem, _ ->
-            salesStockViewModel.deleteListItems(user.token, salesItem.id)
-            Toast.makeText(this@CartActivity, "Item Deleted: ${salesItem.stock_name}", Toast.LENGTH_SHORT).show()
-
-//            setTotalAllPrice()
+    private fun setupCartItemsAdapter() {
+        cartItemsAdapter.setOnItemClickListener { cartItem, position ->
+            salesStockViewModel.deleteListItems(user.token, cartItem.id)
+            currentSubtotal -= cartItem.price.toDouble()
+            updateSubtotalText()
         }
+//        binding.cartItemsRecyclerView.adapter = cartItemsAdapter
+    }
+
+    private fun observeData() {
+        salesStockViewModel.cartItems.observe(this) { cartItems ->
+            //java.lang.NullPointerException: cartItems must not be null
+            // cegah null menggunakan ?.let
+            cartItems?.let {
+                cartItemsAdapter.submitList(it)
+//                updateSubtotal(it)
+                calculateAndSetSubtotal(it)
+            }
+        }
+
+        salesStockViewModel.isLoading.observe(this) {
+            binding.apply {
+                if (it) {
+                    progressBar.visibility = View.VISIBLE
+                    cartItemsRecyclerView.visibility = View.INVISIBLE
+                } else {
+                    progressBar.visibility = View.GONE
+                    cartItemsRecyclerView.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        salesStockViewModel.isHaveData.observe(this) {
+            binding.apply {
+                if (it) {
+                    cartItemsRecyclerView.visibility = View.VISIBLE
+                    tvInfo.visibility = View.GONE
+                } else {
+                    cartItemsRecyclerView.visibility = View.VISIBLE
+                    tvInfo.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun calculateAndSetSubtotal(cartItems: List<ListCartItems>) {
+        currentSubtotal = cartItems.sumOf { it.price.toDouble() }
+        updateSubtotalText()
+    }
+
+    private fun updateSubtotalText() {
+        val formattedPrice = helper.formatToRupiah(currentSubtotal)
+        binding.nominalText.text = formattedPrice
     }
 
     companion object {
         const val EXTRA_USER = "user"
     }
+}
+
+//            updateSubtotalAfterDeletion(cartItem.price * cartItem.quantity)
 
 
-//    private fun showHaveDataOrNot(){
-//        salesStockViewModel.isHaveData.observe(this){
+// Refresh the cart items list after deletion to ensure data is up to date
+//            salesStockViewModel.getCartItemsForCustomer(user.token, cartItem.customerId)
+//            salesStockViewModel.cartItems.value?.let {
+//                updateSubtotal(it)
+//            }
+//            binding.nominalText.text = cartItem.sub_total
+//            binding.nominalText.text = cartItem.sub_total
+//            cartItem.sub_total
+//            updateSubtotal(cartItem.sub_total - cartItem.price)
+//            val formattedPrice = helper.formatToRupiah(cartItem.sub_total.toDouble())
+//            binding.nominalText.text = formattedPrice
+
+//    private fun updateSubtotal(cartItems: List<ListCartItems>) {
+//        val subTotal = cartItems.sumOf { it.price * it.quantity }
+//        val formattedPrice = helper.formatToRupiah(subTotal.toDouble())
+//        binding.nominalText.text = formattedPrice
+//    }
+
+//    private fun updateSubtotal(cartItems: List<ListCartItems>) {
+//        val subTotal = cartItems.firstOrNull()?.sub_total ?: "0"
+//        val formattedPrice = helper.formatToRupiah(subTotal.toDouble())
+//        binding.nominalText.text = formattedPrice
+//    }
+
+//    private fun updateSubtotal(cartItems: List<ListCartItems>) {
+//        var total = 0
+//        for (item in cartItems) {
+//            total += item.price.toInt()
+//        }
+//        val formattedPrice = helper.formatToRupiah(total.toDouble())
+//        binding.nominalText.text = formattedPrice
+//    }
+
+
+//class CartActivity : AppCompatActivity() {
+//
+//    private lateinit var binding: ActivitySalesStockBinding
+//
+//    private lateinit var user: UserModel
+//    private lateinit var cartItemsAdapter: CartItemsAdapter
+//
+//    private val salesStockViewModel: SalesStocksViewModel by viewModels {
+//        ViewModelFactory.getInstance(this)
+//    }
+//
+//    private val resultAddItemsActivity = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        if (result.resultCode == Activity.RESULT_OK) {
+//
+//            // Refresh data pada RecyclerView
+//            val selectedCustomerId =
+//                result.data?.getIntExtra(AddItemsActivity.EXTRA_CUSTOMER_ID, -1)
+//            if (selectedCustomerId != null && selectedCustomerId != -1) {
+//                salesStockViewModel.getCartItemsForCustomer(user.token, selectedCustomerId)
+//            }
+//        }
+//    }
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        binding = ActivitySalesStockBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+//
+//        // Mendapatkan objek user dari Intent
+//        user = intent.getParcelableExtra(EXTRA_USER)!!
+//
+//        cartItemsAdapter = CartItemsAdapter()
+//
+//
+//        // Inisialisasi komponen-komponen
+//        showHaveDataOrNot()
+//
+//        setupAutoCompleteTextView()
+//        setupCartItemsAdapter()
+//        setupRecycleView()
+//
+//        showLoading()
+//
+//        setupAddButton()
+//    }
+//
+//    private fun setupCartItemsAdapter() {
+//        // Inisialisasi adapter untuk RecyclerView
+//        cartItemsAdapter = CartItemsAdapter()
+//
+//        // Observe itemDelete LiveData to update items after deletion
+////        salesStockViewModel.itemDelete.observe(this) { updatedItems ->
+//////            cartItemsAdapter.submitList()
+////        }
+//        // Mengatur listener untuk item yang dihapus dari keranjang
+//        cartItemsAdapter.setOnItemClickListener { cartItems, position ->
+//            salesStockViewModel.deleteListItems(user.token, cartItems.id)
+//            cartItemsAdapter.deleteItem(position)
+////            Toast.makeText(this@CartActivity, "Item Deleted: ${cartItems.stock_name}", Toast.LENGTH_SHORT).show()
+//
+////            refreshCartData() // Menyegarkan data keranjang
+//            refreshCartDataAfterDeletion(cartItems.id) // Menyegarkan data keranjang setelah CartItems di hapus
+//
+//        }
+//    }
+//
+//    private fun setupAddButton() {
+//        // Mengatur listener untuk tombol tambah item
+//        binding.addButton.setOnClickListener {
+//            val moveToAddItemsActivity = Intent(this, AddItemsActivity::class.java)
+//            moveToAddItemsActivity.putExtra(AddItemsActivity.EXTRA_USER, user)
+//            // Memulai Activity baru tetapi tidak ada mekanisme langsung untuk mendapatkan hasil atau data kembali dari aktivitas tersebut ketika selesai.
+//            // startActivity(moveToAddItemsActivity)
+//            // Memulai Activity baru dengan kontrak untuk mendapatkan hasil atau data kembali dari aktivitas tersebut ketika selesai.
+//            resultAddItemsActivity.launch(moveToAddItemsActivity)
+//        }
+//    }
+//
+//
+//    private fun setupAutoCompleteTextView() {
+//        val customerNameAutocompleteTextView: AutoCompleteTextView =
+//            binding.customerNameAutocompleteTextView
+//
+//        // Mengambil daftar pelanggan dari ViewModel
+//        salesStockViewModel.getCustomers(user.token)
+//        salesStockViewModel.customersList.observe(this, Observer { customers ->
+//            val customerNames = customers.map { it.customer_name }
+//            val customerNameAdapter =
+//                ArrayAdapter(this, android.R.layout.simple_list_item_1, customerNames)
+//            customerNameAutocompleteTextView.setAdapter(customerNameAdapter)
+//        })
+//
+//        // Mengatur listener untuk pemilihan item di AutoCompleteTextView
+//        customerNameAutocompleteTextView.onItemClickListener =
+//            AdapterView.OnItemClickListener { parent, _, position, _ ->
+//                val selectedCustomer = salesStockViewModel.customersList.value?.find {
+//                    it.customer_name == parent.getItemAtPosition(position) as String
+//                }
+//                selectedCustomer?.let { customer ->
+//                    handleCustomerSelection(customer)
+//                } ?: run {
+//                    // Handle the case when selectedCustomer is null
+//                    Log.e("CartActivity", "Selected customer is null 2")
+//                    Toast.makeText(
+//                        this@CartActivity,
+//                        "Selected customer is null 2",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//            }
+//    }
+//
+//    private fun handleCustomerSelection(customer: ListCustomersItem) {
+//        // Menangani pemilihan pelanggan dari AutoCompleteTextView
+////        Toast.makeText(this@CartActivity, "Customer selected: ${customer.customer_name}", Toast.LENGTH_SHORT).show()
+//        Log.i(
+//            "CartActivity",
+//            "Customer selected: ID=${customer.id}, Name=${customer.customer_name}"
+//        )
+//
+//        salesStockViewModel.getCartItemsForCustomer(user.token, customer.id)
+//        salesStockViewModel.cartItems.observe(this) { cartItems ->
+//            if (cartItems != null) {
+////                cartItemsAdapter.setListSalesStock(cartItems)
+//                updateSubtotal(cartItems)   // Memperbarui subtotal
+//                cartItemsAdapter.submitList(cartItems)
+//            } else {
+//                Log.e("CartActivity", "Cart items are null")
+//                Toast.makeText(
+//                    this@CartActivity,
+//                    "Selected customer has no items",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
+//    }
+//
+//    private fun setupRecycleView() {
+//        // Mengatur RecyclerView
+//        binding.cartItemsRecyclerView.layoutManager = LinearLayoutManager(this)
+//        binding.cartItemsRecyclerView.setHasFixedSize(true)
+//        binding.cartItemsRecyclerView.adapter = cartItemsAdapter
+//    }
+//
+//    override fun onRestart() {
+//        super.onRestart()
+//        // Panggil kembali fungsi untuk memperbarui data saat aktivitas di-restart
+//        // Memperbarui data pelanggan tanpa menghapus teks yang sudah ada
+//        showHaveDataOrNot()
+//        showLoading()
+//    }
+//
+//    private fun refreshCartDataAfterDeletion(deletedItemId: Int) {
+//        // Mengambil kembali item keranjang dari pelanggan yang dipilih
+//        val selectedCustomerName = binding.customerNameAutocompleteTextView.text.toString()
+//        val selectedCustomer =
+//            salesStockViewModel.customersList.value?.find { it.customer_name == selectedCustomerName }
+//        selectedCustomer?.let { customer ->
+//            salesStockViewModel.getCartItemsForCustomer(user.token, customer.id)
+//            salesStockViewModel.cartItems.observe(this) { cartItems ->
+//                if (cartItems != null) {
+////                    cartItemsAdapter.setListSalesStock(cartItems)
+//                    cartItemsAdapter.submitList(cartItems)
+//                    updateSubtotal(cartItems)  // Memperbarui subtotal
+//                } else {
+//                    Log.e("CartActivity", "Cart items are null")
+//                    Toast.makeText(
+//                        this@CartActivity,
+//                        "Selected customer has no items",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
+//        }
+//    }
+//
+////    private fun refreshCartData() {
+////        // Menyegarkan RecyclerView dan AutoCompleteTextView
+////        setupRecycleView()
+////        setupAutoCompleteTextView()
+////    }
+//
+//    private fun updateSubtotal(cartItems: List<ListCartItems>) {
+//        val subTotal = cartItems.firstOrNull()?.sub_total ?: "0"
+//        val formattedPrice = helper.formatToRupiah(subTotal.toDouble())
+//        binding.nominalText.text = formattedPrice
+//    }
+//
+//    private fun showHaveDataOrNot() {
+//        salesStockViewModel.isHaveData.observe(this) {
 //            binding.apply {
 //                if (it) {
 //                    cartItemsRecyclerView.visibility = View.VISIBLE
 //                    tvInfo.visibility = View.GONE
 //                } else {
-//                    cartItemsRecyclerView.visibility = View.GONE
-//                    tvInfo.visibility = View.VISIBLE
+//                    cartItemsRecyclerView.visibility = View.VISIBLE
+////                    cartItemsRecyclerView.visibility = View.GONE
+////                    tvInfo.visibility = View.VISIBLE
+//                    tvInfo.visibility = View.GONE
 //                }
 //            }
 //        }
@@ -150,6 +410,23 @@ class CartActivity : AppCompatActivity() {
 //                    cartItemsRecyclerView.visibility = View.VISIBLE
 //                }
 //            }
+//        }
+//    }
+//
+//    companion object {
+//        const val EXTRA_USER = "user"
+//    }
+//}
+//////////////////////////////////////////////////////////////////////////////////////////
+
+//        salesStockViewModel.isLoading.observe(this) { isLoading ->
+//            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//            binding.cartItemsRecyclerView.visibility =
+//                if (isLoading) View.INVISIBLE else View.VISIBLE
+//        }
+//        salesStockViewModel.isHaveData.observe(this) { isHaveData ->
+//            binding.cartItemsRecyclerView.visibility = if (isHaveData) View.VISIBLE else View.GONE
+//            binding.tvInfo.visibility = if (isHaveData) View.GONE else View.VISIBLE
 //        }
 //    }
 
@@ -234,7 +511,13 @@ class CartActivity : AppCompatActivity() {
 //                }
 //        }
 //    }
-}
+//}
+
+//        binding.addButton.setOnClickListener {
+//            val moveToPurchaseStocksActivity = Intent(this, AddItemsActivity::class.java)
+//            moveToPurchaseStocksActivity.putExtra(AddItemsActivity.EXTRA_USER, user)
+//            startActivity(moveToPurchaseStocksActivity)
+//        }
 
 //        salesStockViewModel.cartItems.observe(this) { cartItems ->
 //            cartItemsAdapter.setListSalesStock(cartItems)
@@ -377,8 +660,8 @@ class CartActivity : AppCompatActivity() {
 //        Snackbar.make(binding.root, "No items available in the cart", Snackbar.LENGTH_LONG).show()
 //    }
 
-//    private fun deleteListSales(salesItem: ListSalesStocksItem) {
-//        salesStockViewModel.deleteListSales(user.token, salesItem.id)
+//    private fun deleteListSales(cartItems: ListSalesStocksItem) {
+//        salesStockViewModel.deleteListSales(user.token, cartItems.id)
 //    }
 
 
@@ -396,13 +679,13 @@ class CartActivity : AppCompatActivity() {
 
 //        // Setel OnItemClickListener pada adapter
 //        adapter.setOnItemClickListener(object : SalesStockAdapter.OnItemClickListener {
-//            override fun onItemClick(salesItem: ListSalesStocksItem) {
+//            override fun onItemClick(cartItems: ListSalesStocksItem) {
 //                // Tangani klik item (misalnya, buka detail item)
 //            }
 //
-//            override fun onDeleteClick(salesItem: ListSalesStocksItem, position: Int) {
+//            override fun onDeleteClick(cartItems: ListSalesStocksItem, position: Int) {
 //                // Panggil fungsi delete dari ViewModel
-//                salesStockViewModel.deleteListSales("Bearer <TOKEN>", salesItem.id).observe(this@SalesStockActivity) { response ->
+//                salesStockViewModel.deleteListSales("Bearer <TOKEN>", cartItems.id).observe(this@SalesStockActivity) { response ->
 //                    if (response.error) {
 //                        // Tampilkan pesan kesalahan jika penghapusan gagal
 //                        Toast.makeText(this@SalesStockActivity, response.message, Toast.LENGTH_SHORT).show()

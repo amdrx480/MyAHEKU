@@ -1,7 +1,11 @@
 package com.dicoding.picodiploma.loginwithanimation.view.cart.items
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -23,8 +27,11 @@ import com.dicoding.picodiploma.loginwithanimation.view.cart.SalesStocksViewMode
 class AddItemsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddSalesBinding
-
     private lateinit var user: UserModel
+    private var customerId: Int? = null
+    private var stockId: Int? = null
+
+
 
     private val salesStockViewModel: SalesStocksViewModel by viewModels {
         ViewModelFactory.getInstance(this)
@@ -44,8 +51,8 @@ class AddItemsActivity : AppCompatActivity() {
         val customerNameAutoComplete: AutoCompleteTextView = binding.customerNameAutocompleteTextView
         val nameItemAutoComplete: AutoCompleteTextView = binding.itemNameAutoCompleteTextView
 
-        var customerId: Int? = null
-        var stockId: Int? = null
+//        var customerId: Int? = null
+//        var stockId: Int? = null
 
         // Observasi pelanggan
         salesStockViewModel.getCustomers(user.token)
@@ -84,6 +91,24 @@ class AddItemsActivity : AppCompatActivity() {
                 binding.itemUnitEditText.setText(it.units_Name)
                 binding.itemCategoryEditText.setText(it.category_Name)
                 binding.itemSellingEditText.setText(it.selling_Price.toString())
+
+                binding.itemQuantityEditText.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        // Tambahkan logika untuk menghitung subtotal saat teks berubah
+                        val enteredQuantity = s.toString().toIntOrNull() ?: 0
+                        val price = binding.itemSellingEditText.text.toString().toDoubleOrNull() ?: 0.0
+                        calculateAndSetSubtotal(enteredQuantity, price)
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        // Tidak perlu diimplementasikan
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        // Tidak perlu diimplementasikan
+                    }
+                })
+
                 Toast.makeText(this@AddItemsActivity, "Item selected: ${it.stock_Name}", Toast.LENGTH_LONG).show()
                 Log.i("AddItemsActivity", "Item selected: ID=${it.id}, Name=${it.stock_Name}")
             }
@@ -92,7 +117,6 @@ class AddItemsActivity : AppCompatActivity() {
         // Penanganan klik tombol simpan
         binding.saveButton.setOnClickListener {
             val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
-
             if (customerId != null && stockId != null) {
                 val salesStocksRequest = createAddSalesRequest(customerId!!, stockId!!, enteredQuantity)
                 salesStockViewModel.uploadItems(user.token, salesStocksRequest).observe(this) {
@@ -108,6 +132,13 @@ class AddItemsActivity : AppCompatActivity() {
                             binding.itemQuantityEditText.text.clear()
                             binding.itemCategoryEditText.text.clear()
                             binding.itemSellingEditText.text.clear()
+
+                            // Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
+//                            val resultIntent = Intent().apply {
+//                                putExtra(EXTRA_CUSTOMER_ID, customerId)
+//                            }
+//                            setResult(Activity.RESULT_OK, resultIntent)
+//                            finish()
 
                             helper.showToast(this, getString(R.string.upload_success))
                             AlertDialog.Builder(this).apply {
@@ -133,6 +164,40 @@ class AddItemsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select both a customer and an item.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun calculateAndSetSubtotal(quantity: Int, price: Double) {
+        val subtotal = quantity * price
+        val formattedSubtotal = helper.formatToRupiah(subtotal)
+        binding.itemTotalPriceEditText.setText(formattedSubtotal)
+    }
+
+    override fun onBackPressed() {
+        // Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
+        val resultIntent = Intent().apply {
+//            putExtra(EXTRA_CUSTOMER_ID, customerId)
+            putExtra(EXTRA_CUSTOMER_ID, customerId)
+        }
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+        super.onBackPressed()
+    }
+
+    private fun createAddSalesRequest(
+        customer_id: Int,
+        stock_id: Int,
+        quantity: Int,
+    ): SalesStocksRequest {
+        return SalesStocksRequest(
+            customer_id = customer_id,
+            stock_id = stock_id,
+            quantity = quantity,
+        )
+    }
+
+    companion object {
+        const val EXTRA_USER = "user"
+        const val EXTRA_CUSTOMER_ID = "customer_id"
     }
 
 
@@ -256,20 +321,5 @@ class AddItemsActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private fun createAddSalesRequest(
-        customer_id: Int,
-        stock_id: Int,
-        quantity: Int,
-    ): SalesStocksRequest {
-        return SalesStocksRequest(
-            customer_id = customer_id,
-            stock_id = stock_id,
-            quantity = quantity,
-        )
-    }
-
-    companion object {
-        const val EXTRA_USER = "user"
-    }
 
 }
