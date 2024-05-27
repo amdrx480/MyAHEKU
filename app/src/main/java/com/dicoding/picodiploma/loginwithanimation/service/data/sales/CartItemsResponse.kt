@@ -26,6 +26,9 @@ data class ListCartItems(
     @SerializedName("stock_name")
     val stock_name: String,
 
+    @SerializedName("unit_name")
+    val unit_name: String,
+
     @SerializedName("quantity")
     val quantity: String,
 

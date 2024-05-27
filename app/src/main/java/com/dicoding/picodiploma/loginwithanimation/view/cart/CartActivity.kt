@@ -1,6 +1,5 @@
 package com.dicoding.picodiploma.loginwithanimation.view.cart
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,11 +7,13 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySalesStockBinding
 import com.dicoding.picodiploma.loginwithanimation.model.UserModel
 import com.dicoding.picodiploma.loginwithanimation.service.data.customers.ListCustomersItem
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ListCartItems
+import com.dicoding.picodiploma.loginwithanimation.service.database.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.cart.items.AddItemsActivity
@@ -22,21 +23,13 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySalesStockBinding
     private lateinit var user: UserModel
     private lateinit var cartItemsAdapter: CartItemsAdapter
+
+    private var customerId: Int? = null
+    private var selectedCustomer: ListCustomersItem? = null
     private var currentSubtotal: Double = 0.0
 
     private val salesStockViewModel: SalesStocksViewModel by viewModels {
         ViewModelFactory.getInstance(this)
-    }
-    private val resultAddItemsActivity = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val selectedCustomerId =
-                result.data?.getIntExtra(AddItemsActivity.EXTRA_CUSTOMER_ID, -1)
-            selectedCustomerId?.let { customerId ->
-                salesStockViewModel.getCartItemsForCustomer(user.token, customerId)
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +37,19 @@ class CartActivity : AppCompatActivity() {
         binding = ActivitySalesStockBinding.inflate(layoutInflater)
         setContentView(binding.root)
         user = intent.getParcelableExtra(EXTRA_USER)!!
+
         cartItemsAdapter = CartItemsAdapter()
         setupViews()
         observeData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customerId?.let { // Pastikan customerId tidak null
+            handleCustomerSelection(
+                selectedCustomer ?: return
+            ) // Memanggil fungsi untuk mengambil data berdasarkan customer ID
+        }
     }
 
     private fun setupViews() {
@@ -79,11 +82,58 @@ class CartActivity : AppCompatActivity() {
                 val selectedCustomerName = parent.getItemAtPosition(position) as String
                 val selectedCustomer =
                     salesStockViewModel.customersList.value?.find { it.customer_name == selectedCustomerName }
-                selectedCustomer?.let { handleCustomerSelection(it) }
+                selectedCustomer?.let {
+                    handleCustomerSelection(it)
+                    customerId = it.id
+                }
             }
+        binding.saveButton.setOnClickListener {
+            if (customerId != null) {
+                salesStockViewModel.postItemTransactions(user.token, customerId!!).observe(this) {
+                    when (it) {
+                        is ResultResponse.Loading -> {
+                            // Handle loading state
+                        }
+                        is ResultResponse.Success -> {
+
+                            helper.showToast(this, getString(R.string.upload_success))
+                            AlertDialog.Builder(this).apply {
+                                setTitle(getString(R.string.upload_success))
+                                setMessage(getString(R.string.data_success))
+                                setPositiveButton(getString(R.string.continue_)) { _, _ ->
+                                    salesStockViewModel.getCartItemsForCustomer(
+                                        user.token,
+                                        customerId!!
+                                    )
+                                }
+                                create()
+                                show()
+
+                            }
+                        }
+                        is ResultResponse.Error -> {
+                            AlertDialog.Builder(this).apply {
+                                setTitle(getString(R.string.upload_failed))
+                                setMessage(getString(R.string.upload_failed) + ", ${it.error}")
+                                setPositiveButton(getString(R.string.continue_)) { _, _ -> }
+                                create()
+                                show()
+                            }
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    this,
+                    "Please select both a customer and an item.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun handleCustomerSelection(customer: ListCustomersItem) {
+        selectedCustomer = customer
         salesStockViewModel.getCartItemsForCustomer(user.token, customer.id)
     }
 
@@ -91,7 +141,7 @@ class CartActivity : AppCompatActivity() {
         binding.addButton.setOnClickListener {
             val moveToAddItemsActivity = Intent(this, AddItemsActivity::class.java)
             moveToAddItemsActivity.putExtra(AddItemsActivity.EXTRA_USER, user)
-            resultAddItemsActivity.launch(moveToAddItemsActivity)
+            startActivity(moveToAddItemsActivity)
         }
     }
 
@@ -101,7 +151,6 @@ class CartActivity : AppCompatActivity() {
             currentSubtotal -= cartItem.price.toDouble()
             updateSubtotalText()
         }
-//        binding.cartItemsRecyclerView.adapter = cartItemsAdapter
     }
 
     private fun observeData() {
@@ -110,7 +159,6 @@ class CartActivity : AppCompatActivity() {
             // cegah null menggunakan ?.let
             cartItems?.let {
                 cartItemsAdapter.submitList(it)
-//                updateSubtotal(it)
                 calculateAndSetSubtotal(it)
             }
         }
@@ -154,6 +202,47 @@ class CartActivity : AppCompatActivity() {
         const val EXTRA_USER = "user"
     }
 }
+
+//            resultAddItemsActivity.launch(moveToAddItemsActivity)
+
+//    private val resultAddItemsActivity = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            val selectedCustomerId =
+//                result.data?.getIntExtra(AddItemsActivity.EXTRA_CUSTOMER_ID, -1)
+//            selectedCustomerId?.let { customerId ->
+//                // Refresh the cart items for the selected customer
+//                salesStockViewModel.getCartItemsForCustomer(user.token, customerId)
+//            }
+//        }
+//    }
+
+//                            customerNameAutocompleteTextView.text.clear()
+
+//                            nameItemAutoComplete.text.clear()
+//                            customerNameAutoComplete.text.clear()
+//                            binding.itemCodeEditText.text.clear()
+//                            binding.itemUnitEditText.text.clear()
+//                            binding.itemQuantityEditText.text.clear()
+//                            binding.itemCategoryEditText.text.clear()
+//                            binding.itemSellingEditText.text.clear()
+
+// Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
+//                            val resultIntent = Intent().apply {
+//                                putExtra(EXTRA_CUSTOMER_ID, customerId)
+//                            }
+//                            setResult(Activity.RESULT_OK, resultIntent)
+//                            finish()
+
+
+//    private fun createAddSalesRequest(
+//        customer_id: Int,
+//    ): ItemTransactionsRequest {
+//        return ItemTransactionsRequest(
+//            customer_id,
+//        )
+//    }
 
 //            updateSubtotalAfterDeletion(cartItem.price * cartItem.quantity)
 

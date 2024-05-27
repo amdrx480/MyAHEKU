@@ -28,10 +28,9 @@ class AddItemsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddSalesBinding
     private lateinit var user: UserModel
+
     private var customerId: Int? = null
     private var stockId: Int? = null
-
-
 
     private val salesStockViewModel: SalesStocksViewModel by viewModels {
         ViewModelFactory.getInstance(this)
@@ -43,22 +42,20 @@ class AddItemsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         user = intent.getParcelableExtra(CartActivity.EXTRA_USER)!!
-
         setListStockItem()
     }
 
     private fun setListStockItem() {
-        val customerNameAutoComplete: AutoCompleteTextView = binding.customerNameAutocompleteTextView
+        val customerNameAutoComplete: AutoCompleteTextView =
+            binding.customerNameAutocompleteTextView
         val nameItemAutoComplete: AutoCompleteTextView = binding.itemNameAutoCompleteTextView
-
-//        var customerId: Int? = null
-//        var stockId: Int? = null
 
         // Observasi pelanggan
         salesStockViewModel.getCustomers(user.token)
         salesStockViewModel.customersList.observe(this, Observer { customers ->
             val customerNames = customers.map { it.customer_name }
-            val customerNameAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, customerNames)
+            val customerNameAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, customerNames)
             customerNameAutoComplete.setAdapter(customerNameAdapter)
         })
 
@@ -71,54 +68,84 @@ class AddItemsActivity : AppCompatActivity() {
         })
 
         // Penanganan pemilihan pelanggan
-        customerNameAutoComplete.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        customerNameAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
 //            val selectedCustomer = salesStockViewModel.customersList.value?.getOrNull(position)
-            val selectedCustomer = salesStockViewModel.customersList.value?.find { it.customer_name == parent.getItemAtPosition(position) as String }
-            selectedCustomer?.let {
-                customerId = it.id
-                Toast.makeText(this@AddItemsActivity, "Customer selected: ${it.customer_name}", Toast.LENGTH_LONG).show()
-                Log.i("AddItemsActivity", "Customer selected: ID=${it.id}, Name=${it.customer_name}")
-                Log.e("AddItemsActivity", "Customer selected: ID=${it.id}, Name=${it.customer_name}")
+                val selectedCustomer = salesStockViewModel.customersList.value?.find {
+                    it.customer_name == parent.getItemAtPosition(position) as String
+                }
+                selectedCustomer?.let {
+                    customerId = it.id
+                    Toast.makeText(
+                        this@AddItemsActivity,
+                        "Customer selected: ${it.customer_name}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.i(
+                        "AddItemsActivity",
+                        "Customer selected: ID=${it.id}, Name=${it.customer_name}"
+                    )
+                    Log.e(
+                        "AddItemsActivity",
+                        "Customer selected: ID=${it.id}, Name=${it.customer_name}"
+                    )
+                }
             }
-        }
 
         // Penanganan pemilihan item stok
-        nameItemAutoComplete.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val selectedItem = salesStockViewModel.itemStock.value?.getOrNull(position)
-            selectedItem?.let {
-                stockId = it.id.toInt()
-                binding.itemCodeEditText.setText(it.stock_Code)
-                binding.itemUnitEditText.setText(it.units_Name)
-                binding.itemCategoryEditText.setText(it.category_Name)
-                binding.itemSellingEditText.setText(it.selling_Price.toString())
+        nameItemAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val selectedItem = salesStockViewModel.itemStock.value?.getOrNull(position)
+                selectedItem?.let {
+                    stockId = it.id.toInt()
+                    binding.itemCodeEditText.setText(it.stock_Code)
+                    binding.itemUnitEditText.setText(it.units_Name)
+                    binding.itemCategoryEditText.setText(it.category_Name)
+                    binding.itemSellingEditText.setText(it.selling_Price.toString())
 
-                binding.itemQuantityEditText.addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable?) {
-                        // Tambahkan logika untuk menghitung subtotal saat teks berubah
-                        val enteredQuantity = s.toString().toIntOrNull() ?: 0
-                        val price = binding.itemSellingEditText.text.toString().toDoubleOrNull() ?: 0.0
-                        calculateAndSetSubtotal(enteredQuantity, price)
-                    }
+                    binding.itemQuantityEditText.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(s: Editable?) {
+                            // Tambahkan logika untuk menghitung subtotal saat teks berubah
+                            val enteredQuantity = s.toString().toIntOrNull() ?: 0
+                            val price =
+                                binding.itemSellingEditText.text.toString().toDoubleOrNull() ?: 0.0
+                            calculateAndSetSubtotal(enteredQuantity, price)
+                        }
 
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        // Tidak perlu diimplementasikan
-                    }
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                            // Tidak perlu diimplementasikan
+                        }
 
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        // Tidak perlu diimplementasikan
-                    }
-                })
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+                            // Tidak perlu diimplementasikan
+                        }
+                    })
 
-                Toast.makeText(this@AddItemsActivity, "Item selected: ${it.stock_Name}", Toast.LENGTH_LONG).show()
-                Log.i("AddItemsActivity", "Item selected: ID=${it.id}, Name=${it.stock_Name}")
+                    Toast.makeText(
+                        this@AddItemsActivity,
+                        "Item selected: ${it.stock_Name}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.i("AddItemsActivity", "Item selected: ID=${it.id}, Name=${it.stock_Name}")
+                }
             }
-        }
 
         // Penanganan klik tombol simpan
         binding.saveButton.setOnClickListener {
             val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
             if (customerId != null && stockId != null) {
-                val salesStocksRequest = createAddSalesRequest(customerId!!, stockId!!, enteredQuantity)
+                val salesStocksRequest =
+                    createAddSalesRequest(customerId!!, stockId!!, enteredQuantity)
                 salesStockViewModel.uploadItems(user.token, salesStocksRequest).observe(this) {
                     when (it) {
                         is ResultResponse.Loading -> {
@@ -132,13 +159,6 @@ class AddItemsActivity : AppCompatActivity() {
                             binding.itemQuantityEditText.text.clear()
                             binding.itemCategoryEditText.text.clear()
                             binding.itemSellingEditText.text.clear()
-
-                            // Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
-//                            val resultIntent = Intent().apply {
-//                                putExtra(EXTRA_CUSTOMER_ID, customerId)
-//                            }
-//                            setResult(Activity.RESULT_OK, resultIntent)
-//                            finish()
 
                             helper.showToast(this, getString(R.string.upload_success))
                             AlertDialog.Builder(this).apply {
@@ -161,7 +181,11 @@ class AddItemsActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, "Please select both a customer and an item.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please select both a customer and an item.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -170,17 +194,6 @@ class AddItemsActivity : AppCompatActivity() {
         val subtotal = quantity * price
         val formattedSubtotal = helper.formatToRupiah(subtotal)
         binding.itemTotalPriceEditText.setText(formattedSubtotal)
-    }
-
-    override fun onBackPressed() {
-        // Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
-        val resultIntent = Intent().apply {
-//            putExtra(EXTRA_CUSTOMER_ID, customerId)
-            putExtra(EXTRA_CUSTOMER_ID, customerId)
-        }
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
-        super.onBackPressed()
     }
 
     private fun createAddSalesRequest(
@@ -197,10 +210,21 @@ class AddItemsActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_USER = "user"
-        const val EXTRA_CUSTOMER_ID = "customer_id"
     }
 
 
+//    override fun onBackPressed() {
+//        // Tambahkan untuk mengembalikan hasil resultAddItemsActivity ke CartActivity
+////        val resultIntent = Intent().apply {
+////            putExtra(EXTRA_CUSTOMER_ID, customerId)
+////        }
+////        setResult(Activity.RESULT_OK, resultIntent)
+////        finish()
+//        salesStockViewModel.getCartItemsForCustomer(user.token, customerId!!)
+//        super.onBackPressed()
+//    }
+//        const val EXTRA_CUSTOMER_ID = "customer_id"
+//        customerId = intent.getIntExtra(CartActivity.EXTRA_CUSTOMER_ID, -1)
 
 //    private fun setListStockItem() {
 //        val autoCompleteNameItem: AutoCompleteTextView = binding.autocompleteNameTextView

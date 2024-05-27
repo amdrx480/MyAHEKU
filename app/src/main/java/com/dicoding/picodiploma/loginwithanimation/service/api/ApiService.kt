@@ -7,6 +7,7 @@ import com.dicoding.picodiploma.loginwithanimation.service.data.category.AllCate
 import com.dicoding.picodiploma.loginwithanimation.service.data.customers.AllCustomersResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.login.LoginRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.CartItemsResponse
+import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ItemTransactionsRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.SalesStocksRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.units.AllUnitsResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.vendors.AllVendorsResponse
@@ -50,6 +51,14 @@ interface ApiService {
         @Path("id") salesId: Int  // ID item yang ingin dihapus
     ): Call<CartItemsResponse>
 
+    @POST("item_transactions/{customer_id}")
+    suspend fun postItemTransactions(
+        @Header("Authorization") token: String,
+        @Path("customer_id") customerId: Int  // ID item yang ingin di panggil
+
+//        @Body itemTransactionsRequest: ItemTransactionsRequest
+    ): ApiResponse
+
     //@GET("cart_items/{id}")
 //    @GET("customers/{id}")
 //    fun getCustomerById(
@@ -58,7 +67,7 @@ interface ApiService {
 ////        @Query("id") customerId: Int  // ID item yang ingin di panggil
 //    ): Call<ListCustomersItem>
 
-//    @POST("sales/to_history")
+    //    @POST("sales/to_history")
 //    suspend fun addSalesToHistory(
 //        @Header("Authorization") token: String,
 ////        @Body salesStocksRequest: SalesStocksRequest,

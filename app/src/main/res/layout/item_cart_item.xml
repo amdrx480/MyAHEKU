@@ -86,7 +86,7 @@
 
             <!-- TextView untuk unit stock -->
             <TextView
-                android:id="@+id/tvUnits"
+                android:id="@+id/tvUnitName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Units     "

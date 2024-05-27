@@ -198,6 +198,16 @@ class SalesStocksViewModel(private val repository: AppRepository) : ViewModel() 
         salesStocksRequest: SalesStocksRequest
     ) = repository.postItems(token, salesStocksRequest)
 
+    fun postItemTransactions(
+        token: String,
+        customerId: Int,
+    ) = repository.postItemTransactions(token, customerId)
+
+//        itemTransactionsRequest: ItemTransactionsRequest
+//    ) = repository.postItemTransactions(token, itemTransactionsRequest)
+
+
+
 
 //    fun fetchCustomerById(token: String, customerId: Int) {
 //        val client = ApiConfig

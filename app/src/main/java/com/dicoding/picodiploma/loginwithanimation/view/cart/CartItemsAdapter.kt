@@ -47,6 +47,7 @@ class CartItemsAdapter : ListAdapter<ListCartItems, CartItemsAdapter.ViewHolder>
             with(binding) {
                 Log.d(TAG, "Binding stocks: $cartItem")
                 tvStockName.text = cartItem.stock_name
+                tvUnitName.text = cartItem.unit_name
                 tvStockQuantity.text = cartItem.quantity
                 val formattedPrice = helper.formatToRupiah(cartItem.price.toDouble())
                 tvStockPrice.text = formattedPrice

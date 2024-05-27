@@ -15,6 +15,7 @@ import com.dicoding.picodiploma.loginwithanimation.service.data.customers.ListCu
 import com.dicoding.picodiploma.loginwithanimation.service.data.login.LoginRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.login.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.service.data.purchase.PurchaseRequest
+import com.dicoding.picodiploma.loginwithanimation.service.data.sales.ItemTransactionsRequest
 import com.dicoding.picodiploma.loginwithanimation.service.data.sales.SalesStocksRequest
 import com.dicoding.picodiploma.loginwithanimation.service.database.AppDatabase
 import com.dicoding.picodiploma.loginwithanimation.service.database.ResultResponse
@@ -72,6 +73,28 @@ class AppRepository(
             emit(ResultResponse.Loading)
             try {
                 val response = apiService.addItems("Bearer $token", salesStocksRequest)
+                if (!response.error) {
+                    emit(ResultResponse.Success(response))
+                } else {
+                    Log.e(TAG, "Register Fail: ${response.message}")
+                    emit(ResultResponse.Error(response.message))
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Register Exception: ${e.message.toString()} ")
+                emit(ResultResponse.Error(e.message.toString()))
+            }
+        }
+
+    fun postItemTransactions(
+        token: String,
+//        itemTransactionsRequest: ItemTransactionsRequest
+        customerId: Int,
+    ): LiveData<ResultResponse<ApiResponse>> =
+        liveData {
+            emit(ResultResponse.Loading)
+            try {
+//                val response = apiService.postItemTransactions("Bearer $token", itemTransactionsRequest)
+                val response = apiService.postItemTransactions("Bearer $token", customerId)
                 if (!response.error) {
                     emit(ResultResponse.Success(response))
                 } else {
