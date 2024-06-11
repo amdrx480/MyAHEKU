@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_item_purchases"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_item_purchases" />
+
+    <item
+        android:id="@+id/navigation_item_transactions"
+        android:icon="@drawable/image_person_empty"
+        android:title="@string/title_item_transaction" />
+
+</menu>

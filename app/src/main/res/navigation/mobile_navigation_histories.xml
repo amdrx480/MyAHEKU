@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_histories"
+    app:startDestination="@+id/navigation_item_purchases">
+
+    <fragment
+        android:id="@+id/navigation_item_purchases"
+        android:name="com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.itempurchases.ItemPurchasesFragment"
+        android:label="@string/title_item_purchases"
+        tools:layout="@layout/fragment_item_purchases" />
+
+    <fragment
+        android:id="@+id/navigation_item_transactions"
+        android:name="com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.itemtransactions.ItemTransactionsFragment"
+        android:label="@string/title_item_transaction"
+        tools:layout="@layout/fragment_item_transactions" />
+
+</navigation>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--        android:name="com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardFragment"-->
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<navigation xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/mobile_navigation"-->
+<!--app:startDestination="@+id/navigation_item_purchases">-->
+
+<!--<fragment-->
+<!--    android:id="@+id/navigation_item_purchases"-->
+<!--    android:name="com.dicoding.picodiploma.loginwithanimation.view.dashboard.DashboardFragment"-->
+<!--    android:label="@string/title_dashboard"-->
+<!--    tools:layout="@layout/fragment_item_purchases" />-->
+
+<!--<fragment-->
+<!--    android:id="@+id/navigation_item_transactions"-->
+<!--    android:name="com.dicoding.picodiploma.loginwithanimation.view.profile.ProfileFragment"-->
+<!--    android:label="@string/title_profile"-->
+<!--    tools:layout="@layout/fragment_item_transaction" />-->
+<!--</navigation>-->

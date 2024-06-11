@@ -7,6 +7,9 @@
     <string name="title_vendors">Vendors</string>
     <string name="title_profile">Profile</string>
 
+    <string name="title_item_purchases">Purchases</string>
+    <string name="title_item_transaction">Transaction</string>
+
 
     <string name="message_welcome_page">Mau belajar Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
     <string name="title_welcome_page">Selamat datang di Dicoding!</string>

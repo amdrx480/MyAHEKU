@@ -20,26 +20,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginWithAnimation"
         android:usesCleartextTraffic="true">
+<!--        <activity-->
+<!--            android:name=".HistoriesActivity"-->
+<!--            android:exported="false" />-->
         <activity
-            android:name=".view.cart.items.AddItemsActivity"
+            android:name=".ui.main.dashboard.histories.HistoriesActivity"
             android:exported="false" />
         <activity
-            android:name=".view.stocks.detail.DetailStocksActivity"
+            android:name=".ui.main.dashboard.sales.items.AddItemsActivity"
             android:exported="false" />
         <activity
-            android:name=".view.cart.CartActivity"
+            android:name=".ui.main.dashboard.stocks.detail.DetailStocksActivity"
             android:exported="false" />
         <activity
-            android:name=".view.purchase.PurchaseStockActivity"
+            android:name=".ui.main.dashboard.sales.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".view.welcome.WelcomeActivity"
+            android:name=".ui.main.dashboard.purchase.PurchaseStockActivity"
             android:exported="false" />
         <activity
-            android:name=".view.stocks.StocksActivity"
+            android:name=".ui.splash.WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".view.welcome.SplashScreenActivity"
+            android:name=".ui.main.dashboard.stocks.StocksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,13 +54,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.signup.SignupActivity"
+            android:name=".ui.signup.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".view.login.LoginActivity"
-            android:exported="false" />
+            android:name=".ui.login.LoginActivity"
+            android:exported="false">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true" />
     </application>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.dashboard.DashboardFragment">
+    tools:context=".ui.main.dashboard.DashboardFragment">
 
     <!-- TODO: Update blank fragment layout -->
 <!--    <ProgressBar-->
@@ -266,7 +266,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/eoiuroei"
+                android:id="@+id/historiesButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="29dp"
