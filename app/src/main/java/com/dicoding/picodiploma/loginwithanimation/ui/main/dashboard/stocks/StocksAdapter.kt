@@ -7,6 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowPhotoBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.detail.DetailStocksActivity

@@ -8,16 +8,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentProfileBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.user.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.local.AuthPreferenceDataSource
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
+import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.ui.login.LoginActivity
+import com.google.android.material.snackbar.Snackbar
+import java.io.File
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,24 +60,57 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setupViewModel()
         setupAction()
+        setupObservers()
     }
 
-//private fun setupViewModel() {
-//    profileViewModel = ViewModelProvider(
-//        this,
-//        ViewModelUserFactory(AuthPreferenceDataSource.getInstance(requireContext().dataStore))
-//    )[ProfileViewModel::class.java]
-//
-//    profileViewModel.getSession().observe(this) { preferences ->
-//        user = UserModel(
-//            preferences.password,
-//            preferences.token,
-//            true
-//        )
-//    }
-//}
+    private fun setupObservers() {
+        profileViewModel.authToken.observe(viewLifecycleOwner) { token ->
+            if (token != null) {
+                profileViewModel.fetchAdminProfile().observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is ResultResponse.Loading -> {
+                            // Tampilkan loading indicator
+                        }
+                        is ResultResponse.Success -> {
+                            // Tampilkan data profil
+                            val profile = result.data
+                            with(binding) {
+                                Glide.with(this@ProfileFragment)
+                                    .load(profile.imagePath) // URL gambar dari backend
+                                    .placeholder(R.drawable.ic_place_default_holder) // Gambar placeholder jika diperlukan
+                                    .error(R.drawable.ic_broken_image) // Gambar error jika terjadi kesalahan
+                                    .into(imageViewPerson) // ImageView untuk menampilkan gambar
+
+                                tvNamePerson.text = profile.name
+                                tvRole.text = profile.roleName
+                            }
+                            // Isi field lainnya sesuai data profil
+                        }
+                        is ResultResponse.Error -> {
+                            // Tampilkan pesan error
+//                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } else {
+                // Tampilkan pesan bahwa token tidak ditemukan
+                Toast.makeText(requireContext(), "Token not found", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun displayProfile(profile: ProfileModel) {
+        // Tampilkan data profil ke UI
+        binding.apply {
+            // Misalnya, terapkan data ke TextViews atau ImageView sesuai kebutuhan
+            tvNamePerson.text = profile.name
+            tvRole.text = profile.roleName
+//            textViewPhone.text = profile.phone
+            // dll.
+        }
+    }
+
 
     private fun setupAction() {
         binding.logoutButton.setOnClickListener {
@@ -83,7 +123,8 @@ class ProfileFragment : Fragment() {
                 // Buat Intent untuk menuju ke halaman login
                 val moveToListStoryActivity = Intent(requireActivity(), LoginActivity::class.java)
                 // Clear task dan membuat halaman login menjadi aktivitas teratas yang baru
-                moveToListStoryActivity.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                moveToListStoryActivity.flags =
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 // Ambil data sesi dari ViewModel dan tambahkan ke Intent
                 profileViewModel.logoutVoucher()
                 // Mulai activity login dan tutup activity saat ini
@@ -104,3 +145,18 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 }
+
+//private fun setupViewModel() {
+//    profileViewModel = ViewModelProvider(
+//        this,
+//        ViewModelUserFactory(AuthPreferenceDataSource.getInstance(requireContext().dataStore))
+//    )[ProfileViewModel::class.java]
+//
+//    profileViewModel.getSession().observe(this) { preferences ->
+//        user = UserModel(
+//            preferences.password,
+//            preferences.token,
+//            true
+//        )
+//    }
+//}

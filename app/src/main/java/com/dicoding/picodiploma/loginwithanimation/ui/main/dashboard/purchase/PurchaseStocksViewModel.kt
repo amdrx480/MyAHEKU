@@ -42,7 +42,6 @@ class PurchaseStocksViewModel(private val authRepository: AuthRepository) : View
         }
     }
 
-    //    fun fetchVendors(token: String?) = authRepository.getVendors(token)
     fun fetchVendors(token: String?) = authRepository.fetchVendors(token)
 
     fun fetchUnits(token: String?) = authRepository.fetchUnits(token)

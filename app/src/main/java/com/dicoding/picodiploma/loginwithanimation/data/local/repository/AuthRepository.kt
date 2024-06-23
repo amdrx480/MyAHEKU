@@ -14,6 +14,8 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryM
 import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
@@ -127,6 +129,28 @@ class AuthRepository(
             emit(ResultResponse.Error(e.message.toString()))
         }
     }
+
+    // Metode untuk mengambil profil admin berdasarkan token yang tersimpan
+    fun fetchAdminProfile(token: String?): LiveData<ResultResponse<ProfileModel>> = liveData {
+        emit(ResultResponse.Loading)
+        try {
+            val response = apiService.fetchAdminProfile("Bearer $token")
+            emit(ResultResponse.Success(response.data))
+        } catch (e: Exception) {
+            emit(ResultResponse.Error(e.message ?: "Unknown error"))
+        }
+    }
+
+
+//    fun fetchAdminProfile(token: String?): LiveData<ResultResponse<List<ProfileModel>>> = liveData {
+//        emit(ResultResponse.Loading)
+//        try {
+//            val response = apiService.fetchAdminProfile("Bearer $token")
+//            emit(ResultResponse.Success(response.data))
+//        } catch (e: Exception) {
+//            emit(ResultResponse.Error(e.message ?: "Unknown error"))
+//        }
+//    }
 
     fun fetchVendors(token: String?): LiveData<ResultResponse<List<VendorsModel>>> = liveData {
         emit(ResultResponse.Loading)

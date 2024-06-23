@@ -5,6 +5,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryR
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.AllCustomersResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsResponse
@@ -22,10 +23,15 @@ interface ApiService {
         @Body loginRequest: LoginWithVoucherRequest,
     ): LoginWithVoucherResponse
 
-    @POST("auth/voucher")
+    @POST("auth/login_voucher")
     suspend fun loginVoucher(
         @Body loginRequest: LoginWithVoucherRequest,
     ): LoginWithVoucherResponse
+
+    @GET("admin/profile")
+    suspend fun fetchAdminProfile(
+        @Header("Authorization") data: String,
+    ): ProfileResponse
 
     @POST("purchases")
     suspend fun addPurchaseStocks(
