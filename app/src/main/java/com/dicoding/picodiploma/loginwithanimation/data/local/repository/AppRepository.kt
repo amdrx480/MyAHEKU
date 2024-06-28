@@ -7,7 +7,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
@@ -16,7 +15,6 @@ import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.Purchase
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
 import com.dicoding.picodiploma.loginwithanimation.data.local.database.AppDatabase
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
-import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.RemoteMediator
 import com.dicoding.picodiploma.loginwithanimation.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.flow.Flow
 
@@ -84,20 +82,20 @@ class AppRepository(
             }
         }
 
-    fun pagingStories(token: String): Flow<PagingData<StocksEntity>> {
-        wrapEspressoIdlingResource {
-            @OptIn(ExperimentalPagingApi::class)
-            return Pager(
-                config = PagingConfig(
-                    pageSize = 5
-                ),
-                remoteMediator = RemoteMediator(appDatabase, apiService, token),
-                pagingSourceFactory = {
-                    appDatabase.appDao().getAllStocks()
-                }
-            ).flow
-        }
-    }
+//    fun pagingStories(token: String): Flow<PagingData<StocksEntity>> {
+//        wrapEspressoIdlingResource {
+//            @OptIn(ExperimentalPagingApi::class)
+//            return Pager(
+//                config = PagingConfig(
+//                    pageSize = 5
+//                ),
+//                remoteMediator = RemoteMediator(appDatabase, apiService, token),
+//                pagingSourceFactory = {
+//                    appDatabase.appDao().getAllStocks()
+//                }
+//            ).flow
+//        }
+//    }
 
     fun pagingPurchases(token: String): Flow<PagingData<PurchasesEntity>> {
         wrapEspressoIdlingResource {

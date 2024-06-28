@@ -6,10 +6,8 @@ data class StocksResponse(
 
     @SerializedName("error")
     val error: Boolean,
-
     @SerializedName("message")
     val message: String,
-
     @SerializedName("data")
     val data: List<StocksEntity>,
 )

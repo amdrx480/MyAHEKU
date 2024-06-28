@@ -26,6 +26,9 @@
     <string name="stocks">Stocks</string>
     <string name="save">Simpan</string>
 
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
+
     <string name="empty_data">Unfortunately, there\'s no photo right now</string>
     <string name="photo_name">Photo Author</string>
     <string name="description">Photo Description here</string>

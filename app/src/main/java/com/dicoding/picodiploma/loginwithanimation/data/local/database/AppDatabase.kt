@@ -24,7 +24,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemT
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun appDao(): StocksDao
+    abstract fun stocksDao(): StocksDao
     abstract fun remoteKeysDao(): StocksRemoteKeysDao
     abstract fun purchasesDao(): PurchasesDao
     abstract fun purchasesRemoteKeysDao(): PurchasesRemoteKeysDao
@@ -40,7 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java, "myAheku.db"
+                    AppDatabase::class.java, "My_AHEku.db"
                 )
                     .fallbackToDestructiveMigration()
                     .build()

@@ -43,14 +43,14 @@ interface ApiService {
     suspend fun getAllPurchase(
         @Header("Authorization") data: String,
         @Query("page") page: Int,
-        @Query("size") size: Int,
+        @Query("limit") limit: Int,
     ): PurchasesResponse
 
     @GET("item_transactions")
     suspend fun getAllItemTransactions(
         @Header("Authorization") data: String,
         @Query("page") page: Int,
-        @Query("size") size: Int,
+        @Query("limit") limit: Int,
     ): ItemTransactionsResponse
 
     @POST("cart_items")
@@ -87,7 +87,14 @@ interface ApiService {
     suspend fun getAllStocks(
         @Header("Authorization") data: String,
         @Query("page") page: Int,
-        @Query("size") size: Int,
+        @Query("limit") limit: Int,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("search") search: String? = null,
+        @Query("category_name") categoryName: String? = null,
+        @Query("unit_name") unitName: String? = null,
+        @Query("selling_price_min") sellingPriceMin: Int? = null,
+        @Query("selling_price_max") sellingPriceMax: Int? = null
     ): StocksResponse
 
     @GET("stocks")

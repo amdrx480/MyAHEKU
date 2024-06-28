@@ -65,7 +65,7 @@ class DashboardFragment : Fragment() {
 
         binding.stocksButton.setOnClickListener {
             val moveToStocksActivity = Intent(requireActivity(), StocksActivity::class.java)
-//            moveToStocksActivity.putExtra(StocksActivity.EXTRA_TOKEN, dashboardViewModel.getAuthToken().value)
+            moveToStocksActivity.putExtra(StocksActivity.EXTRA_TOKEN, dashboardViewModel.authToken.value)
             startActivity(moveToStocksActivity)
         }
     }

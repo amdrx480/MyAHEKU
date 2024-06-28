@@ -2,7 +2,6 @@ package com.dicoding.picodiploma.loginwithanimation.data.local.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -11,30 +10,25 @@ import androidx.paging.PagingData
 import com.dicoding.picodiploma.loginwithanimation.data.local.AuthPreferenceDataSource
 import com.dicoding.picodiploma.loginwithanimation.data.local.database.AppDatabase
 import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryModel
-import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
-import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.units.UnitsModel
-import com.dicoding.picodiploma.loginwithanimation.data.model.units.UnitsResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsModel
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.ItemTransactionsRemoteMediator
 import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.PurchasesRemoteMediator
-import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.RemoteMediator
+import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.StocksRemoteMediator
+import com.dicoding.picodiploma.loginwithanimation.utils.RawQueryHelper
 import com.dicoding.picodiploma.loginwithanimation.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 //import javax.inject.Inject
 
@@ -67,21 +61,104 @@ class AuthRepository(
 
     fun getAuthStateToken(): Flow<Boolean> = authPreferenceDataSource.getAuthStateToken()
 
-    fun pagingStories(token: String): Flow<PagingData<StocksEntity>> {
-        wrapEspressoIdlingResource {
-            @OptIn(ExperimentalPagingApi::class)
-            return Pager(
-                config = PagingConfig(
-                    pageSize = 5
-                ),
-                remoteMediator = RemoteMediator(appDatabase, apiService, token),
-                pagingSourceFactory = {
-                    appDatabase.appDao().getAllStocks()
-                }
-            ).flow
-        }
+    @OptIn(ExperimentalPagingApi::class)
+    fun getPagingStocks(
+        token: String,
+        sort: String? = null,
+        order: String? = null,
+        search: String? = null,
+        categoryName: List<String>? = null,
+        unitName: List<String>? = null,
+        sellingPriceMin: Int? = null,
+        sellingPriceMax: Int? = null
+    ): Flow<PagingData<StocksEntity>> {
+        val rawQuery = RawQueryHelper.buildStocksQuery(sort, search, order, categoryName, unitName)
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            remoteMediator = StocksRemoteMediator(
+                appDatabase = appDatabase,
+                apiService = apiService,
+                token = token,
+                sort = sort,
+                search = search,
+                order = order,
+                categoryName = categoryName,
+                unitName = unitName,
+                sellingPriceMin = sellingPriceMin,
+                sellingPriceMax = sellingPriceMax,
+            ),
+            pagingSourceFactory = { appDatabase.stocksDao().getStocksByRawQuery(rawQuery) }
+        ).flow
     }
 
+//    @OptIn(ExperimentalPagingApi::class)
+//    fun getPagingStocks(
+//        token: String,
+//        filter: String? = null,
+//        sort: String? = null,
+//        query: String? = null,
+//        order: String? = null,
+//        categoryName: String? = null,
+//        unitName: String? = null,
+////        minSellingPrice: Int? = null,
+////        maxSellingPrice: Int? = null
+//    ): Flow<PagingData<StocksEntity>> {
+//        // wrapEspressoIdlingResource digunakan di sini untuk mengelola idling resource
+//        // saat pengujian dengan Espresso. Ini membantu dalam menjaga konsistensi
+//        // dan stabilitas pengujian UI dengan memastikan bahwa resource idling
+//        // diatur dengan baik selama operasi asynchronous.
+//
+//        // Menggunakan wrapEspressoIdlingResource untuk mengelola idling resource saat pengujian dengan Espresso
+////        val rawQuery = RawQueryHelper.buildStocksQuery(filter, sort, query, order, categoryName, unitName, minSellingPrice, maxSellingPrice)
+//        val rawQuery = RawQueryHelper.buildStocksQuery(
+//            filter = filter,
+//            sort = sort,
+//            query = query,
+//            order = order,
+//            categoryName = categoryName,
+//            unitName = unitName,
+//        )
+//
+//        return wrapEspressoIdlingResource {
+//            Pager(
+//                config = PagingConfig(
+//                    pageSize = 10,
+//                    enablePlaceholders = false // Menonaktifkan placeholders untuk data yang belum dimuat
+//                ),
+//                // Menggunakan remoteMediator untuk menghubungkan data lokal dengan sumber data jarak jauh
+//                remoteMediator = StocksRemoteMediator(
+//                    appDatabase = appDatabase,
+//                    apiService = apiService,
+//                    token = token,
+//                    filter = filter,
+//                    sort = sort,
+//                    search = query,
+//                    order = order,
+//                    categoryName = categoryName,
+//                    unitName = unitName,
+//                ),
+//                // Menggunakan pagingSourceFactory untuk mendefinisikan sumber data paginasi dari database lokal
+//                pagingSourceFactory = {
+//                    appDatabase.stocksDao().getStocksByRawQuery(rawQuery)
+//                }
+//            ).flow
+//        }
+//    }
+
+    //                pagingSourceFactory = {
+//                    if (!filter.isNullOrBlank() && !sort.isNullOrBlank()) {
+//                        appDatabase.stocksDao().getFilteredStocks(filter = filter, sort = sort)
+//                    } else if (!query.isNullOrBlank()) {
+//                        appDatabase.stocksDao().searchStocksByName(search = query)
+//                        //!!
+//                    } else {
+//                        appDatabase.stocksDao().getAllStocks()
+//                    }
+//                }
     fun pagingPurchases(token: String): Flow<PagingData<PurchasesEntity>> {
         wrapEspressoIdlingResource {
             @OptIn(ExperimentalPagingApi::class)
@@ -246,7 +323,6 @@ class AuthRepository(
         private const val TAG = "AuthRepository"
     }
 }
-
 
 
 //    fun getUnits(token: String?): LiveData<ResultResponse<UnitsResponse>> {
