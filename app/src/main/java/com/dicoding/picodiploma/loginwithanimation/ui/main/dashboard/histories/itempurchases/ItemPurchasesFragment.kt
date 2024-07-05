@@ -3,29 +3,40 @@ package com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentItemPurchasesBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.user.UserModel
+import com.dicoding.picodiploma.loginwithanimation.databinding.BottomSheetFilterBinding
+import com.dicoding.picodiploma.loginwithanimation.databinding.BottomSheetSortBinding
 import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.DashboardFragment
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.HistoriesActivity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.LoadingStateAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 class ItemPurchasesFragment : Fragment() {
 
-    private lateinit var itemPurchasesAdapter: ItemPurchasesAdapter
 
-    private var token: String = ""
+//    private var token: String = ""
     private val itemPurchasesViewModel: ItemPurchasesViewModel by viewModels {
         ViewModelUserFactory.getInstance(requireContext())
     }
+
+    private lateinit var itemPurchasesAdapter: ItemPurchasesAdapter
+    private val selectedCategories = mutableSetOf<String>()
+    private val selectedUnits = mutableSetOf<String>()
 
     private var _binding: FragmentItemPurchasesBinding? = null
     private val binding get() = _binding
@@ -43,41 +54,234 @@ class ItemPurchasesFragment : Fragment() {
 //        user = requireArguments().getParcelable(ARG_USER)!!
 //        token = requireActivity().intent.getStringExtra(DashboardFragment.EXTRA_TOKEN) ?: ""
 
+        itemPurchasesAdapter = ItemPurchasesAdapter()
 
-        setupAdapter()
+        setupRecyclerView()
+        observePurchases()
+        setupSwipeToRefresh()
+        setupSearch()
+        setupSortButton()
+        setupFilterButton()
+//        setupAdapter()
 //        setupObservers()
     }
 
-    private fun setupAdapter() {
-        itemPurchasesAdapter = ItemPurchasesAdapter()
-        binding?.itemPurchasesRecyclerView?.apply {
-            adapter = itemPurchasesAdapter.withLoadStateHeaderAndFooter(
-                footer = LoadingStateAdapter { itemPurchasesAdapter.retry() },
-                header = LoadingStateAdapter { itemPurchasesAdapter.retry() }
-            )
-            binding?.itemPurchasesRecyclerView?.layoutManager =
-                LinearLayoutManager(requireContext())
-            binding?.itemPurchasesRecyclerView?.setHasFixedSize(true)
-        }
+    private fun setupRecyclerView() {
+        binding?.rvPurchases?.layoutManager = LinearLayoutManager(requireContext())
+        binding?.rvPurchases?.adapter = itemPurchasesAdapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter { itemPurchasesAdapter.retry() },
+            footer = LoadingStateAdapter { itemPurchasesAdapter.retry() }
+        )
+    }
 
-        lifecycleScope.launchWhenCreated {
-            itemPurchasesAdapter.loadStateFlow.collect {
-                binding?.swipeRefresh?.isRefreshing = it.mediator?.refresh is LoadState.Loading
-            }
+    private fun observePurchases() {
+        itemPurchasesViewModel.purchasesFlow.observe(this) { pagingData ->
+//            itemPurchasesAdapter.submitData(PagingData.empty())
+            itemPurchasesAdapter.submitData(lifecycle, pagingData)
         }
 
         lifecycleScope.launch {
             itemPurchasesAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding?.swipeRefresh?.isRefreshing = loadStates.refresh is LoadState.Loading
                 binding?.tvInfo?.root?.isVisible = loadStates.refresh is LoadState.Error
             }
-            if (itemPurchasesAdapter.itemCount < 1) binding?.tvInfo?.root?.visibility = View.VISIBLE
-            else binding?.tvInfo?.root?.visibility = View.VISIBLE
-        }
-
-        itemPurchasesViewModel.getPurchases(token).observe(viewLifecycleOwner) {
-            itemPurchasesAdapter.submitData(lifecycle, it)
         }
     }
+
+    private fun setupSwipeToRefresh() {
+        binding?.swipeRefresh?.setOnRefreshListener {
+            itemPurchasesAdapter.refresh()
+        }
+    }
+
+    private fun setupSearch() {
+        binding?.etSearch?.apply {
+            setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    if (event.rawX >= (right - compoundDrawables[2].bounds.width())) {
+                        // Clear text
+                        setText("")
+                        // Call performClick to handle accessibility feedback
+                        performClick()
+                        return@setOnTouchListener true
+                    }
+                }
+                return@setOnTouchListener false
+            }
+
+            doOnTextChanged { text, _, _, _ ->
+                val query = text?.toString()?.trim()
+                itemPurchasesViewModel.searchPurchases(query)
+            }
+        }
+    }
+
+    private fun setupSortButton() {
+        binding?.btnSort?.setOnClickListener {
+            showSortOptions()
+        }
+    }
+
+    private fun showSortOptions() {
+        val dialogBinding = BottomSheetSortBinding.inflate(layoutInflater)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(dialogBinding.root)
+
+        val currentSort = itemPurchasesViewModel.currentSort.value
+        val currentOrder = itemPurchasesViewModel.currentOrder.value
+        when (currentSort) {
+            "stock_name" -> {
+                if (currentOrder == "asc") dialogBinding.radioAscName.isChecked = true
+                else dialogBinding.radioDescName.isChecked = true
+            }
+            "selling_price" -> {
+                if (currentOrder == "asc") dialogBinding.radioAscPrice.isChecked = true
+                else dialogBinding.radioDescPrice.isChecked = true
+            }
+        }
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnConfirm.setOnClickListener {
+            val selectedSortOrder = when (dialogBinding.radioGroupSort.checkedRadioButtonId) {
+                R.id.radioAscName -> "stock_name" to "asc"
+                R.id.radioDescName -> "stock_name" to "desc"
+                R.id.radioAscPrice -> "selling_price" to "asc"
+                R.id.radioDescPrice -> "selling_price" to "desc"
+                else -> "stock_name" to "asc"
+            }
+
+            itemPurchasesViewModel.filterAndSortPurchases(
+                search = binding?.etSearch?.text.toString().trim(),
+                sort = selectedSortOrder.first,
+                order = selectedSortOrder.second
+            )
+            dialog.dismiss()
+            updateSortButtonIndicator(true)
+        }
+
+        dialog.setOnDismissListener {
+            // Update the button indicator based on the current sort state
+            val isSorting = itemPurchasesViewModel.currentOrder.value != "asc"
+            updateSortButtonIndicator(isSorting)
+        }
+        dialog.show()
+    }
+
+    private fun setupFilterButton() {
+        binding?.btnFilter?.setOnClickListener {
+            showFilterOptions()
+        }
+    }
+
+    private fun showFilterOptions() {
+        val bottomSheetBinding = BottomSheetFilterBinding.inflate(layoutInflater)
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetBinding.root)
+
+        // Setup category chips
+        itemPurchasesViewModel.categoryNamesLiveData.observe(this) { categories ->
+            bottomSheetBinding.chipGroupCategory.removeAllViews()
+            categories.forEach { categoryName ->
+                val chip = Chip(requireContext())
+                chip.text = categoryName
+                chip.isCheckable = true
+                chip.isChecked = selectedCategories.contains(categoryName)
+                chip.setOnCheckedChangeListener { _, isChecked ->
+                    // Handle chip selection logic here
+                    if (isChecked) {
+                        selectedCategories.add(categoryName)
+                    } else {
+                        selectedCategories.remove(categoryName)
+                    }
+                }
+                bottomSheetBinding.chipGroupCategory.addView(chip)
+            }
+        }
+
+        // Setup unit chips
+        itemPurchasesViewModel.unitNamesLiveData.observe(this) { units ->
+            bottomSheetBinding.chipGroupUnit.removeAllViews()
+            units.forEach { unitName ->
+                val chip = Chip(requireContext())
+                chip.text = unitName
+                chip.isCheckable = true
+                chip.isChecked = selectedUnits.contains(unitName)
+                chip.setOnCheckedChangeListener { _, isChecked ->
+                    // Handle chip selection logic here
+                    if (isChecked) {
+                        selectedUnits.add(unitName)
+                    } else {
+                        selectedUnits.remove(unitName)
+                    }
+                }
+                bottomSheetBinding.chipGroupUnit.addView(chip)
+            }
+        }
+
+        bottomSheetBinding.btnApplyFilter.setOnClickListener {
+            val minPrice = bottomSheetBinding.etMinPrice.text.toString().toIntOrNull()
+            val maxPrice = bottomSheetBinding.etMaxPrice.text.toString().toIntOrNull()
+
+            itemPurchasesViewModel.filterByCategoryAndUnit(
+                selectedCategories.toList(),
+                selectedUnits.toList()
+            )
+            itemPurchasesViewModel.setSellingPriceRange(minPrice, maxPrice)
+            itemPurchasesViewModel.applyFilters()
+
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetBinding.btnCancel.setOnClickListener {
+            bottomSheetDialog.dismiss() // Dismiss the bottom sheet
+        }
+
+        // Show the bottom sheet dialog
+        bottomSheetDialog.show()
+    }
+
+    private fun updateSortButtonIndicator(isSorting: Boolean) {
+        // Add logic to update the button indicator
+        if (isSorting) {
+            binding?.btnSort?.setImageResource(R.drawable.ic_sort_active) // Change to an active indicator icon
+        } else {
+            binding?.btnSort?.setImageResource(R.drawable.ic_sort) // Change to a default indicator icon
+        }
+    }
+
+//    private fun setupAdapter() {
+//        itemPurchasesAdapter = ItemPurchasesAdapter()
+//        binding?.itemPurchasesRecyclerView?.apply {
+//            adapter = itemPurchasesAdapter.withLoadStateHeaderAndFooter(
+//                footer = LoadingStateAdapter { itemPurchasesAdapter.retry() },
+//                header = LoadingStateAdapter { itemPurchasesAdapter.retry() }
+//            )
+//            binding?.itemPurchasesRecyclerView?.layoutManager =
+//                LinearLayoutManager(requireContext())
+//            binding?.itemPurchasesRecyclerView?.setHasFixedSize(true)
+//        }
+//
+//        lifecycleScope.launchWhenCreated {
+//            itemPurchasesAdapter.loadStateFlow.collect {
+//                binding?.swipeRefresh?.isRefreshing = it.mediator?.refresh is LoadState.Loading
+//            }
+//        }
+//
+//        lifecycleScope.launch {
+//            itemPurchasesAdapter.loadStateFlow.collectLatest { loadStates ->
+//                binding?.tvInfo?.root?.isVisible = loadStates.refresh is LoadState.Error
+//            }
+//            if (itemPurchasesAdapter.itemCount < 1) binding?.tvInfo?.root?.visibility = View.VISIBLE
+//            else binding?.tvInfo?.root?.visibility = View.VISIBLE
+//        }
+//
+//        itemPurchasesViewModel.getPurchases(token).observe(viewLifecycleOwner) {
+//            itemPurchasesAdapter.submitData(lifecycle, it)
+//        }
+//    }
 
 //    private fun setupObservers() {
 //        itemPurchasesViewModel.getPurchases(user.token).observe(viewLifecycleOwner) {

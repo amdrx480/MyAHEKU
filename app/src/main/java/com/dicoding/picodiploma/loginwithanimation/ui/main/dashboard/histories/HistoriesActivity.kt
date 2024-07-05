@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityHistoriesBinding
+//import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityHistoriesBinding
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.DashboardFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

@@ -16,6 +16,13 @@ interface StocksDao {
     @RawQuery(observedEntities = [StocksEntity::class])
     fun getStocksByRawQuery(query: SupportSQLiteQuery): PagingSource<Int, StocksEntity>
 
+    // Query to get all stocks for export
+    @Query("SELECT * FROM stocks")
+    suspend fun getStocksForExport(): List<StocksEntity>
+
+//    @RawQuery(observedEntities = [StocksEntity::class])
+//    suspend fun getStocksByRawQueryForExport(query: SupportSQLiteQuery): List<StocksEntity>
+
     // Update
     @Update
     suspend fun updateStock(stock: StocksEntity)
@@ -23,6 +30,10 @@ interface StocksDao {
     @Query("DELETE FROM stocks")
     suspend fun deleteAllStocks()
 }
+
+//    @RawQuery
+//    suspend fun getStocksByRawQueryForExport(query: SupportSQLiteQuery): List<StocksEntity>
+
 
 // Read
 //    @Query("SELECT * FROM stocks ORDER BY stock_name ASC")

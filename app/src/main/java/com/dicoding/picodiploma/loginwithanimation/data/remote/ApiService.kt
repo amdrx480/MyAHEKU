@@ -3,6 +3,7 @@ package com.dicoding.picodiploma.loginwithanimation.data.remote
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.AllCustomersResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.excel.ExcelResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileResponse
@@ -13,7 +14,9 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksR
 import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.units.UnitsResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsResponse
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -44,6 +47,13 @@ interface ApiService {
         @Header("Authorization") data: String,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("search") search: String? = null,
+        @Query("category_name") categoryName: String? = null,
+        @Query("unit_name") unitName: String? = null,
+        @Query("selling_price_min") sellingPriceMin: Int? = null,
+        @Query("selling_price_max") sellingPriceMax: Int? = null,
     ): PurchasesResponse
 
     @GET("item_transactions")
@@ -96,6 +106,21 @@ interface ApiService {
         @Query("selling_price_min") sellingPriceMin: Int? = null,
         @Query("selling_price_max") sellingPriceMax: Int? = null
     ): StocksResponse
+
+//    @Streaming
+//    @GET("stocks/export")
+//    suspend fun exportStocksToExcel(
+//        @Header("Authorization") token: String,
+//        @Query("page") page: Int,
+//        @Query("limit") limit: Int,
+//        @Query("sort") sort: String? = null,
+//        @Query("order") order: String? = null,
+//        @Query("search") search: String? = null,
+//        @Query("category_name") categoryName: String? = null,
+//        @Query("unit_name") unitName: String? = null,
+//        @Query("selling_price_min") sellingPriceMin: Int? = null,
+//        @Query("selling_price_max") sellingPriceMax: Int? = null
+//    ): ExcelResponse
 
     @GET("stocks")
     fun getStocks(

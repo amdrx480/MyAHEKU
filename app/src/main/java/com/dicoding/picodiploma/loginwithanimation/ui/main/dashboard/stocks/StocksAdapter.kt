@@ -11,11 +11,16 @@ import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowPhotoBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.detail.DetailStocksActivity
+import java.text.NumberFormat
+import java.util.*
 
-class StocksAdapter : PagingDataAdapter<StocksEntity, StocksAdapter.ViewHolder>(DIFF_CALLBACK) {
+class StocksAdapter : PagingDataAdapter<StocksEntity, StocksAdapter.ViewHolder>(
+    DIFF_CALLBACK
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemRowPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemRowPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -41,7 +46,10 @@ class StocksAdapter : PagingDataAdapter<StocksEntity, StocksAdapter.ViewHolder>(
                 tvStockCategory.text = stocks.categoryName
                 tvUnits.text = stocks.unitName
                 tvStockTotal.text = stocks.stockTotal.toString()
-//                tvStockRoll.text = stocks.stock_Roll.toString()
+                // Format selling price to IDR
+                val format = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+                tvSellingPrice.text =
+                    format.format(stocks.sellingPrice)//                tvStockRoll.text = stocks.stock_Roll.toString()
 //                tvStockMeter.text = stocks.stock_Meter.toString()
 
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

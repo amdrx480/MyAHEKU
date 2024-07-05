@@ -97,20 +97,20 @@ class AppRepository(
 //        }
 //    }
 
-    fun pagingPurchases(token: String): Flow<PagingData<PurchasesEntity>> {
-        wrapEspressoIdlingResource {
-            @OptIn(ExperimentalPagingApi::class)
-            return Pager(
-                config = PagingConfig(
-                    pageSize = 5
-                ),
-                remoteMediator = PurchasesRemoteMediator(appDatabase, apiService, token),
-                pagingSourceFactory = {
-                    appDatabase.purchasesDao().getAllPurchases()
-                }
-            ).flow
-        }
-    }
+//    fun pagingPurchases(token: String): Flow<PagingData<PurchasesEntity>> {
+//        wrapEspressoIdlingResource {
+//            @OptIn(ExperimentalPagingApi::class)
+//            return Pager(
+//                config = PagingConfig(
+//                    pageSize = 5
+//                ),
+//                remoteMediator = PurchasesRemoteMediator(appDatabase, apiService, token),
+//                pagingSourceFactory = {
+//                    appDatabase.purchasesDao().getAllPurchases()
+//                }
+//            ).flow
+//        }
+//    }
 
     companion object {
         private const val TAG = "AppRepository"

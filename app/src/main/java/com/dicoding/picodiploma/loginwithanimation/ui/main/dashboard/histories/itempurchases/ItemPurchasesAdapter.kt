@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemPurchasesItemBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
+import java.text.NumberFormat
+import java.util.*
 
 class ItemPurchasesAdapter : PagingDataAdapter<PurchasesEntity, ItemPurchasesAdapter.ViewHolder>(
     DIFF_CALLBACK
@@ -35,11 +37,17 @@ class ItemPurchasesAdapter : PagingDataAdapter<PurchasesEntity, ItemPurchasesAda
 //                    .placeholder(R.drawable.ic_place_default_holder)
 //                    .error(R.drawable.ic_broken_image)
 //                    .into(imgViewPhoto)
+                tvIndex.text = purchases.id.toString()
                 val combinedText = "${purchases.stockName} - ${purchases.stockCode}"
                 tvStockName.text = combinedText
+                tvVendorName.text = purchases.vendorName
                 tvStockCategory.text = purchases.categoryName
                 tvUnits.text = purchases.unitName
                 tvStockTotal.text = purchases.quantity.toString()
+                // Format selling price to IDR
+                val format = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+                tvPurchasePrice.text = format.format(purchases.purchasePrice)
+                tvSellingPrice.text = format.format(purchases.sellingPrice)
 //                tvStockTotal.text = purchases.stock_total.toString()
 //                tvStockRoll.text = purchases.stock_Roll.toString()
 //                tvStockMeter.text = purchases.stock_Meter.toString()
@@ -64,6 +72,8 @@ class ItemPurchasesAdapter : PagingDataAdapter<PurchasesEntity, ItemPurchasesAda
                 newItem: PurchasesEntity,
             ): Boolean {
                 return oldItem == newItem
+//                return oldItem.id == newItem.id
+
             }
 
             override fun areContentsTheSame(
@@ -71,6 +81,7 @@ class ItemPurchasesAdapter : PagingDataAdapter<PurchasesEntity, ItemPurchasesAda
                 newItem: PurchasesEntity,
             ): Boolean {
                 return oldItem.id == newItem.id
+//                return oldItem == newItem
             }
         }
     }

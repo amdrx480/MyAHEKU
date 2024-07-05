@@ -13,89 +13,114 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.Purchase
 
 @OptIn(ExperimentalPagingApi::class)
 class PurchasesRemoteMediator(
-  private val appDatabase: AppDatabase,
-  private val apiService: ApiService,
-  private val data: String
+    private val appDatabase: AppDatabase,
+    private val apiService: ApiService,
+    private val token: String?,
+    private val sort: String?,
+    private val order: String?,
+    private val search: String?,
+    private val categoryName: List<String>? = null,
+    private val unitName: List<String>? = null,
+    private val sellingPriceMin: Int? = null,
+    private val sellingPriceMax: Int? = null,
 ) : RemoteMediator<Int, PurchasesEntity>() {
-  override suspend fun load(
-    loadType: LoadType,
-    state: PagingState<Int, PurchasesEntity>
-  ): MediatorResult {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, PurchasesEntity>
+    ): MediatorResult {
 
-    val page = when (loadType) {
-      LoadType.REFRESH -> {
-        val purchasesRemoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-        purchasesRemoteKeys?.nextKey?.minus(1) ?: INITIAL_PAGE_INDEX
-      }
-      LoadType.PREPEND -> {
-        val purchasesRemoteKeys = getRemoteKeyForFirstItem(state)
-        val prevKey = purchasesRemoteKeys?.prevKey
-          ?: return MediatorResult.Success(endOfPaginationReached = purchasesRemoteKeys != null)
-        prevKey
-      }
-      LoadType.APPEND -> {
-        val purchasesRemoteKeys = getRemoteKeyForLastItem(state)
-        val nextKey = purchasesRemoteKeys?.nextKey
-          ?: return MediatorResult.Success(endOfPaginationReached = purchasesRemoteKeys != null)
-        nextKey
-      }
-    }
-
-    return try {
-      //jancok haurs pake all response gak bisa kek biasa
-      val responseData =
-        apiService.
-        getAllPurchase("Bearer $data", page, state.config.pageSize).data
-
-      val endOfPaginationReached = responseData.isEmpty()
-      appDatabase.withTransaction {
-        if (loadType == LoadType.REFRESH) {
-          appDatabase.purchasesRemoteKeysDao().deleteRemoteKeys()
-          appDatabase.purchasesDao().deleteAllPurchases()
+        val page = when (loadType) {
+            LoadType.REFRESH -> {
+                val purchasesRemoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                purchasesRemoteKeys?.nextKey?.minus(1) ?: INITIAL_PAGE_INDEX
+            }
+            LoadType.PREPEND -> {
+                val purchasesRemoteKeys = getRemoteKeyForFirstItem(state)
+                val prevKey = purchasesRemoteKeys?.prevKey
+                    ?: return MediatorResult.Success(endOfPaginationReached = purchasesRemoteKeys != null)
+                prevKey
+            }
+            LoadType.APPEND -> {
+                val purchasesRemoteKeys = getRemoteKeyForLastItem(state)
+                val nextKey = purchasesRemoteKeys?.nextKey
+                    ?: return MediatorResult.Success(endOfPaginationReached = purchasesRemoteKeys != null)
+                nextKey
+            }
         }
 
-        val prevKey = if (page == 1) null else page - 1
-        val nextKey = if (endOfPaginationReached) null else page + 1
+        return try {
+            val categoryFilter = categoryName?.joinToString(",")
+            val unitFilter = unitName?.joinToString(",")
 
-        val keys = responseData.map {
-          PurchasesRemoteKeys(id = it.id.toString(), prevKey = prevKey, nextKey = nextKey)
+            //jancok haurs pake all response gak bisa kek biasa
+//      val responseData =
+//        apiService.
+//        getAllPurchase("Bearer $data", page, state.config.pageSize).data
+
+            val apiResponse = apiService.getAllPurchase(
+                data = "Bearer $token",
+                page = page,
+                limit = state.config.pageSize,
+                sort = sort,
+                order = order, // add order parameter
+                search = search,
+                categoryName = categoryFilter, // Pass new parameters to API call
+                unitName = unitFilter,
+                sellingPriceMin = sellingPriceMin,
+                sellingPriceMax = sellingPriceMax
+            )
+
+            val purchases = apiResponse.data
+            val endOfPaginationReached = purchases.isEmpty()
+
+            appDatabase.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    appDatabase.purchasesRemoteKeysDao().deleteRemoteKeys()
+                    appDatabase.purchasesDao().deleteAllPurchases()
+                }
+
+                val prevKey = if (page == 1) null else page - 1
+                val nextKey = if (endOfPaginationReached) null else page + 1
+
+                val keys = purchases.map {
+                    PurchasesRemoteKeys(id = it.id.toString(), prevKey = prevKey, nextKey = nextKey)
+                }
+
+                appDatabase.purchasesRemoteKeysDao().insertAll(keys)
+                appDatabase.purchasesDao().insertAllPurchases(purchases)
+            }
+
+            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+        } catch (exception: Exception) {
+            MediatorResult.Error(exception)
         }
-
-        appDatabase.purchasesRemoteKeysDao().insertAll(keys)
-        appDatabase.purchasesDao().insertPurchases(responseData)
-      }
-
-      MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-    } catch (exception: Exception) {
-      MediatorResult.Error(exception)
     }
-  }
 
-  private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
-    return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let {
-      appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.id.toString())
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let {
+            appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.id.toString())
+        }
     }
-  }
 
-  private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
-    return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let {
-      appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.id.toString())
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let {
+            appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.id.toString())
+        }
     }
-  }
 
-  private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
-    return state.anchorPosition?.let { position ->
-      state.closestItemToPosition(position)?.id?.let {
-        appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.toString())
-      }
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PurchasesEntity>): PurchasesRemoteKeys? {
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let {
+                appDatabase.purchasesRemoteKeysDao().getRemoteKeysId(it.toString())
+            }
+        }
     }
-  }
 
-  override suspend fun initialize(): InitializeAction {
-    return InitializeAction.LAUNCH_INITIAL_REFRESH
-  }
+    override suspend fun initialize(): InitializeAction {
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    }
 
-  private companion object {
-    const val INITIAL_PAGE_INDEX = 1
-  }
+    private companion object {
+        const val INITIAL_PAGE_INDEX = 1
+    }
 }

@@ -15,7 +15,9 @@ android {
 
     defaultConfig {
         applicationId = "com.dicoding.picodiploma.loginwithanimation"
-        minSdk = 21
+//        minSdk = 21
+        // menggunakan minSdk 26 agar Apache POI dapat digunakan
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -47,6 +49,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -92,6 +97,18 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
 
     implementation ("com.github.bumptech.glide:glide:4.13.1")
+
+    // Data untuk Ekspor dan Buat File Excel Menggunakan Apache POI
+    implementation ("org.apache.poi:poi:5.2.2")
+//    implementation ("org.apache.poi:poi:5.3.2")
+    implementation ("org.apache.poi:poi-ooxml:5.2.2")
+
+//    // Tambahkan ini untuk Log4j2 API
+//    implementation("org.apache.logging.log4j:log4j-api:2.17.2")
+//
+//    // Tambahkan ini untuk Log4j2 Core
+//    annotationProcessor("org.apache.logging.log4j:log4j-core:2.17.0")
+
 
     // DI Hilt
 //    implementation ("com.google.dagger:hilt-android:2.41")
