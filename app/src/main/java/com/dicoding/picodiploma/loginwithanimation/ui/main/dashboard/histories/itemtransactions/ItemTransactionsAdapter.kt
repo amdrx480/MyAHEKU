@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemTransactionsItemBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsEntity
+import java.text.NumberFormat
+import java.util.*
 
 class ItemTransactionsAdapter :
     PagingDataAdapter<ItemTransactionsEntity, ItemTransactionsAdapter.ViewHolder>(
@@ -37,11 +39,17 @@ class ItemTransactionsAdapter :
 //                    .placeholder(R.drawable.ic_place_default_holder)
 //                    .error(R.drawable.ic_broken_image)
 //                    .into(imgViewPhoto)
-                tvStockName.text = itemTransactions.stockName
+                tvIndex.text = itemTransactions.id.toString()
+                val combinedText = "${itemTransactions.stockName} - ${itemTransactions.stockCode}"
+                tvStockName.text = combinedText
+                tvCustomerName.text = itemTransactions.customerName
                 tvStockCategory.text = itemTransactions.categoryName
                 tvUnits.text = itemTransactions.unitName
                 tvStockTotal.text = itemTransactions.quantity.toString()
 
+                // Format selling price to IDR
+                val format = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+                tvTransactionPrice.text = format.format(itemTransactions.subTotal)
 //                tvStockTotal.text = itemTransactions.stock_total.toString()
 //                tvStockRoll.text = itemTransactions.stock_Roll.toString()
 //                tvStockMeter.text = itemTransactions.stock_Meter.toString()
@@ -65,19 +73,28 @@ class ItemTransactionsAdapter :
                 oldItem: ItemTransactionsEntity,
                 newItem: ItemTransactionsEntity,
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
+//                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
                 oldItem: ItemTransactionsEntity,
                 newItem: ItemTransactionsEntity,
             ): Boolean {
-//                return oldItem.id == newItem.id
-                return oldItem.stockName == newItem.stockName &&
-                        oldItem.categoryName == newItem.categoryName &&
-                        oldItem.unitName == newItem.unitName &&
-                        oldItem.quantity == newItem.quantity
+//                return oldItem == newItem
+                return oldItem.id == newItem.id
+
             }
         }
     }
 }
+
+//                return oldItem.stockName == newItem.stockName &&
+//                        oldItem.categoryName == newItem.categoryName &&
+//                        oldItem.unitName == newItem.unitName &&
+//                        oldItem.quantity == newItem.quantity
+
+//                return oldItem.stockName == newItem.stockName &&
+//                        oldItem.categoryName == newItem.categoryName &&
+//                        oldItem.unitName == newItem.unitName &&
+//                        oldItem.quantity == newItem.quantity

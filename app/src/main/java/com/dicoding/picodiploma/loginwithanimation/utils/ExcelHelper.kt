@@ -3,7 +3,9 @@ package com.dicoding.picodiploma.loginwithanimation.utils
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
+import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsEntity
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,15 +15,209 @@ import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 object ExcelHelper {
 
     private const val DEFAULT_COLUMN_WIDTH = 15 // Lebar kolom default dalam karakter
+
+    // Fungsi utama untuk menyimpan data PurchasesEntity ke dalam file Excel
+    suspend fun savePurchasesToExcel(
+        context: Context,
+        purchases: List<PurchasesEntity>
+    ): ResultResponse<String> {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Membuat workbook baru menggunakan XSSFWorkbook (untuk format XLSX)
+                val workbook = XSSFWorkbook()
+                val sheet =
+                    workbook.createSheet("Purchases") // Membuat sheet baru dengan nama "Purchases"
+
+                // Membuat style untuk teks tebal di tengah
+                val boldCenterStyle = workbook.createCellStyle().apply {
+                    alignment = HorizontalAlignment.CENTER
+                    verticalAlignment = VerticalAlignment.CENTER
+                    setFont(workbook.createFont().apply {
+                        bold = true
+                        fontHeightInPoints = 14
+                    })
+                }
+
+                // Membuat style untuk teks tebal biasa
+                val boldStyle = workbook.createCellStyle().apply {
+                    setFont(workbook.createFont().apply {
+                        bold = true
+                    })
+                }
+
+                // Membuat style untuk border seluruh cell
+                val borderStyle = workbook.createCellStyle().apply {
+                    borderBottom = BorderStyle.THIN
+                    borderTop = BorderStyle.THIN
+                    borderLeft = BorderStyle.THIN
+                    borderRight = BorderStyle.THIN
+                }
+
+                // Membuat row untuk judul perusahaan
+                val companyTitleRow = sheet.createRow(0)
+                val companyTitleCell = companyTitleRow.createCell(0)
+                companyTitleCell.setCellValue("PT. Anugrah Hadi Electric")
+                companyTitleCell.cellStyle = boldCenterStyle
+
+                // Membuat row untuk judul header data
+                val titleHeaderRow = sheet.createRow(1)
+                val titleHeaderCell = titleHeaderRow.createCell(0)
+                titleHeaderCell.setCellValue("Data Pembelian Barang")
+                titleHeaderCell.cellStyle = boldCenterStyle
+
+                // Menggabungkan sel untuk judul perusahaan dan judul header data
+                sheet.addMergedRegion(CellRangeAddress(0, 0, 0, 8))
+                sheet.addMergedRegion(CellRangeAddress(1, 1, 0, 8))
+
+                // Membuat header row untuk nama kolom
+                val headerRow = sheet.createRow(2)
+                createPurchasesHeaderRow(
+                    headerRow,
+                    borderStyle
+                ) // Memanggil fungsi createPurchasesHeaderRow untuk membuat header kolom
+
+                // Memasukkan data ke dalam rows
+                var rowIndex = 3
+                for (purchase in purchases) {
+                    val dataRow = sheet.createRow(rowIndex++)
+                    createPurchasesDataRow(
+                        dataRow,
+                        purchase,
+                        borderStyle
+                    ) // Memanggil fungsi createPurchasesDataRow untuk membuat data row
+                    // Menyesuaikan lebar kolom berdasarkan header dan data
+                    adjustColumnWidths(sheet, headerRow, dataRow)
+                }
+
+                // Membuat row untuk alamat perusahaan
+                val addressRow =
+                    sheet.createRow(rowIndex + 1) // Menambahkan satu baris setelah data rows
+                val addressCell = addressRow.createCell(0)
+                addressCell.setCellValue("Alamat : Jl. Sriwijaya III No.9, Perumnas 3, Kec. Karawaci, Kabupaten Tangerang, Banten 15810")
+                addressCell.cellStyle = boldStyle
+
+                // Menggabungkan sel untuk row alamat
+                sheet.addMergedRegion(CellRangeAddress(rowIndex + 1, rowIndex + 1, 0, 8))
+
+                // Menyimpan workbook ke dalam file
+                val fileName = generateFileItemPurchasesName()
+                val file = File(getDownloadFolderPath(context), fileName)
+                val fileOutputStream = FileOutputStream(file)
+                workbook.write(fileOutputStream)
+                workbook.close()
+
+                ResultResponse.Success(file.absolutePath) // Mengembalikan path file Excel yang berhasil disimpan
+            } catch (e: Exception) {
+                Log.e("ExcelHelper", "Error saving purchases to Excel", e)
+                ResultResponse.Error("Failed to export purchases to Excel: ${e.message}") // Mengembalikan error jika terjadi exception
+            }
+        }
+    }
+
+    // Fungsi utama untuk menyimpan data ItemTransactionsEntity ke dalam file Excel
+    suspend fun saveItemTransactionsToExcel(
+        context: Context,
+        itemTransactions: List<ItemTransactionsEntity>
+    ): ResultResponse<String> {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Membuat workbook baru menggunakan XSSFWorkbook (untuk format XLSX)
+                val workbook = XSSFWorkbook()
+                val sheet =
+                    workbook.createSheet("ItemTransactions") // Membuat sheet baru dengan nama "ItemTransactions"
+
+                // Membuat style untuk teks tebal di tengah
+                val boldCenterStyle = workbook.createCellStyle().apply {
+                    alignment = HorizontalAlignment.CENTER
+                    verticalAlignment = VerticalAlignment.CENTER
+                    setFont(workbook.createFont().apply {
+                        bold = true
+                        fontHeightInPoints = 14
+                    })
+                }
+
+                // Membuat style untuk teks tebal biasa
+                val boldStyle = workbook.createCellStyle().apply {
+                    setFont(workbook.createFont().apply {
+                        bold = true
+                    })
+                }
+
+                // Membuat style untuk border seluruh cell
+                val borderStyle = workbook.createCellStyle().apply {
+                    borderBottom = BorderStyle.THIN
+                    borderTop = BorderStyle.THIN
+                    borderLeft = BorderStyle.THIN
+                    borderRight = BorderStyle.THIN
+                }
+
+                // Membuat row untuk judul perusahaan
+                val companyTitleRow = sheet.createRow(0)
+                val companyTitleCell = companyTitleRow.createCell(0)
+                companyTitleCell.setCellValue("PT. Anugrah Hadi Electric")
+                companyTitleCell.cellStyle = boldCenterStyle
+
+                // Membuat row untuk judul header data
+                val titleHeaderRow = sheet.createRow(1)
+                val titleHeaderCell = titleHeaderRow.createCell(0)
+                titleHeaderCell.setCellValue("Data Transaksi Barang")
+                titleHeaderCell.cellStyle = boldCenterStyle
+
+                // Menggabungkan sel untuk judul perusahaan dan judul header data
+                sheet.addMergedRegion(CellRangeAddress(0, 0, 0, 10))
+                sheet.addMergedRegion(CellRangeAddress(1, 1, 0, 10))
+
+                // Membuat header row untuk nama kolom
+                val headerRow = sheet.createRow(2)
+                createItemTransactionsHeaderRow(
+                    headerRow,
+                    borderStyle
+                ) // Memanggil fungsi createItemTransactionsHeaderRow untuk membuat header kolom
+
+                // Memasukkan data ke dalam rows
+                var rowIndex = 3
+                for (transaction in itemTransactions) {
+                    val dataRow = sheet.createRow(rowIndex++)
+                    createItemTransactionsDataRow(
+                        dataRow,
+                        transaction,
+                        borderStyle
+                    ) // Memanggil fungsi createItemTransactionsDataRow untuk membuat data row
+                    // Menyesuaikan lebar kolom berdasarkan header dan data
+                    adjustColumnWidths(sheet, headerRow, dataRow)
+                }
+
+                // Membuat row untuk alamat perusahaan
+                val addressRow =
+                    sheet.createRow(rowIndex + 1) // Menambahkan satu baris setelah data rows
+                val addressCell = addressRow.createCell(0)
+                addressCell.setCellValue("Alamat : Jl. Sriwijaya III No.9, Perumnas 3, Kec. Karawaci, Kabupaten Tangerang, Banten 15810")
+                addressCell.cellStyle = boldStyle
+
+                // Menggabungkan sel untuk row alamat
+                sheet.addMergedRegion(CellRangeAddress(rowIndex + 1, rowIndex + 1, 0, 10))
+
+                // Menyimpan workbook ke dalam file
+                val fileName = generateFileItemTransactionsName()
+                val file = File(getDownloadFolderPath(context), fileName)
+                val fileOutputStream = FileOutputStream(file)
+                workbook.write(fileOutputStream)
+                workbook.close()
+
+                ResultResponse.Success(file.absolutePath) // Mengembalikan path file Excel yang berhasil disimpan
+            } catch (e: Exception) {
+                Log.e("ExcelHelper", "Error saving item transactions to Excel", e)
+                ResultResponse.Error("Failed to export item transactions to Excel: ${e.message}") // Mengembalikan error jika terjadi exception
+            }
+        }
+    }
 
     // Fungsi utama untuk menyimpan data StocksEntity ke dalam file Excel
     suspend fun saveStocksToExcel(
@@ -107,7 +303,7 @@ object ExcelHelper {
                 sheet.addMergedRegion(CellRangeAddress(rowIndex + 1, rowIndex + 1, 0, 7))
 
                 // Menyimpan workbook ke dalam file
-                val fileName = generateFileName()
+                val fileName = generateFileStocksName()
                 val file = File(getDownloadFolderPath(context), fileName)
                 val fileOutputStream = FileOutputStream(file)
                 workbook.write(fileOutputStream)
@@ -120,6 +316,46 @@ object ExcelHelper {
             }
         }
     }
+
+    // Fungsi untuk membuat header row dengan border style
+    private fun createPurchasesHeaderRow(headerRow: Row, borderStyle: CellStyle) {
+        val headers = arrayOf(
+            "ID",
+            "Vendor Name",
+            "Stock Name",
+            "Stock Code",
+            "Category",
+            "Unit",
+            "Quantity",
+            "Purchase Price",
+            "Selling Price"
+        )
+        for ((index, header) in headers.withIndex()) {
+            val cell = headerRow.createCell(index, CellType.STRING)
+            cell.setCellValue(header)
+            cell.cellStyle = borderStyle
+        }
+    }
+
+    // Fungsi untuk membuat header row untuk item transactions
+    private fun createItemTransactionsHeaderRow(headerRow: Row, style: CellStyle) {
+        val headers = listOf(
+            "ID",
+            "Customer Name",
+            "Stock Name",
+            "Stock Code",
+            "Unit Name",
+            "Category Name",
+            "Quantity",
+            "Sub Total"
+        )
+        headers.forEachIndexed { index, header ->
+            val cell = headerRow.createCell(index)
+            cell.setCellValue(header)
+            cell.cellStyle = style
+        }
+    }
+
 
     // Fungsi untuk membuat header row dengan border style
     private fun createHeaderRow(headerRow: Row, borderStyle: CellStyle) {
@@ -141,9 +377,53 @@ object ExcelHelper {
     }
 
     // Fungsi untuk membuat data row dengan border style
+    private fun createPurchasesDataRow(
+        dataRow: Row,
+        purchase: PurchasesEntity,
+        borderStyle: CellStyle
+    ) {
+        val cells = arrayOf(
+            purchase.id.toString(),
+            purchase.vendorName ?: "",
+            purchase.stockName ?: "",
+            purchase.stockCode ?: "",
+            purchase.categoryName ?: "",
+            purchase.unitName ?: "",
+            purchase.quantity?.toString() ?: "",
+            formatCurrency(purchase.purchasePrice ?: 0), // Format purchasePrice ke mata uang Rupiah
+            formatCurrency(purchase.sellingPrice ?: 0) // Format sellingPrice ke mata uang Rupiah
+        )
+
+        for ((index, cellValue) in cells.withIndex()) {
+            val cell = dataRow.createCell(index, CellType.STRING)
+            cell.setCellValue(cellValue)
+            cell.cellStyle = borderStyle
+        }
+    }
+
+    // Fungsi untuk membuat data row untuk item transactions
+    private fun createItemTransactionsDataRow(dataRow: Row, transaction: ItemTransactionsEntity, style: CellStyle) {
+        val cells = listOf(
+            transaction.id.toString(),
+            transaction.customerName ?: "",
+            transaction.stockName ?: "",
+            transaction.stockCode ?: "",
+            transaction.unitName ?: "",
+            transaction.categoryName ?: "",
+            transaction.quantity?.toString() ?: "",
+            transaction.subTotal?.toString() ?: ""
+        )
+        cells.forEachIndexed { index, value ->
+            val cell = dataRow.createCell(index)
+            cell.setCellValue(value)
+            cell.cellStyle = style
+        }
+    }
+
+    // Fungsi untuk membuat data row dengan border style
     private fun createDataRow(dataRow: Row, stock: StocksEntity, borderStyle: CellStyle) {
         val cells = arrayOf(
-            stock.id.toString(),
+            stock.id,
             stock.createdAt,
             stock.stockName,
             stock.stockCode,
@@ -167,7 +447,18 @@ object ExcelHelper {
     }
 
     // Fungsi untuk generate nama file Excel berdasarkan timestamp
-    private fun generateFileName(): String {
+    private fun generateFileItemPurchasesName(): String {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        return "Purchases_$timeStamp.xlsx"
+    }
+
+    private fun generateFileItemTransactionsName(): String {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        return "ItemTransactions_$timeStamp.xlsx"
+    }
+
+    // Fungsi untuk generate nama file Excel berdasarkan timestamp
+    private fun generateFileStocksName(): String {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         return "Stocks_$timeStamp.xlsx"
     }

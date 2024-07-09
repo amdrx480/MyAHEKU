@@ -6,17 +6,68 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.dashboard.histories.itemtransactions.ItemTransactionsFragment">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="Search"
+        app:layout_constraintEnd_toStartOf="@+id/btnSort"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_search"
+            android:drawableEnd="@drawable/ic_clear"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:drawablePadding="8dp" /> <!-- Adjust the drawable padding as needed -->
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/btnSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/sort"
+        android:padding="12dp"
+        android:src="@drawable/ic_sort"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutSearch"
+        app:layout_constraintEnd_toStartOf="@+id/btnFilter"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayoutSearch"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutSearch" />
+
+    <ImageButton
+        android:id="@+id/btnFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/filter"
+        android:padding="12dp"
+        android:src="@drawable/ic_filter_list"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutSearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnSort"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutSearch" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutSearch">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/itemTransactionsRecyclerView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_ItemTransactions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="55dp"
             tools:listitem="@layout/item_transactions_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -25,14 +76,54 @@
         layout="@layout/view_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_info"
-        android:textSize="30sp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <!-- Export floating action button (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabExport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_download"
+        app:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/m3_ref_palette_white" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swipe_refresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/itemTransactionsRecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginTop="55dp"-->
+<!--            tools:listitem="@layout/item_transactions_item" />-->
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+<!--    <include-->
+<!--        android:id="@+id/tv_info"-->
+<!--        layout="@layout/view_error"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:text="@string/no_info"-->
+<!--        android:textSize="30sp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        tools:visibility="visible" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

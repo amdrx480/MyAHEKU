@@ -83,6 +83,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <!-- Export floating action button (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabExportItemPurchases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_download"
+        app:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/m3_ref_palette_white" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

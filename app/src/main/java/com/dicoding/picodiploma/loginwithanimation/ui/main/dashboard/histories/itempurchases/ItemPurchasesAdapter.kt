@@ -30,24 +30,24 @@ class ItemPurchasesAdapter : PagingDataAdapter<PurchasesEntity, ItemPurchasesAda
     inner class ViewHolder(private var binding: ItemPurchasesItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(purchases: PurchasesEntity) {
+        fun bind(itemPurchases: PurchasesEntity) {
             with(binding) {
                 Glide.with(imgViewStock)
 //                    .load(story.photoUrl) // URL Avatar
 //                    .placeholder(R.drawable.ic_place_default_holder)
 //                    .error(R.drawable.ic_broken_image)
 //                    .into(imgViewPhoto)
-                tvIndex.text = purchases.id.toString()
-                val combinedText = "${purchases.stockName} - ${purchases.stockCode}"
+                tvIndex.text = itemPurchases.id.toString()
+                val combinedText = "${itemPurchases.stockName} - ${itemPurchases.stockCode}"
                 tvStockName.text = combinedText
-                tvVendorName.text = purchases.vendorName
-                tvStockCategory.text = purchases.categoryName
-                tvUnits.text = purchases.unitName
-                tvStockTotal.text = purchases.quantity.toString()
+                tvVendorName.text = itemPurchases.vendorName
+                tvStockCategory.text = itemPurchases.categoryName
+                tvUnits.text = itemPurchases.unitName
+                tvStockTotal.text = itemPurchases.quantity.toString()
                 // Format selling price to IDR
                 val format = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-                tvPurchasePrice.text = format.format(purchases.purchasePrice)
-                tvSellingPrice.text = format.format(purchases.sellingPrice)
+                tvPurchasePrice.text = format.format(itemPurchases.purchasePrice)
+                tvSellingPrice.text = format.format(itemPurchases.sellingPrice)
 //                tvStockTotal.text = purchases.stock_total.toString()
 //                tvStockRoll.text = purchases.stock_Roll.toString()
 //                tvStockMeter.text = purchases.stock_Meter.toString()

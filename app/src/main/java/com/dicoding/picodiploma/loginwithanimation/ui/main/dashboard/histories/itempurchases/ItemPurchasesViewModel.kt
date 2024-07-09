@@ -26,10 +26,6 @@ class ItemPurchasesViewModel(private val authRepository: AuthRepository) : ViewM
     private val sellingPriceMax = MutableLiveData<Int?>(null)
     val isFilterApplied = MutableLiveData(false)
 
-    // LiveData untuk mengamati perubahan pada daftar category name dan unit name yang dipilih
-//    val selectedCategories: LiveData<List<String>> get() = categoryName
-//    val selectedUnits: LiveData<List<String>> get() = unitName
-
     // Variabel untuk menyimpan status terakhir pilihan kategori dan unit
     private var lastSelectedCategories: List<String> = emptyList()
     private var lastSelectedUnits: List<String> = emptyList()
@@ -185,6 +181,12 @@ class ItemPurchasesViewModel(private val authRepository: AuthRepository) : ViewM
         }
     }
 }
+
+
+// LiveData untuk mengamati perubahan pada daftar category name dan unit name yang dipilih
+//    val selectedCategories: LiveData<List<String>> get() = categoryName
+//    val selectedUnits: LiveData<List<String>> get() = unitName
+
 //    fun getPurchases(token: String): LiveData<PagingData<PurchasesEntity>> {
 //        return repository.pagingPurchases(token).cachedIn(viewModelScope).asLiveData()
 //    }

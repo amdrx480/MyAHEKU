@@ -1,35 +1,38 @@
 package com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.itempurchases
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentItemPurchasesBinding
-import com.dicoding.picodiploma.loginwithanimation.data.model.user.UserModel
+import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.databinding.BottomSheetFilterBinding
 import com.dicoding.picodiploma.loginwithanimation.databinding.BottomSheetSortBinding
 import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
-import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.DashboardFragment
-import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.HistoriesActivity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.LoadingStateAdapter
+import com.dicoding.picodiploma.loginwithanimation.utils.ExcelHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 class ItemPurchasesFragment : Fragment() {
 
+    private var _binding: FragmentItemPurchasesBinding? = null
+    private val binding get() = _binding
 
-//    private var token: String = ""
     private val itemPurchasesViewModel: ItemPurchasesViewModel by viewModels {
         ViewModelUserFactory.getInstance(requireContext())
     }
@@ -37,9 +40,6 @@ class ItemPurchasesFragment : Fragment() {
     private lateinit var itemPurchasesAdapter: ItemPurchasesAdapter
     private val selectedCategories = mutableSetOf<String>()
     private val selectedUnits = mutableSetOf<String>()
-
-    private var _binding: FragmentItemPurchasesBinding? = null
-    private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +51,6 @@ class ItemPurchasesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        user = requireArguments().getParcelable(ARG_USER)!!
-//        token = requireActivity().intent.getStringExtra(DashboardFragment.EXTRA_TOKEN) ?: ""
 
         itemPurchasesAdapter = ItemPurchasesAdapter()
 
@@ -62,8 +60,10 @@ class ItemPurchasesFragment : Fragment() {
         setupSearch()
         setupSortButton()
         setupFilterButton()
-//        setupAdapter()
-//        setupObservers()
+
+        binding?.fabExportItemPurchases?.setOnClickListener {
+            exportVisibleItemPurchasesToExcel()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -72,11 +72,25 @@ class ItemPurchasesFragment : Fragment() {
             header = LoadingStateAdapter { itemPurchasesAdapter.retry() },
             footer = LoadingStateAdapter { itemPurchasesAdapter.retry() }
         )
+
+        binding?.rvPurchases?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && binding!!.fabExportItemPurchases.isVisible) {
+                    binding!!.fabExportItemPurchases.hide()
+                } else if (dy < 0 && !binding!!.fabExportItemPurchases.isVisible) {
+                    binding!!.fabExportItemPurchases.show()
+
+                    binding?.fabExportItemPurchases?.setOnClickListener {
+                        exportVisibleItemPurchasesToExcel()
+                    }
+                }
+            }
+        })
     }
 
     private fun observePurchases() {
         itemPurchasesViewModel.purchasesFlow.observe(this) { pagingData ->
-//            itemPurchasesAdapter.submitData(PagingData.empty())
             itemPurchasesAdapter.submitData(lifecycle, pagingData)
         }
 
@@ -252,6 +266,44 @@ class ItemPurchasesFragment : Fragment() {
         }
     }
 
+    private fun exportVisibleItemPurchasesToExcel() {
+        val context = requireContext()
+        val visibleItemStocks = itemPurchasesAdapter.snapshot().items
+
+        lifecycleScope.launch {
+            val result = ExcelHelper.savePurchasesToExcel(context, visibleItemStocks)
+            // Handle the result if needed
+            when (result) {
+                is ResultResponse.Success -> {
+                    Log.d(
+                        "ItemPurchasesFragment",
+                        "Exported ItemPurchases to Excel: ${result.data}"
+                    )
+                    Toast.makeText(context, "Exported to: ${result.data}", Toast.LENGTH_LONG).show()
+                }
+                is ResultResponse.Error -> {
+                    Log.e(
+                        "ItemPurchasesFragment",
+                        "Failed to export ItemPurchases: ${result.error}"
+                    )
+                    Toast.makeText(context, "Failed to export: ${result.error}", Toast.LENGTH_LONG)
+                        .show()
+                }
+                is ResultResponse.Loading -> {
+                    // You can show a loading indicator if needed
+                    Log.d("ItemPurchasesFragment", "Exporting ItemPurchases...")
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
+
+
 //    private fun setupAdapter() {
 //        itemPurchasesAdapter = ItemPurchasesAdapter()
 //        binding?.itemPurchasesRecyclerView?.apply {
@@ -290,12 +342,6 @@ class ItemPurchasesFragment : Fragment() {
 //            }
 //        }
 //    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-}
 
 //    companion object {
 //        private const val ARG_TOKEN = "extra_token"

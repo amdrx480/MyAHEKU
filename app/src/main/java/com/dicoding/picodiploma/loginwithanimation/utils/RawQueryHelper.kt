@@ -190,6 +190,100 @@ object RawQueryHelper {
         return SimpleSQLiteQuery(queryBuilder.toString(), args.toTypedArray())
     }
 
+    fun buildItemTransactionsQuery(
+        sort: String? = null,
+        search: String? = null,
+        order: String? = "ASC", // default order
+        categoryName: List<String>? = null,
+        unitName: List<String>? = null,
+        subTotalMin: Int? = null,
+        subTotalMax: Int? = null,
+    ): SupportSQLiteQuery {
+        val queryBuilder = StringBuilder("SELECT * FROM item_transactions")
+        val args = mutableListOf<Any>()
+
+        var isFirstCondition = true
+
+        // Adding WHERE clause if any filtering condition is provided
+        if (!search.isNullOrBlank() || !categoryName.isNullOrEmpty() || !unitName.isNullOrEmpty()) {
+            queryBuilder.append(" WHERE ")
+
+            // Adding main filter condition
+            if (!search.isNullOrBlank()) {
+                queryBuilder.append("(stock_name LIKE ? OR stock_code LIKE ? OR category_name LIKE ? OR unit_name LIKE ?)")
+                val searchArg = "%$search%"
+                args.addAll(listOf(searchArg, searchArg, searchArg, searchArg))
+                isFirstCondition = false
+            }
+
+            // Adding category_name filter
+            if (!categoryName.isNullOrEmpty()) {
+                if (!isFirstCondition) {
+                    queryBuilder.append(" AND ")
+                }
+                queryBuilder.append("category_name IN (${categoryName.joinToString { "?" }})")
+                args.addAll(categoryName)
+                isFirstCondition = false
+            }
+
+            // Adding unit_name filter
+            if (!unitName.isNullOrEmpty()) {
+                if (!isFirstCondition) {
+                    queryBuilder.append(" AND ")
+                }
+                queryBuilder.append("unit_name IN (${unitName.joinToString { "?" }})")
+                args.addAll(unitName)
+                isFirstCondition = false
+            }
+
+            // Adding sub_total range filter
+            if (subTotalMin != null && subTotalMax != null) {
+                if (!isFirstCondition) {
+                    queryBuilder.append(" AND ")
+                }
+                queryBuilder.append("sub_total BETWEEN ? AND ?")
+                args.addAll(listOf(subTotalMin, subTotalMax))
+                isFirstCondition = false
+            } else if (subTotalMin != null) {
+                if (!isFirstCondition) {
+                    queryBuilder.append(" AND ")
+                }
+                queryBuilder.append("sub_total >= ?")
+                args.add(subTotalMin)
+                isFirstCondition = false
+            } else if (subTotalMax != null) {
+                if (!isFirstCondition) {
+                    queryBuilder.append(" AND ")
+                }
+                queryBuilder.append("sub_total <= ?")
+                args.add(subTotalMax)
+                isFirstCondition = false
+            }
+        }
+
+        // Adding search query condition
+        if (!search.isNullOrBlank()) {
+            if (!isFirstCondition) {
+                queryBuilder.append(" AND ")
+            } else {
+                queryBuilder.append(" WHERE ")
+            }
+            queryBuilder.append(" (stock_name LIKE ? OR stock_code LIKE ? OR category_name LIKE ? OR unit_name LIKE ?)")
+            val searchArg = "%$search%"
+            args.addAll(listOf(searchArg, searchArg, searchArg, searchArg))
+        }
+
+        // Adding sorting order
+        when (sort) {
+            "sub_total" -> queryBuilder.append(" ORDER BY sub_total $order")
+            else -> queryBuilder.append(" ORDER BY rowid $order") // default order by rowid
+        }
+
+        return SimpleSQLiteQuery(queryBuilder.toString(), args.toTypedArray())
+    }
+
+}
+
 
 //    fun buildPurchasesQuery(
 //        sort: String? = null,
@@ -282,8 +376,6 @@ object RawQueryHelper {
 //
 //        return SimpleSQLiteQuery(queryBuilder.toString(), args.toTypedArray())
 //    }
-}
-
 
 
 //object RawQueryHelper {

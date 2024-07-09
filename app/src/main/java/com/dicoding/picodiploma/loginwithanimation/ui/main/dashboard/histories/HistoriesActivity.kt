@@ -30,20 +30,18 @@ class HistoriesActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar) // Set action bar
 
-
         // Get token from intent
         token = intent.getStringExtra(DashboardFragment.EXTRA_TOKEN) ?: ""
 
-        // Setup Bottom Navigation View
+        // Setup Bottom Navigation View and NavController
         val navView: BottomNavigationView = binding.historiesBottomNavigationView
-
-        // Setup NavController
         val navController = findNavController(R.id.nav_host_fragment_activity_histories)
 
         // Configure the AppBar with the NavController
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_item_purchases, R.id.navigation_item_transactions
+                R.id.navigation_item_purchases,
+                R.id.navigation_item_transactions
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -143,20 +143,67 @@ class AuthRepository(
         }
     }
 
-    fun pagingItemTransactions(token: String): Flow<PagingData<ItemTransactionsEntity>> {
+    @OptIn(ExperimentalPagingApi::class)
+    fun getPagingItemTransactions(
+        token: String,
+        sort: String? = null,
+        order: String? = null,
+        search: String? = null,
+        categoryName: List<String>? = null,
+        unitName: List<String>? = null,
+        subTotalMin: Int? = null,
+        subTotalMax: Int? = null
+    ): Flow<PagingData<ItemTransactionsEntity>> {
         wrapEspressoIdlingResource {
-            @OptIn(ExperimentalPagingApi::class)
+            val rawQuery =
+                RawQueryHelper.buildItemTransactionsQuery(
+                    sort,
+                    search,
+                    order,
+                    categoryName,
+                    unitName
+                )
+
             return Pager(
                 config = PagingConfig(
-                    pageSize = 5
+                    pageSize = 10,
+                    enablePlaceholders = false
+
                 ),
-                remoteMediator = ItemTransactionsRemoteMediator(appDatabase, apiService, token),
+                remoteMediator = ItemTransactionsRemoteMediator(
+                    appDatabase = appDatabase,
+                    apiService = apiService,
+                    token = token,
+                    sort = sort,
+                    search = search,
+                    order = order,
+                    categoryName = categoryName,
+                    unitName = unitName,
+                    subTotalMin = subTotalMin,
+                    subTotalMax = subTotalMax,
+                ),
                 pagingSourceFactory = {
-                    appDatabase.itemTransactionsDao().getAllItemTransactions()
+                    appDatabase.itemTransactionsDao()
+                        .getItemTransactionsByRawQuery(rawQuery)
                 }
             ).flow
         }
     }
+
+//    fun pagingItemTransactions(token: String): Flow<PagingData<ItemTransactionsEntity>> {
+//        wrapEspressoIdlingResource {
+//            @OptIn(ExperimentalPagingApi::class)
+//            return Pager(
+//                config = PagingConfig(
+//                    pageSize = 5
+//                ),
+//                remoteMediator = ItemTransactionsRemoteMediator(appDatabase, apiService, token),
+//                pagingSourceFactory = {
+//                    appDatabase.itemTransactionsDao().getAllItemTransactions()
+//                }
+//            ).flow
+//        }
+//    }
 
     fun loginVoucher(
         loginWithVoucherRequest: LoginWithVoucherRequest
@@ -542,7 +589,6 @@ class AuthRepository(
 //                        appDatabase.stocksDao().getAllStocks()
 //                    }
 //                }
-
 
 
 //    fun getUnits(token: String?): LiveData<ResultResponse<UnitsResponse>> {

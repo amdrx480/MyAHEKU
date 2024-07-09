@@ -61,6 +61,14 @@ interface ApiService {
         @Header("Authorization") data: String,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("search") search: String? = null,
+//        @Query("customer_name") customerName: String? = null,
+        @Query("category_name") categoryName: String? = null,
+        @Query("unit_name") unitName: String? = null,
+        @Query("sub_total_min") subTotalMin: Int? = null,
+        @Query("sub_total_max") subTotalMax: Int? = null,
     ): ItemTransactionsResponse
 
     @POST("cart_items")
@@ -142,7 +150,10 @@ interface ApiService {
         @Header("Authorization") token: String,
     ): CategoryResponse
 
-
+    @GET("customers")
+    suspend fun fetchCustomers(
+        @Header("Authorization") data: String,
+    ): VendorsResponse
 }
 
 

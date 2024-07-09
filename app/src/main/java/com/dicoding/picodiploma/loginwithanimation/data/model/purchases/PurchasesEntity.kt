@@ -17,30 +17,19 @@ data class PurchasesEntity (
 
     @ColumnInfo(name = "vendor_name")
     @SerializedName("vendor_name")
-//    @field:SerializedName("vendor_name")
     val vendorName: String? = null,
 
-//    @field:SerializedName("stock_name")
     @ColumnInfo(name = "stock_name")
     @SerializedName("stock_name")
     val stockName: String? = null,
 
     @ColumnInfo(name = "stock_code")
     @SerializedName("stock_code")
-//    @field:SerializedName("stock_code")
     val stockCode: String? = null,
-
-//    @field:SerializedName("category_id")
-//    val categoryId: Int? = null,
 
     @ColumnInfo(name = "category_name")
     @SerializedName("category_name")
     val categoryName: String? = null,
-
-//    @ColumnInfo(name = "unit_id")
-//    @SerializedName("unit_id")
-//    @field:SerializedName("unit_id")
-//    val unitId: Int? = null,
 
     @ColumnInfo(name = "unit_name")
     @SerializedName("unit_name")
@@ -59,6 +48,20 @@ data class PurchasesEntity (
     val sellingPrice: Int? = null
 
 ) : Parcelable
+
+//    @field:SerializedName("stock_name")
+
+//    @field:SerializedName("vendor_name")
+
+//    @field:SerializedName("stock_code")
+
+//    @field:SerializedName("category_id")
+//    val categoryId: Int? = null,
+
+//    @ColumnInfo(name = "unit_id")
+//    @SerializedName("unit_id")
+//    @field:SerializedName("unit_id")
+//    val unitId: Int? = null,
 
 //    @ColumnInfo(name = "vendor_name")
 //    @SerializedName("vendor_name")

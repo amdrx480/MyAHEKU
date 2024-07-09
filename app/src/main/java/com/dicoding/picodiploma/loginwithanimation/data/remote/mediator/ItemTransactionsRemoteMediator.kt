@@ -14,7 +14,15 @@ import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiService
 class ItemTransactionsRemoteMediator(
     private val appDatabase: AppDatabase,
     private val apiService: ApiService,
-    private val data: String
+    private val token: String,
+    private val sort: String? = null,
+    private val order: String? = null,
+    private val search: String? = null,
+//    private val customerName: List<String>? = null,
+    private val categoryName: List<String>? = null,
+    private val unitName: List<String>? = null,
+    private val subTotalMin: Int? = null,
+    private val subTotalMax: Int? = null
 ) : RemoteMediator<Int, ItemTransactionsEntity>() {
     override suspend fun load(
         loadType: LoadType,
@@ -41,12 +49,30 @@ class ItemTransactionsRemoteMediator(
         }
 
         return try {
-            //jancok haurs pake all response gak bisa kek biasa
-            val responseData =
-                apiService.
-                getAllItemTransactions("Bearer $data", page, state.config.pageSize).data
+            val categoryFilter = categoryName?.joinToString(",")
+            val unitFilter = unitName?.joinToString(",")
+//            val customerFilter = customerName?.joinToString(",")
 
-            val endOfPaginationReached = responseData.isEmpty()
+
+            //jancok haurs pake all response gak bisa kek biasa
+            val apiResponse =
+                apiService.getAllItemTransactions(
+                    data = "Bearer $token",
+                    page = page,
+                    limit = state.config.pageSize,
+                    sort = sort,
+                    order = order, // add order parameter
+                    search = search,
+//                    customerName = customerFilter,
+                    categoryName = categoryFilter, // Pass new parameters to API call
+                    unitName = unitFilter,
+                    subTotalMin = subTotalMin,
+                    subTotalMax = subTotalMax
+                )
+
+            val itemTransactionsData = apiResponse.data
+            val endOfPaginationReached = itemTransactionsData.isEmpty()
+
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     appDatabase.itemTransactionsRemoteKeysDao().deleteRemoteKeys()
@@ -56,12 +82,16 @@ class ItemTransactionsRemoteMediator(
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
 
-                val keys = responseData.map {
-                    ItemTransactionsRemoteKeys(id = it.id.toString(), prevKey = prevKey, nextKey = nextKey)
+                val keys = itemTransactionsData.map {
+                    ItemTransactionsRemoteKeys(
+                        id = it.id.toString(),
+                        prevKey = prevKey,
+                        nextKey = nextKey
+                    )
                 }
 
                 appDatabase.itemTransactionsRemoteKeysDao().insertAll(keys)
-                appDatabase.itemTransactionsDao().insertItemTransactions(responseData)
+                appDatabase.itemTransactionsDao().insertItemTransactions(itemTransactionsData)
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
