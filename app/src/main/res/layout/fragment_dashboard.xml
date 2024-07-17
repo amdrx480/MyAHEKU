@@ -52,52 +52,52 @@
                     android:textColor="#098047"
                     android:textSize="22sp" />
 
-                <ImageView
-                    android:id="@+id/rfdl8ld2ohk"
-                    android:layout_width="14dp"
-                    android:layout_height="21dp"
-                    android:layout_marginEnd="12dp"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ic_launcher" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/rfdl8ld2ohk"-->
+<!--                    android:layout_width="14dp"-->
+<!--                    android:layout_height="21dp"-->
+<!--                    android:layout_marginEnd="12dp"-->
+<!--                    android:scaleType="fitXY"-->
+<!--                    android:src="@mipmap/ic_launcher" />-->
 
-                <LinearLayout
-                    android:id="@+id/rs8vbx66tio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/rs8vbx66tio"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:id="@+id/rp1v2p06a2ft"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="#FF000000"
-                        android:orientation="vertical"></LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/rp1v2p06a2ft"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_marginBottom="4dp"-->
+<!--                        android:background="#FF000000"-->
+<!--                        android:orientation="vertical"></LinearLayout>-->
 
-                    <LinearLayout
-                        android:id="@+id/rw5lif7dq1l"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="3dp"
-                        android:background="#FF000000"
-                        android:orientation="vertical"></LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/rw5lif7dq1l"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_marginBottom="3dp"-->
+<!--                        android:background="#FF000000"-->
+<!--                        android:orientation="vertical"></LinearLayout>-->
 
-                    <LinearLayout
-                        android:id="@+id/r70kv7slrojy"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="2dp"
-                        android:background="#FF000000"
-                        android:orientation="vertical"></LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/r70kv7slrojy"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_marginBottom="2dp"-->
+<!--                        android:background="#FF000000"-->
+<!--                        android:orientation="vertical"></LinearLayout>-->
 
-                    <LinearLayout
-                        android:id="@+id/rfrkhf78499r"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#FF000000"
-                        android:orientation="vertical"></LinearLayout>
-                </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/rfrkhf78499r"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:background="#FF000000"-->
+<!--                        android:orientation="vertical"></LinearLayout>-->
+<!--                </LinearLayout>-->
             </LinearLayout>
 
             <TextView

@@ -11,9 +11,11 @@ import androidx.paging.PagingData
 import com.dicoding.picodiploma.loginwithanimation.data.local.AuthPreferenceDataSource
 import com.dicoding.picodiploma.loginwithanimation.data.local.database.AppDatabase
 import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.customers.customers.CustomersModel
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
@@ -21,6 +23,8 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntit
 import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.units.UnitsModel
 import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsRequest
+import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
@@ -30,6 +34,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.remote.mediator.StocksRe
 import com.dicoding.picodiploma.loginwithanimation.utils.RawQueryHelper
 import com.dicoding.picodiploma.loginwithanimation.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 //import javax.inject.Inject
 
@@ -234,7 +239,17 @@ class AuthRepository(
         }
     }
 
-
+    fun updateAdminProfile(token: String, profileRequest: ProfileRequest): Flow<ResultResponse<ProfileModel>> {
+        return flow {
+            emit(ResultResponse.Loading)
+            try {
+                val response = apiService.updateAdminProfile("Bearer $token", profileRequest.toRequestBody())
+                emit(ResultResponse.Success(response.data))
+            } catch (e: Exception) {
+                emit(ResultResponse.Error(e.message ?: "Unknown Error"))
+            }
+        }
+    }
 //    fun fetchAdminProfile(token: String?): LiveData<ResultResponse<List<ProfileModel>>> = liveData {
 //        emit(ResultResponse.Loading)
 //        try {
@@ -245,10 +260,39 @@ class AuthRepository(
 //        }
 //    }
 
+    fun postVendors(
+        token: String,
+        vendorsRequest: VendorsRequest,
+    ): LiveData<ResultResponse<VendorsResponse>> = liveData {
+        try {
+            emit(ResultResponse.Loading)
+            val response = apiService.postVendors("Bearer $token", vendorsRequest)
+            if (!response.error) {
+                emit(ResultResponse.Success(response))
+            } else {
+                Log.e(TAG, "Register Fail: ${response.message}")
+                emit(ResultResponse.Error(response.message))
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Register Exception: ${e.message.toString()} ")
+            emit(ResultResponse.Error(e.message.toString()))
+        }
+    }
+
     fun fetchVendors(token: String?): LiveData<ResultResponse<List<VendorsModel>>> = liveData {
         emit(ResultResponse.Loading)
         try {
             val response = apiService.fetchVendors("Bearer $token")
+            emit(ResultResponse.Success(response.data))
+        } catch (e: Exception) {
+            emit(ResultResponse.Error(e.message ?: "Unknown error"))
+        }
+    }
+
+    fun fetchCustomers(token: String?): LiveData<ResultResponse<List<CustomersModel>>> = liveData {
+        emit(ResultResponse.Loading)
+        try {
+            val response = apiService.fetchCustomers("Bearer $token")
             emit(ResultResponse.Success(response.data))
         } catch (e: Exception) {
             emit(ResultResponse.Error(e.message ?: "Unknown error"))

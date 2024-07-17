@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/navigation_data_master"
+        android:name="com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.datamaster.DataMasterFragment"
+        android:label="@string/title_data_master"
+        tools:layout="@layout/fragment_data_master" />
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.dicoding.picodiploma.loginwithanimation.ui.main.profile.ProfileFragment"
         android:label="@string/title_profile"

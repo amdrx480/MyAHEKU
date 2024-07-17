@@ -7,9 +7,9 @@
         android:title="@string/title_dashboard" />
 
     <item
-        android:id="@+id/navigation_vendors"
-        android:icon="@drawable/baseline_store_24"
-        android:title="@string/title_vendors" />
+        android:id="@+id/navigation_data_master"
+        android:icon="@drawable/baseline_dataset_24"
+        android:title="@string/title_data_master" />
 
     <item
         android:id="@+id/navigation_profile"

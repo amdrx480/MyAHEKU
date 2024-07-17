@@ -80,13 +80,33 @@ class StocksActivity : AppCompatActivity() {
             adapter.submitData(lifecycle, pagingData)
         }
 
+//        lifecycleScope.launch {
+//            adapter.loadStateFlow.collectLatest { loadStates ->
+//                binding.swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+//                when (loadStates.refresh) {
+//                    is LoadState.Error -> binding.tvInfo.root.isVisible = true
+//                    else -> binding.tvInfo.root.isVisible = false
+//                }
+//            }
+//        }
+
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 binding.swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
                 binding.tvInfo.root.isVisible = loadStates.refresh is LoadState.Error
             }
         }
+
+//        lifecycleScope.launch {
+//            adapter.loadStateFlow.collectLatest { loadStates ->
+//                binding.swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+//                binding.tvInfo.root.isVisible = loadStates.refresh is LoadState.Error
+//            }
+//        }
     }
+
+//    binding.tvInfo.root.isVisible = loadStates.refresh is LoadState.NotLoading
+
 
     private fun setupSwipeToRefresh() {
         binding.swipeRefresh.setOnRefreshListener {

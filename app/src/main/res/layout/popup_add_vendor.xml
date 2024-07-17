@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etVendorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nama Vendor"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/etVendorAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Alamat Vendor"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/etVendorEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email Vendor"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/etVendorPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Telepon Vendor"
+        android:inputType="phone" />
+</LinearLayout>

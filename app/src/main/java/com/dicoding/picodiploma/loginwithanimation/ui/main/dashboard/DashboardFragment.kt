@@ -6,10 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileRequest
 import com.dicoding.picodiploma.loginwithanimation.databinding.FragmentDashboardBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
+import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.purchase.PurchaseStockActivity
 import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.ui.main.MainActivity
@@ -27,6 +31,7 @@ class DashboardFragment : Fragment() {
     private val dashboardViewModel: DashboardViewModel by viewModels {
         ViewModelUserFactory.getInstance(requireContext())
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,11 +49,14 @@ class DashboardFragment : Fragment() {
     }
 
 
-
     private fun setupAction() {
         binding.purchaseStocksButton.setOnClickListener {
-            val moveToPurchaseStocksActivity = Intent(requireActivity(), PurchaseStockActivity::class.java)
-            moveToPurchaseStocksActivity.putExtra(PurchaseStockActivity.EXTRA_TOKEN, dashboardViewModel.authToken.value)
+            val moveToPurchaseStocksActivity =
+                Intent(requireActivity(), PurchaseStockActivity::class.java)
+            moveToPurchaseStocksActivity.putExtra(
+                PurchaseStockActivity.EXTRA_TOKEN,
+                dashboardViewModel.authToken.value
+            )
             startActivity(moveToPurchaseStocksActivity)
         }
         binding.salesStockButton.setOnClickListener {
@@ -59,20 +67,49 @@ class DashboardFragment : Fragment() {
 
         binding.historiesButton.setOnClickListener {
             val moveToHistoriesActivity = Intent(requireActivity(), HistoriesActivity::class.java)
-            moveToHistoriesActivity.putExtra(HistoriesActivity.EXTRA_TOKEN, dashboardViewModel.authToken.value)
+            moveToHistoriesActivity.putExtra(
+                HistoriesActivity.EXTRA_TOKEN,
+                dashboardViewModel.authToken.value
+            )
             startActivity(moveToHistoriesActivity)
         }
 
         binding.stocksButton.setOnClickListener {
             val moveToStocksActivity = Intent(requireActivity(), StocksActivity::class.java)
-            moveToStocksActivity.putExtra(StocksActivity.EXTRA_TOKEN, dashboardViewModel.authToken.value)
+            moveToStocksActivity.putExtra(
+                StocksActivity.EXTRA_TOKEN,
+                dashboardViewModel.authToken.value
+            )
             startActivity(moveToStocksActivity)
         }
     }
 
+
     private fun setupObservers() {
         dashboardViewModel.authToken.observe(viewLifecycleOwner) { token ->
             // Log the token value
+            if (token != null) {
+                dashboardViewModel.fetchAdminProfile().observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is ResultResponse.Loading -> {
+                            // Tampilkan loading indicator jika diperlukan
+                        }
+                        is ResultResponse.Success -> {
+                            // Tampilkan data profil
+                            val profile = result.data
+                            binding.tvUserName.text = "Hello ${profile.name}, Selamat Datang"
+                        }
+                        is ResultResponse.Error -> {
+                            // Tampilkan pesan error
+                            Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+            } else {
+                // Tampilkan pesan bahwa token tidak ditemukan
+                Toast.makeText(requireContext(), "Token not found", Toast.LENGTH_SHORT).show()
+            }
             Log.d("DashboardFragment", "Auth Token: $token")
         }
 
@@ -96,7 +133,6 @@ class DashboardFragment : Fragment() {
         const val EXTRA_TOKEN = "extra_token"
     }
 }
-
 
 
 //penyebab repeating ListStockItem

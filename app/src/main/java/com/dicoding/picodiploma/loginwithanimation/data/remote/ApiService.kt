@@ -1,8 +1,10 @@
 package com.dicoding.picodiploma.loginwithanimation.data.remote
 
+import androidx.room.Update
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.category.CategoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.AllCustomersResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.customers.customers.CustomersResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.excel.ExcelResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
@@ -13,7 +15,10 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsRes
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.transactions.ItemTransactionsResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.units.UnitsResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.vendors.VendorsResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -34,6 +39,12 @@ interface ApiService {
     @GET("admin/profile")
     suspend fun fetchAdminProfile(
         @Header("Authorization") data: String,
+    ): ProfileResponse
+
+    @POST("admin/profile")
+    suspend fun updateAdminProfile(
+        @Header("Authorization") token: String,
+        @Body requestBody: RequestBody
     ): ProfileResponse
 
     @POST("purchases")
@@ -135,6 +146,12 @@ interface ApiService {
         @Header("Authorization") data: String,
     ): Call<StocksResponse>
 
+    @POST("vendors")
+    suspend fun postVendors(
+        @Header("Authorization") data: String,
+        @Body vendorsRequest: VendorsRequest,
+    ): VendorsResponse
+
     @GET("vendors")
     suspend fun fetchVendors(
         @Header("Authorization") data: String,
@@ -153,9 +170,8 @@ interface ApiService {
     @GET("customers")
     suspend fun fetchCustomers(
         @Header("Authorization") data: String,
-    ): VendorsResponse
+    ): CustomersResponse
 }
-
 
 
 //        @Body categoryRequest: CategoryRequest,

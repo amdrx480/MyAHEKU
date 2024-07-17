@@ -6,77 +6,321 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.profile.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/imageViewPerson"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/image_person_empty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSelectImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select Image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPerson" />
+
+    <TextView
+        android:id="@+id/tvNamePersonLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Name:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/btnSelectImage" />
+
+    <EditText
+        android:id="@+id/etNamePerson"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/tvNamePersonLabel" />
+
+    <TextView
+        android:id="@+id/tvEmailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Email:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/etNamePerson" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailLabel" />
+
+    <TextView
+        android:id="@+id/tvPhoneLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Phone:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <EditText
+        android:id="@+id/etPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Phone"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneLabel" />
+
+    <Button
+        android:id="@+id/btnUpdateProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Update Profile"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPerson"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@+id/etPhone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/cr15bff4eb577"
-        android:elevation="10dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="9dp"
-        android:paddingVertical="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_role"
-        app:layout_constraintVertical_bias="0.892">
+        app:layout_constraintTop_toBottomOf="@+id/btnUpdateProfile">
 
         <TextView
-            android:id="@+id/roydyhcscmsj"
+            android:id="@+id/tvLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:layout_marginBottom="19dp"
-            android:text="@string/logout"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="Logout"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/imageView_Person"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="100dp"
-        android:src="@drawable/image_person_empty"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.153" />
-
-    <TextView
-        android:id="@+id/tv_name_person"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Irwan Ganteng Banget"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView_Person"
-        app:layout_constraintStart_toStartOf="@+id/imageView_Person"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_Person" />
-
-    <TextView
-        android:id="@+id/tv_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Admin"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_name_person"
-        app:layout_constraintStart_toStartOf="@+id/tv_name_person"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name_person" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.main.profile.ProfileFragment">-->
+
+<!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/logoutButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        android:background="@drawable/cr15bff4eb577"-->
+<!--        android:elevation="10dp"-->
+<!--        android:orientation="vertical"-->
+<!--        android:paddingHorizontal="9dp"-->
+<!--        android:paddingVertical="19dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_email"-->
+<!--        app:layout_constraintVertical_bias="0.892">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/roydyhcscmsj"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="19dp"-->
+<!--            android:layout_marginBottom="19dp"-->
+<!--            android:text="@string/logout"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:textSize="22sp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView_Person"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginBottom="100dp"-->
+<!--        android:src="@drawable/image_person_empty"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.153" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_name_person"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Irwan Ganteng Banget"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="22sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/imageView_Person"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/imageView_Person"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imageView_Person" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_role"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Admin"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="22sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/tv_name_person"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_name_person"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_name_person" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_phone"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Nomor Telepon: 08123456789"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/tv_role"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_role"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_role" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_email"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Email: irwan@example.com"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/tv_phone"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_phone"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_phone" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.main.profile.ProfileFragment">-->
+
+<!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/logoutButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        android:background="@drawable/cr15bff4eb577"-->
+<!--        android:elevation="10dp"-->
+<!--        android:orientation="vertical"-->
+<!--        android:paddingHorizontal="9dp"-->
+<!--        android:paddingVertical="19dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_role"-->
+<!--        app:layout_constraintVertical_bias="0.892">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/roydyhcscmsj"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="19dp"-->
+<!--            android:layout_marginBottom="19dp"-->
+<!--            android:text="@string/logout"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:textSize="22sp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView_Person"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginBottom="100dp"-->
+<!--        android:src="@drawable/image_person_empty"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.153" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_name_person"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Irwan Ganteng Banget"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="22sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/imageView_Person"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/imageView_Person"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imageView_Person" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_role"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Admin"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="22sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/tv_name_person"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_name_person"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_name_person" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
