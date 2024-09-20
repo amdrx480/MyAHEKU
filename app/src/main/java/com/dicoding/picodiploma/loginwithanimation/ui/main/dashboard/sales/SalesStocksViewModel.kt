@@ -11,6 +11,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsRes
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsModel
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.AllCustomersResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.ListCustomersItem
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.stocks.StocksEntity
 import retrofit2.Call
@@ -199,6 +200,12 @@ class SalesStocksViewModel(private val repository: AuthRepository) : ViewModel()
         token: String,
         salesStocksRequest: SalesStocksRequest
     ) = repository.postItems(token, salesStocksRequest)
+
+    fun postPurchaseOrders(
+        token: String,
+        customerId: Int,
+        purchaseOrderRequest: PurchaseOrderRequest
+    ) = repository.postPurchaseOrders(token, customerId, purchaseOrderRequest)
 
     fun postItemTransactions(
         token: String,

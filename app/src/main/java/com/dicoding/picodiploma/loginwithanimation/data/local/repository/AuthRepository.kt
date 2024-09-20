@@ -16,6 +16,8 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.L
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileRequest
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderModel
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesEntity
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.SalesStocksRequest
@@ -318,6 +320,37 @@ class AuthRepository(
             emit(ResultResponse.Error(e.message ?: "Unknown error"))
         }
     }
+
+    fun getPurchaseOrder(token: String?): LiveData<ResultResponse<List<PurchaseOrderModel>>> = liveData {
+        emit(ResultResponse.Loading)
+        try {
+            val response = apiService.getPurchaseOrder("Bearer $token")
+            emit(ResultResponse.Success(response.data))
+        } catch (e: Exception) {
+            emit(ResultResponse.Error(e.message ?: "Unknown error"))
+        }
+    }
+
+    fun postPurchaseOrders(
+        token: String,
+        customerId: Int,
+        purchaseOrderRequest: PurchaseOrderRequest
+    ): LiveData<ResultResponse<ApiResponse>> =
+        liveData {
+            emit(ResultResponse.Loading)
+            try {
+                val response = apiService.postPurchaseOrders("Bearer $token", customerId, purchaseOrderRequest)
+                if (!response.error) {
+                    emit(ResultResponse.Success(response))
+                } else {
+                    Log.e(TAG, "Register Fail: ${response.message}")
+                    emit(ResultResponse.Error(response.message))
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Register Exception: ${e.message.toString()} ")
+                emit(ResultResponse.Error(e.message.toString()))
+            }
+        }
 
     fun postPurchaseStocks(
         token: String,

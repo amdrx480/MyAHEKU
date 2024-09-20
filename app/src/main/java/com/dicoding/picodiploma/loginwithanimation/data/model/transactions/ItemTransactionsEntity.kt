@@ -51,12 +51,12 @@ class ItemTransactionsEntity(
     @SerializedName("quantity")
     val quantity: Int? = null,
 
-//    @ColumnInfo(name = "price")
-//    @SerializedName("price")
-//    val price: Int? = null,
+    @ColumnInfo(name = "price")
+    @SerializedName("price")
+    val price: Int? = null,
 
-    @ColumnInfo(name = "sub_total")
-    @SerializedName("sub_total")
-    val subTotal: Int? = null,
+//    @ColumnInfo(name = "sub_total")
+//    @SerializedName("sub_total")
+//    val subTotal: Int? = null,
 
     ) : Parcelable

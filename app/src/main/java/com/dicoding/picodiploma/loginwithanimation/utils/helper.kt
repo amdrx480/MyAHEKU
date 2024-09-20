@@ -2,6 +2,9 @@ package com.dicoding.picodiploma.loginwithanimation.utils
 
 import android.content.Context
 import android.os.Build
+import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.dicoding.picodiploma.loginwithanimation.data.local.database.AppDatabase
@@ -12,7 +15,9 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -46,5 +51,23 @@ object helper {
             .withZone(ZoneId.of(targetTimeZone))
         return dTimeFormatter.format(instant)
     }
+
+    fun formatTime(reminderTime: String): String {
+        val inputFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val outputFormatter = DateTimeFormatter.ofPattern("HH:mm dd MMMM yyyy", Locale("id", "ID"))
+
+        val dateTime = OffsetDateTime.parse(reminderTime, inputFormatter)
+        return dateTime.format(outputFormatter)
+    }
+
+    fun animateTimerView(view: View) {
+        val animation = AlphaAnimation(0.3f, 1.0f).apply {
+            duration = 1000 // 1 second
+            repeatCount = Animation.INFINITE
+            repeatMode = Animation.REVERSE
+        }
+        view.startAnimation(animation)
+    }
+
 }
 

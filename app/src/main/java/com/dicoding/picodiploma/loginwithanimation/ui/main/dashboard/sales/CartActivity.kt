@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.sales
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,17 +13,19 @@ import androidx.appcompat.app.AlertDialog
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySalesStockBinding
 import com.dicoding.picodiploma.loginwithanimation.data.model.customers.ListCustomersItem
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsModel
 import com.dicoding.picodiploma.loginwithanimation.data.remote.ResultResponse
 import com.dicoding.picodiploma.loginwithanimation.utils.helper
 import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.DashboardFragment
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.sales.items.AddItemsActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySalesStockBinding
-//    private lateinit var user: UserModel
     private lateinit var cartItemsAdapter: CartItemsAdapter
 
     private var token: String = ""
@@ -34,15 +38,10 @@ class CartActivity : AppCompatActivity() {
         ViewModelUserFactory.getInstance(this)
     }
 
-//    private val salesStockViewModel: SalesStocksViewModel by viewModels {
-//        ViewModelFactory.getInstance(this)
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesStockBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        user = intent.getParcelableExtra(EXTRA_TOKEN)!!
         token = intent.getStringExtra(DashboardFragment.EXTRA_TOKEN)?: ""
 
         cartItemsAdapter = CartItemsAdapter()
@@ -94,6 +93,58 @@ class CartActivity : AppCompatActivity() {
                     customerId = it.id
                 }
             }
+
+        binding.purchaseOrderButton.setOnClickListener {
+            // Pastikan customerId sudah diambil dari intent atau data lainnya
+            if (customerId != null) {
+                // Tampilkan DateTimePicker
+                showDateTimePicker { reminderTime ->
+                    // Siapkan data untuk request purchase order
+                    val purchaseOrderRequest = PurchaseOrderRequest(reminderTime) // Sesuaikan dengan request
+
+                    // Panggil ViewModel untuk melakukan API call
+                    salesStockViewModel.postPurchaseOrders(token, customerId!!, purchaseOrderRequest)
+                        .observe(this) { result ->
+                            when (result) {
+                                is ResultResponse.Loading -> {
+                                    // Handle loading state
+                                    // Contoh: Tampilkan progress bar atau loading indicator
+                                }
+                                is ResultResponse.Success -> {
+                                    helper.showToast(this, getString(R.string.upload_success))
+                                    AlertDialog.Builder(this).apply {
+                                        setTitle(getString(R.string.berhasil))
+                                        setMessage(getString(R.string.data_success))
+                                        setPositiveButton(getString(R.string.continue_)) { _, _ ->
+                                            // Ambil ulang data jika perlu
+                                            salesStockViewModel.getCartItemsForCustomer(token, customerId!!)
+                                        }
+                                        create()
+                                        show()
+                                    }
+                                }
+                                is ResultResponse.Error -> {
+                                    AlertDialog.Builder(this).apply {
+                                        setTitle(getString(R.string.gagal))
+                                        setMessage(getString(R.string.data_failed_cart) + ", ${result.error}")
+                                        setPositiveButton(getString(R.string.continue_)) { _, _ -> }
+                                        create()
+                                        show()
+                                    }
+                                }
+                            }
+                        }
+                }
+            } else {
+                // Tampilkan pesan kesalahan jika customerId belum dipilih
+                Toast.makeText(
+                    this,
+                    "Please select both a customer and a reminder time.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         binding.saveButton.setOnClickListener {
             if (customerId != null) {
                 salesStockViewModel.postItemTransactions(token, customerId!!).observe(this) {
@@ -105,8 +156,8 @@ class CartActivity : AppCompatActivity() {
 
                             helper.showToast(this, getString(R.string.upload_success))
                             AlertDialog.Builder(this).apply {
-                                setTitle(getString(R.string.upload_success))
-                                setMessage(getString(R.string.data_success))
+                                setTitle(getString(R.string.berhasil))
+                                setMessage(getString(R.string.data_success_cart))
                                 setPositiveButton(getString(R.string.continue_)) { _, _ ->
                                     salesStockViewModel.getCartItemsForCustomer(
                                         token,
@@ -120,8 +171,8 @@ class CartActivity : AppCompatActivity() {
                         }
                         is ResultResponse.Error -> {
                             AlertDialog.Builder(this).apply {
-                                setTitle(getString(R.string.upload_failed))
-                                setMessage(getString(R.string.upload_failed) + ", ${it.error}")
+                                setTitle(getString(R.string.gagal))
+                                setMessage(getString(R.string.data_failed_cart) + ", ${it.error}")
                                 setPositiveButton(getString(R.string.continue_)) { _, _ -> }
                                 create()
                                 show()
@@ -203,6 +254,42 @@ class CartActivity : AppCompatActivity() {
     private fun updateSubtotalText() {
         val formattedPrice = helper.formatToRupiah(currentSubtotal)
         binding.nominalText.text = formattedPrice
+    }
+
+//    private fun createPurchaseOrderRequest(
+//        reminderTime: String
+//    ): PurchaseOrderRequest {
+//        return PurchaseOrderRequest(
+//            reminderTime = reminderTime
+//        )
+//    }
+
+    private fun showDateTimePicker(onDateTimeSelected: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+
+        // DatePickerDialog untuk memilih tanggal
+        DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            // Set tanggal yang dipilih
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            // TimePickerDialog untuk memilih waktu
+            TimePickerDialog(this, { _, hourOfDay, minute ->
+                // Set waktu yang dipilih
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                calendar.set(Calendar.MINUTE, minute)
+
+                // Format ke dalam ISO 8601
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+                val formattedDate = dateFormat.format(calendar.time)
+
+                // Callback untuk mengembalikan hasil yang dipilih
+                onDateTimeSelected(formattedDate)
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     companion object {

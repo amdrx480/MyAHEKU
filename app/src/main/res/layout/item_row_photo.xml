@@ -88,13 +88,21 @@
                 android:textColor="#000000"
                 android:textSize="14sp" />
 
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:layout_constraintStart_toStartOf="@+id/linearLayoutStock"
+            card_view:layout_constraintTop_toBottomOf="@+id/linearLayoutStock">
+
             <!-- TextView untuk harga jual -->
             <TextView
                 android:id="@+id/tvSellingPriceLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Price: "
+                android:text="Harga Jual: "
                 android:textColor="#000000"
                 android:textSize="14sp" />
 

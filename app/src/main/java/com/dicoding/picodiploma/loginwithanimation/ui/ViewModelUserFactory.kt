@@ -15,6 +15,7 @@ import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.datamaster.
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.itempurchases.ItemPurchasesViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.itemtransactions.ItemTransactionsViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.purchase.PurchaseStocksViewModel
+import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.purchaseorder.PurchaseOrderViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.sales.SalesStocksViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.StocksViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.profile.ProfileViewModel
@@ -67,6 +68,9 @@ class ViewModelUserFactory(private val pref: AuthRepository) : ViewModelProvider
 
             modelClass.isAssignableFrom(DataMasterViewModel::class.java) -> {
                 DataMasterViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(PurchaseOrderViewModel::class.java) -> {
+                PurchaseOrderViewModel(pref) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

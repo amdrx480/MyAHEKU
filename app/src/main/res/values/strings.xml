@@ -65,6 +65,12 @@
     <string name="login_in_success">Login In Success</string>
 
     <string name="data_success">Data Berhasil Disimpan</string>
+    <string name="data_success_sales">Barang berhasil ditambahkan ke keranjang penjualan</string>
+    <string name="data_failed_sales">Barang gagal ditambahkan ke keranjang penjualan</string>
+
+    <string name="data_success_cart">Barang berhasil terjual</string>
+    <string name="data_failed_cart">Barang gagal terjual</string>
+
 
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -73,6 +79,10 @@
     <string name="created_add">Created at %1$s,</string>
     <string name="invalid_permission">Can\'t get permission</string>
     <string name="upload_success">Upload Success</string>
+    <string name="berhasil">Berhasil</string>
+    <string name="gagal">Gagal</string>
+
+
     <string name="upload_failed">Upload Failed</string>
     <string name="no_attach_file">No file attached, please attach image first</string>
     <string name="new_story">New Story</string>

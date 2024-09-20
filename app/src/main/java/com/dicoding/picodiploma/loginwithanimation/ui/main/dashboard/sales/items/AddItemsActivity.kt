@@ -106,13 +106,18 @@ class AddItemsActivity : AppCompatActivity() {
                     binding.itemCodeEditText.setText(it.stockCode)
                     binding.itemUnitEditText.setText(it.unitName)
                     binding.itemCategoryEditText.setText(it.categoryName)
-                    binding.itemSellingEditText.setText(it.sellingPrice.toString())
+//                    binding.itemSellingEditText.setText(it.sellingPrice.toString())
+//                    val formattedPrice = helper.formatToRupiah(it.sellingPrice.toDouble())
+//                    binding.itemSellingEditText.setText(formattedPrice)
+                    // Format harga menjadi Rupiah dan set di itemSellingEditText
+                    val formattedPrice = helper.formatToRupiah(it.sellingPrice.toDouble())
+                    binding.itemSellingEditText.setText(formattedPrice)
+
                     binding.itemQuantityEditText.addTextChangedListener(object : TextWatcher {
                         override fun afterTextChanged(s: Editable?) {
                             // Tambahkan logika untuk menghitung subtotal saat teks berubah
                             val enteredQuantity = s.toString().toIntOrNull() ?: 0
-                            val price =
-                                binding.itemSellingEditText.text.toString().toDoubleOrNull() ?: 0.0
+                            val price = it.sellingPrice.toDouble()
                             calculateAndSetSubtotal(enteredQuantity, price)
                         }
 
@@ -166,8 +171,8 @@ class AddItemsActivity : AppCompatActivity() {
 
                             helper.showToast(this, getString(R.string.upload_success))
                             AlertDialog.Builder(this).apply {
-                                setTitle(getString(R.string.upload_success))
-                                setMessage(getString(R.string.data_success))
+                                setTitle(getString(R.string.berhasil))
+                                setMessage(getString(R.string.data_success_sales))
                                 setPositiveButton(getString(R.string.continue_)) { _, _ -> }
                                 create()
                                 show()
@@ -175,8 +180,8 @@ class AddItemsActivity : AppCompatActivity() {
                         }
                         is ResultResponse.Error -> {
                             AlertDialog.Builder(this).apply {
-                                setTitle(getString(R.string.upload_failed))
-                                setMessage(getString(R.string.upload_failed) + ", ${it.error}")
+                                setTitle(getString(R.string.gagal))
+                                setMessage(getString(R.string.data_failed_sales) + ", ${it.error}")
                                 setPositiveButton(getString(R.string.continue_)) { _, _ -> }
                                 create()
                                 show()

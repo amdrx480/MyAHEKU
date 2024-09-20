@@ -228,31 +228,28 @@ class PurchaseStockActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please select Item", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val enteredStockName = binding.itemNameEditText.text.toString()
             val enteredStockCode = binding.itemCodeEditText.text.toString()
             val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
-//            val enteredQuantity = binding.itemQuantityEditText.text.toString().toInt()
-            val enteredPurchasePrice =
-                binding.itemPurchaseEditText.text.toString().toIntOrNull() ?: 0
-//                binding.itemPurchaseEditText.text.toString().toInt()
-
+            val enteredPurchasePrice = binding.itemPurchaseEditText.text.toString().toIntOrNull() ?: 0
             val enteredSellingPrice = binding.itemSellingEditText.text.toString().toIntOrNull() ?: 0
-//            val enteredSellingPrice = binding.itemSellingEditText.text.toString().toInt()
 
-//            if (selectedUnit.isNotEmpty() && selectedCategory.isNotEmpty() && enteredQuantity > 0 && supplierVendor.isNotEmpty() && stockName.isNotEmpty() && stockCode.isNotEmpty()) {
-            val purchaseUnitRequest = createPurchaseRequest(
-                selectedVendor.id,
-                enteredStockName,
-                enteredStockCode,
-                selectedCategory.id,
-                selectedUnit.id,
-                enteredQuantity,
-                enteredPurchasePrice,
-                enteredSellingPrice
-            )
-            purchaseStocksViewModel.uploadPurchaseStocks(token, purchaseUnitRequest)
-                .observe(this) {
-                    if (it != null) {
+            // Periksa apakah semua data sudah diisi
+            if (enteredStockName.isNotEmpty() && enteredStockCode.isNotEmpty() && enteredQuantity > 0) {
+                val purchaseUnitRequest = createPurchaseRequest(
+                    selectedVendor.id,
+                    enteredStockName,
+                    enteredStockCode,
+                    selectedCategory.id,
+                    selectedUnit.id,
+                    enteredQuantity,
+                    enteredPurchasePrice,
+                    enteredSellingPrice
+                )
+
+                purchaseStocksViewModel.uploadPurchaseStocks(token, purchaseUnitRequest)
+                    .observe(this) {
                         when (it) {
                             is ResultResponse.Loading -> {
                                 binding.progressBar.visibility = View.VISIBLE
@@ -269,6 +266,12 @@ class PurchaseStockActivity : AppCompatActivity() {
                                     create()
                                     show()
                                 }
+                                // Set semua EditText menjadi kosong setelah data dikirim
+                                binding.itemNameEditText.text.clear()
+                                binding.itemCodeEditText.text.clear()
+                                binding.itemQuantityEditText.text.clear()
+                                binding.itemPurchaseEditText.text.clear()
+                                binding.itemSellingEditText.text.clear()
                             }
                             is ResultResponse.Error -> {
                                 binding.progressBar.visibility = View.GONE
@@ -284,7 +287,90 @@ class PurchaseStockActivity : AppCompatActivity() {
                             }
                         }
                     }
+            } else {
+                AlertDialog.Builder(this).apply {
+                    setTitle("Gagal")
+                    setMessage("Harap Isi Semua")
+                    setPositiveButton(getString(R.string.continue_)) { _, _ ->
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    create()
+                    show()
                 }
+            }
+        }
+    }
+
+
+//        binding.saveButton.setOnClickListener {
+//            // Ambil vendor yang dipilih dari ViewModel
+//            val selectedVendor = purchaseStocksViewModel.selectedVendor.value
+//            // Ambil unit yang dipilih dari ViewModel
+//            val selectedUnit = purchaseStocksViewModel.selectedUnit.value
+//            // Ambil category yang dipilih dari ViewModel
+//            val selectedCategory = purchaseStocksViewModel.selectedCategory.value
+//
+//            if (selectedCategory == null || selectedVendor == null || selectedUnit == null) {
+//                Toast.makeText(this, "Please select Item", Toast.LENGTH_SHORT).show()
+//                return@setOnClickListener
+//            }
+//            val enteredStockName = binding.itemNameEditText.text.toString()
+//            val enteredStockCode = binding.itemCodeEditText.text.toString()
+//            val enteredQuantity = binding.itemQuantityEditText.text.toString().toIntOrNull() ?: 0
+////            val enteredQuantity = binding.itemQuantityEditText.text.toString().toInt()
+//            val enteredPurchasePrice =
+//                binding.itemPurchaseEditText.text.toString().toIntOrNull() ?: 0
+////                binding.itemPurchaseEditText.text.toString().toInt()
+//
+//            val enteredSellingPrice = binding.itemSellingEditText.text.toString().toIntOrNull() ?: 0
+////            val enteredSellingPrice = binding.itemSellingEditText.text.toString().toInt()
+//
+////            if (selectedUnit.isNotEmpty() && selectedCategory.isNotEmpty() && enteredQuantity > 0 && supplierVendor.isNotEmpty() && stockName.isNotEmpty() && stockCode.isNotEmpty()) {
+//            val purchaseUnitRequest = createPurchaseRequest(
+//                selectedVendor.id,
+//                enteredStockName,
+//                enteredStockCode,
+//                selectedCategory.id,
+//                selectedUnit.id,
+//                enteredQuantity,
+//                enteredPurchasePrice,
+//                enteredSellingPrice
+//            )
+//            purchaseStocksViewModel.uploadPurchaseStocks(token, purchaseUnitRequest)
+//                .observe(this) {
+//                    if (it != null) {
+//                        when (it) {
+//                            is ResultResponse.Loading -> {
+//                                binding.progressBar.visibility = View.VISIBLE
+//                            }
+//                            is ResultResponse.Success -> {
+//                                binding.progressBar.visibility = View.GONE
+//                                helper.showToast(this, getString(R.string.upload_success))
+//                                AlertDialog.Builder(this).apply {
+//                                    setTitle(getString(R.string.upload_success))
+//                                    setMessage(getString(R.string.data_success))
+//                                    setPositiveButton(getString(R.string.continue_)) { _, _ ->
+//                                        binding.progressBar.visibility = View.GONE
+//                                    }
+//                                    create()
+//                                    show()
+//                                }
+//                            }
+//                            is ResultResponse.Error -> {
+//                                binding.progressBar.visibility = View.GONE
+//                                AlertDialog.Builder(this).apply {
+//                                    setTitle(getString(R.string.upload_failed))
+//                                    setMessage(getString(R.string.upload_failed) + ", ${it.error}")
+//                                    setPositiveButton(getString(R.string.continue_)) { _, _ ->
+//                                        binding.progressBar.visibility = View.GONE
+//                                    }
+//                                    create()
+//                                    show()
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
 
 
             // Set semua EditText menjadi kosong setelah data dikirim
@@ -303,8 +389,8 @@ class PurchaseStockActivity : AppCompatActivity() {
 //                    show()
 //                }
 //            }
-        }
-    }
+//        }
+//    }
 
 //    private fun setupObservers() {
 //        purchaseStocksViewModel.authToken.observe(this) { token ->

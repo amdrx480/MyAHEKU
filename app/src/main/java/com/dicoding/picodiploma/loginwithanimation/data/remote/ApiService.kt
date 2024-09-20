@@ -9,6 +9,8 @@ import com.dicoding.picodiploma.loginwithanimation.data.model.excel.ExcelRespons
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.loginwithvoucher.LoginWithVoucherResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileResponse
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderRequest
+import com.dicoding.picodiploma.loginwithanimation.data.model.purchaseorders.PurchaseOrderResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesRequest
 import com.dicoding.picodiploma.loginwithanimation.data.model.purchases.PurchasesResponse
 import com.dicoding.picodiploma.loginwithanimation.data.model.sales.CartItemsResponse
@@ -171,8 +173,19 @@ interface ApiService {
     suspend fun fetchCustomers(
         @Header("Authorization") data: String,
     ): CustomersResponse
-}
 
+    @GET("/item_transactions/reminder_purchase_order")
+    suspend fun getPurchaseOrder(
+        @Header("Authorization") data: String,
+    ): PurchaseOrderResponse
+
+    @POST("item_transactions/reminder_purchase_order/{customer_id}")
+    suspend fun postPurchaseOrders(
+        @Header("Authorization") authToken: String,
+        @Path("customer_id") customerId: Int, // Ambil customer_id dari path parameter
+        @Body PurchaseOrderRequest: PurchaseOrderRequest
+    ): ApiResponse
+}
 
 //        @Body categoryRequest: CategoryRequest,
 //    ): CategoryResponse

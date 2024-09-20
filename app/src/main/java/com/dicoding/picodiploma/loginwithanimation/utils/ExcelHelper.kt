@@ -411,7 +411,8 @@ object ExcelHelper {
             transaction.unitName ?: "",
             transaction.categoryName ?: "",
             transaction.quantity?.toString() ?: "",
-            transaction.subTotal?.toString() ?: ""
+            transaction.price?.toString() ?: ""
+//            transaction.subTotal?.toString() ?: ""
         )
         cells.forEachIndexed { index, value ->
             val cell = dataRow.createCell(index)

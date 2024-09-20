@@ -20,9 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginWithAnimation"
         android:usesCleartextTraffic="true">
-<!--        <activity-->
-<!--            android:name=".HistoriesActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.main.dashboard.purchaseorder.DetailPurchaseOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.dashboard.purchaseorder.PurchaseOrderActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".HistoriesActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".ui.main.dashboard.histories.HistoriesActivity"
             android:exported="false" />
@@ -59,11 +64,13 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ui.main.MainActivity"

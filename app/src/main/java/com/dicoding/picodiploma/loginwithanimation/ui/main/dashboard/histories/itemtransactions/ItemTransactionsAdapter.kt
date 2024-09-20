@@ -49,7 +49,9 @@ class ItemTransactionsAdapter :
 
                 // Format selling price to IDR
                 val format = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-                tvTransactionPrice.text = format.format(itemTransactions.subTotal)
+                tvTransactionPrice.text = format.format(itemTransactions.price)
+
+//                tvTransactionPrice.text = format.format(itemTransactions.subTotal)
 //                tvStockTotal.text = itemTransactions.stock_total.toString()
 //                tvStockRoll.text = itemTransactions.stock_Roll.toString()
 //                tvStockMeter.text = itemTransactions.stock_Meter.toString()

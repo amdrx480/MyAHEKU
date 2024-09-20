@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="Form Penjualan"
+        android:text="Keranjang Penjualan"
         android:textColor="#098047"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartItemsRecyclerView"
         android:layout_width="341dp"
-        android:layout_height="420dp"
+        android:layout_height="320dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
         android:id="@+id/totalSales"
         android:layout_width="341dp"
         android:layout_height="48dp"
-        android:layout_marginTop="604dp"
+        android:layout_marginTop="504dp"
         android:background="@drawable/cr15bff4eb577"
         app:layout_constraintEnd_toEndOf="@+id/cartItemsRecyclerView"
         app:layout_constraintHorizontal_bias="0.0"
@@ -88,13 +88,37 @@
         android:paddingVertical="19dp"
         app:layout_constraintEnd_toEndOf="@+id/totalSales"
         app:layout_constraintStart_toStartOf="@+id/totalSales"
-        app:layout_constraintTop_toBottomOf="@+id/totalSales">
+        app:layout_constraintTop_toBottomOf="@+id/purchaseOrderButton">
 
         <TextView
             android:id="@+id/roydyhcscm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/purchaseOrderButton"
+        android:layout_width="283dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/cr15bff4eb577"
+        android:paddingVertical="19dp"
+        app:layout_constraintEnd_toEndOf="@+id/totalSales"
+        app:layout_constraintStart_toStartOf="@+id/totalSales"
+        app:layout_constraintTop_toBottomOf="@+id/totalSales">
+
+        <TextView
+            android:id="@+id/roydyhcsc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jadwalkan Pengiriman Barang"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"

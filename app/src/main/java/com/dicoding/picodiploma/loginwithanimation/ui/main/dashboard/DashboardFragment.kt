@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dicoding.picodiploma.loginwithanimation.data.model.profile.ProfileModel
@@ -19,7 +20,11 @@ import com.dicoding.picodiploma.loginwithanimation.ui.ViewModelUserFactory
 import com.dicoding.picodiploma.loginwithanimation.ui.main.MainActivity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.sales.CartActivity
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.histories.HistoriesActivity
+import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.purchaseorder.PurchaseOrderActivity
+import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.purchaseorder.PurchaseOrderViewModel
 import com.dicoding.picodiploma.loginwithanimation.ui.main.dashboard.stocks.StocksActivity
+import com.dicoding.picodiploma.loginwithanimation.utils.helper
+import com.dicoding.picodiploma.loginwithanimation.utils.helper.formatTime
 
 //private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
 
@@ -29,6 +34,10 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val dashboardViewModel: DashboardViewModel by viewModels {
+        ViewModelUserFactory.getInstance(requireContext())
+    }
+
+    private val purchaseOrderViewModel: PurchaseOrderViewModel by viewModels {
         ViewModelUserFactory.getInstance(requireContext())
     }
 
@@ -50,6 +59,16 @@ class DashboardFragment : Fragment() {
 
 
     private fun setupAction() {
+        binding.purchaseOrderButton.setOnClickListener {
+            val moveToPurchaseOrderActivity =
+                Intent(requireActivity(), PurchaseOrderActivity::class.java)
+            moveToPurchaseOrderActivity.putExtra(
+                PurchaseOrderActivity.EXTRA_TOKEN,
+                dashboardViewModel.authToken.value
+            )
+
+            startActivity(moveToPurchaseOrderActivity)
+        }
         binding.purchaseStocksButton.setOnClickListener {
             val moveToPurchaseStocksActivity =
                 Intent(requireActivity(), PurchaseStockActivity::class.java)
@@ -122,6 +141,44 @@ class DashboardFragment : Fragment() {
             // Log the auth state value
             Log.d("DashboardFragment", "Auth State Available: $isAvailable")
         }
+
+        purchaseOrderViewModel.purchaseOrder.observe(viewLifecycleOwner) { purchaseOrders ->
+            purchaseOrders?.let { orders ->
+                if (orders.isNotEmpty()) {
+                    // Format tanggal menggunakan fungsi formatTime dari helper
+                    // Akses elemen pertama dari daftar yang di mulai dari 0
+                    val formattedDate = formatTime(orders[0].reminderTime)
+                    binding.tvSchedule.text = "Jadwal Pengiriman: $formattedDate"
+                } else {
+                    binding.tvSchedule.text = "Tidak ada jadwal pengiriman"
+                }
+            }
+        }
+
+        purchaseOrderViewModel.currentDayOrderCount.observe(viewLifecycleOwner) { count ->
+            binding.tvCurrentDayOrderCount.text = "($count)"
+        }
+
+        // Observe the currentDayOrdersText LiveData
+        purchaseOrderViewModel.currentDayOrdersText.observe(viewLifecycleOwner) { message ->
+            binding.tvCurrentDayOrders.text = message
+        }
+
+        // Observe deliveryAddressText LiveData
+        purchaseOrderViewModel.deliveryAddressText.observe(viewLifecycleOwner) { addressText ->
+            binding.tvDeliveryAddress.text = addressText
+        }
+
+//        purchaseOrderViewModel.deliveryAddressText.observe(viewLifecycleOwner) { address ->
+//            val textViewDeliveryAddress = binding.tvDeliveryAddress
+//            if (address.isNullOrEmpty()) {
+//                // Tidak ada alamat pengiriman
+//                textViewDeliveryAddress.text = "Tidak ada pengiriman hari ini"
+//            } else {
+//                // Ada alamat pengiriman
+//                textViewDeliveryAddress.text = "Kirim barang ke $address"
+//            }
+//        }
     }
 
     override fun onDestroyView() {

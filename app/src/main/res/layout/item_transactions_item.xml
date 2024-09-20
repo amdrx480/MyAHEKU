@@ -139,28 +139,28 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_marginTop="8dp">-->
 
-                <TextView
-                    android:id="@+id/tvSellingPriceLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Harga Jual  : "
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tvSellingPriceLabel"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Harga Barang  : "-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="14sp" />-->
 
-                <TextView
-                    android:id="@+id/tvSellingPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rp. 100,000"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:id="@+id/tvSellingPrice"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Rp. 100,000"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
